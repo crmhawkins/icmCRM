@@ -14,7 +14,7 @@ class LogActionsController extends Controller
 {
     public function index()
     {
-        return view('logs.index', compact('logActions'));
+        return view('logs.index');
     }
 
     public function Clasificacion(Request $request)
