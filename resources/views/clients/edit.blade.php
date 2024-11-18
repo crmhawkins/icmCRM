@@ -39,7 +39,27 @@
                         @csrf
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group mt-3">
+                                    <label for="is_client" class="form-label">ES :</label>
+                                    <div class="d-flex">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input @error('is_client') is-invalid @enderror" type="radio" name="is_client" id="is_client" value="0"
+                                                   {{ old('is_client',$cliente->is_client) == '0' ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="empresa">Lead</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input @error('is_client') is-invalid @enderror" type="radio" name="is_client" id="is_client" value="1"
+                                                   {{ old('is_client',$cliente->is_client) == '1' ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="empresa">Cliente</label>
+                                        </div>
+                                    </div>
+                                    @error('is_client')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                                <div class="form-group mt-2">
                                     <label for="name">Nombre:</label>
                                     <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" value="{{ old('name', $cliente->name) }}" name="name">
                                     @error('name')
@@ -104,15 +124,7 @@
                                             </span>
                                     @enderror
                                 </div>
-                                <div class="form-group mt-2">
-                                    <label for="birthdate">Fecha de alta:</label>
-                                    <input type="date" class="form-control @error('birthdate') is-invalid @enderror" id="birthdate" value="{{ old('birthdate', $cliente->birthdate) }}" name="birthdate">
-                                    @error('birthdate')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                    @enderror
-                                </div>
+
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mt-3 ">
@@ -193,6 +205,15 @@
                                     <label for="zipcode">Código postal:</label>
                                     <input type="text" class="form-control @error('zipcode') is-invalid @enderror" id="zipcode" value="{{ old('zipcode', $cliente->zipcode) }}" name="zipcode">
                                     @error('zipcode')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                    @enderror
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label for="birthdate">Fecha de alta:</label>
+                                    <input type="date" class="form-control @error('birthdate') is-invalid @enderror" id="birthdate" value="{{ old('birthdate', $cliente->birthdate) }}" name="birthdate">
+                                    @error('birthdate')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>

@@ -50,6 +50,26 @@
                                         @enderror
                                     </div>
                                     <div class="form-group my-3">
+                                        <label for="is_client" class="form-label">ES :</label>
+                                        <div class="d-flex">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input @error('is_client') is-invalid @enderror" type="radio" name="is_client" id="is_client" value="0"
+                                                       {{ old('is_client') == '0' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="empresa">Lead</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input @error('is_client') is-invalid @enderror" type="radio" name="is_client" id="is_client" value="1"
+                                                       {{ old('is_client') == '1' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="empresa">Cliente</label>
+                                            </div>
+                                        </div>
+                                        @error('is_client')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group my-3">
                                         <label for="tipoCliente" class="form-label">Tipo de cliente</label>
                                         <div class="d-flex">
                                             <div class="form-check form-check-inline">
