@@ -3,7 +3,6 @@
 namespace App\Models\Alerts;
 
 use Illuminate\Database\Eloquent\Model;
-use Hawkins\Contracts\Acl\AclGroup;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 

@@ -193,9 +193,9 @@ class InvoiceController extends Controller
                 ];
             }
         }
-
+        $empresa = CompanyDetails::get()->first();
         // Generar el PDF usando la vista 'invoices.previewPDF'
-        $pdf = PDF::loadView('invoices.previewPDF', compact('invoice','data', 'invoiceConceptsFormated'));
+        $pdf = PDF::loadView('invoices.previewPDF', compact('empresa','invoice','data', 'invoiceConceptsFormated'));
         return $pdf;
     }
 
@@ -358,10 +358,10 @@ class InvoiceController extends Controller
         $mailInvoice->paymentMethodId = $invoice->paymentMethod->id;
 
         $email = new MailInvoice($mailInvoice, $filename);
-
+        $empresa = CompanyDetails::get()->first();
+        $mail = $empresa->email;
         Mail::to($request->email)
-        ->cc('administracion@lchawkins.com')
-        ->bcc('ivan@lchawkins.com')
+        ->cc( $mail)
         ->send($email);
 
         // Respuesta

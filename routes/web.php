@@ -35,7 +35,7 @@ use App\Http\Controllers\Email\CategoryEmailController;
 use App\Http\Controllers\Email\EmailController;
 use App\Http\Controllers\Email\StatusMailController;
 use App\Http\Controllers\Events\EventController;
-use App\Http\Controllers\GrupoContabilidadController;
+use App\Http\Controllers\Contabilidad\GrupoContabilidadController;
 use App\Http\Controllers\Holiday\HolidayController;
 use App\Http\Controllers\Holiday\AdminHolidaysController;
 use App\Http\Controllers\Horas\HorasController;
@@ -223,6 +223,8 @@ Route::post('/petition/destroy', [PetitionController::class, 'destroy'])->name('
 
 
 Route::get('/order', [OrdenesController::class, 'index'])->name('order.index');
+Route::get('/orderAll', [OrdenesController::class, 'indexAll'])->name('order.indexAll');
+
 
 // Budgets (PRESUPUESTOS)
 Route::get('/budgets', [BudgetController::class, 'index'])->name('presupuestos.index');
@@ -334,12 +336,12 @@ Route::post('/task/destroy', [TasksController::class, 'destroy'])->name('tarea.d
 Route::get('/task/calendar/{id}', [TasksController::class, 'calendar'])->name('tarea.calendar');
 
 // Dominios
-Route::get('/dominios', [DominiosController::class, 'index'])->name('dominios.index');
-Route::get('/dominios/create', [DominiosController::class, 'create'])->name('dominios.create');
-Route::get('/dominios/edit/{id}', [DominiosController::class, 'edit'])->name('dominios.edit');
-Route::post('/dominios/store', [DominiosController::class, 'store'])->name('dominios.store');
-Route::post('/dominios/update/{id}', [DominiosController::class, 'update'])->name('dominios.update');
-Route::post('/dominios/destroy', [DominiosController::class, 'destroy'])->name('dominios.delete');
+// Route::get('/dominios', [DominiosController::class, 'index'])->name('dominios.index');
+// Route::get('/dominios/create', [DominiosController::class, 'create'])->name('dominios.create');
+// Route::get('/dominios/edit/{id}', [DominiosController::class, 'edit'])->name('dominios.edit');
+// Route::post('/dominios/store', [DominiosController::class, 'store'])->name('dominios.store');
+// Route::post('/dominios/update/{id}', [DominiosController::class, 'update'])->name('dominios.update');
+// Route::post('/dominios/destroy', [DominiosController::class, 'destroy'])->name('dominios.delete');
 
 //Nominas
 Route::get('/nominas', [NominasController::class, 'index'])->name('nominas.index');
@@ -559,40 +561,40 @@ Route::post('/save-order', [BudgetController::class, 'saveOrder'])->name('save.o
 
 
 // Kit Digital
-Route::get('/kit-digital-whatsapp', [KitDigitalController::class, 'index'])->name('kitDigital.indexWhatsapp');
-Route::get('/kit-digital', [KitDigitalController::class, 'listarClientes'])->name('kitDigital.index');
-Route::get('/kit-digital/create', [KitDigitalController::class, 'create'])->name('kitDigital.create');
-Route::post('/kit-digital/store', [KitDigitalController::class, 'store'])->name('kitDigital.store');
-Route::post('/kit-digital/storeComercial', [KitDigitalController::class, 'storeComercial'])->name('kitDigital.storeComercial');
-Route::post('/kit-digital/updatedata', [KitDigitalController::class, 'updateData'])->name('kitDigital.updateData');
-Route::get('/kit-digital/whatsapp/{id}', [KitDigitalController::class, 'whatsapp'])->name('kitDigital.whatsapp');
+// Route::get('/kit-digital-whatsapp', [KitDigitalController::class, 'index'])->name('kitDigital.indexWhatsapp');
+// Route::get('/kit-digital', [KitDigitalController::class, 'listarClientes'])->name('kitDigital.index');
+// Route::get('/kit-digital/create', [KitDigitalController::class, 'create'])->name('kitDigital.create');
+// Route::post('/kit-digital/store', [KitDigitalController::class, 'store'])->name('kitDigital.store');
+// Route::post('/kit-digital/storeComercial', [KitDigitalController::class, 'storeComercial'])->name('kitDigital.storeComercial');
+// Route::post('/kit-digital/updatedata', [KitDigitalController::class, 'updateData'])->name('kitDigital.updateData');
+// Route::get('/kit-digital/whatsapp/{id}', [KitDigitalController::class, 'whatsapp'])->name('kitDigital.whatsapp');
 
 
 //Whatsapp
-Route::get('/whatsapp', [WhatsappController::class, 'hookWhatsapp'])->name('whatsapp.hookWhatsapp');
-Route::post('/whatsapp', [WhatsappController::class, 'processHookWhatsapp'])->name('whatsapp.processHookWhatsapp');
-Route::get('/chatgpt/{texto}', [WhatsappController::class, 'chatGptPruebas'])->name('whatsapp.chatGptPruebas');
+// Route::get('/whatsapp', [WhatsappController::class, 'hookWhatsapp'])->name('whatsapp.hookWhatsapp');
+// Route::post('/whatsapp', [WhatsappController::class, 'processHookWhatsapp'])->name('whatsapp.processHookWhatsapp');
+// Route::get('/chatgpt/{texto}', [WhatsappController::class, 'chatGptPruebas'])->name('whatsapp.chatGptPruebas');
 
-Route::get('/mensajes-whatsapp', [WhatsappController::class, 'whatsapp'])->name('whatsapp.mensajes');
-Route::get('/acciones', [AccionesController::class, 'index'])->name('acciones.index');
-Route::get('/acciones/enviar', [AccionesController::class, 'enviar'])->name('acciones.enviar');
-Route::post('/acciones/enviar-mensajes', [AccionesController::class, 'enviarMensajes'])->name('acciones.enviarMensajes');
-Route::post('/listar-mensajes/{id}', [AccionesController::class, 'listarMensajes'])->name('acciones.listarMensajes');
-Route::post('/acciones/enviar-segmento-3', [AccionesController::class, 'enviarMensajesSegmentos'])->name('acciones.enviarMensajesSegmentos');
+// Route::get('/mensajes-whatsapp', [WhatsappController::class, 'whatsapp'])->name('whatsapp.mensajes');
+// Route::get('/acciones', [AccionesController::class, 'index'])->name('acciones.index');
+// Route::get('/acciones/enviar', [AccionesController::class, 'enviar'])->name('acciones.enviar');
+// Route::post('/acciones/enviar-mensajes', [AccionesController::class, 'enviarMensajes'])->name('acciones.enviarMensajes');
+// Route::post('/listar-mensajes/{id}', [AccionesController::class, 'listarMensajes'])->name('acciones.listarMensajes');
+// Route::post('/acciones/enviar-segmento-3', [AccionesController::class, 'enviarMensajesSegmentos'])->name('acciones.enviarMensajesSegmentos');
 
-Route::post('/actualizar', [AccionesController::class, 'actualizar'])->name('acciones.actualizar');
+// Route::post('/actualizar', [AccionesController::class, 'actualizar'])->name('acciones.actualizar');
 
 });
 // Portal Clientes
-Route::get('/portal', [PortalClientesController::class, 'login'])->name('portal.login');
-Route::post('/portal/login', [PortalClientesController::class, 'loginPost'])->name('portal.loginPost');
-Route::get('/portal/dashboard', [PortalClientesController::class, 'dashboard'])->name('portal.dashboard');
-Route::get('/portal/presupuestos', [PortalClientesController::class, 'presupuestos'])->name('portal.presupuestos');
-Route::get('/portal/facturas', [PortalClientesController::class, 'facturas'])->name('portal.facturas');
-Route::get('/portal/taskview', [PortalClientesController::class, 'pageTasksViewer'])->name('portal.taskview');
-Route::get('/portal/changePin', [PortalClientesController::class, 'changePin'])->name('portal.changePin');
-Route::post('/portal/setPin', [PortalClientesController::class, 'setPin'])->name('portal.setPin');
-Route::get('/portal/presupuesto/{id}', [PortalClientesController::class, 'showBudget'])->name('portal.showBudget');
-Route::get('/portal/factura/{id}', [PortalClientesController::class, 'showInvoice'])->name('portal.showInvoice');
+// Route::get('/portal', [PortalClientesController::class, 'login'])->name('portal.login');
+// Route::post('/portal/login', [PortalClientesController::class, 'loginPost'])->name('portal.loginPost');
+// Route::get('/portal/dashboard', [PortalClientesController::class, 'dashboard'])->name('portal.dashboard');
+// Route::get('/portal/presupuestos', [PortalClientesController::class, 'presupuestos'])->name('portal.presupuestos');
+// Route::get('/portal/facturas', [PortalClientesController::class, 'facturas'])->name('portal.facturas');
+// Route::get('/portal/taskview', [PortalClientesController::class, 'pageTasksViewer'])->name('portal.taskview');
+// Route::get('/portal/changePin', [PortalClientesController::class, 'changePin'])->name('portal.changePin');
+// Route::post('/portal/setPin', [PortalClientesController::class, 'setPin'])->name('portal.setPin');
+// Route::get('/portal/presupuesto/{id}', [PortalClientesController::class, 'showBudget'])->name('portal.showBudget');
+// Route::get('/portal/factura/{id}', [PortalClientesController::class, 'showInvoice'])->name('portal.showInvoice');
 
 

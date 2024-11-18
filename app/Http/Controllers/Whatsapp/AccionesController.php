@@ -83,7 +83,7 @@ class AccionesController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, [
-            CURLOPT_URL => 'https://crm.hawkins.es/api/getAyudas',
+            CURLOPT_URL => url('/api/getAyudas'),
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -137,21 +137,21 @@ class AccionesController extends Controller
             case 24:
                 $template = 'kit_digital_10';
                 $mensajeEnvio = 'Buenas tardes!
-                        Me llamo Hera y te escribo de Hawkins, tu agente digitalizador para las subvenciones del kit digital.
+                        Me llamo Hera y te escribo de , tu agente digitalizador para las subvenciones del kit digital.
                         Te escribo principalmente para continuar con tu subvención. Quieres que te llamemos y avancemos con tu proyecto? Si no te viene bien hoy dime cuando te vendria bien. Quedo a la espera, Gracias!';
             break;
             case 18:
                 $template = 'kit_digital_leads2';
                 $mensajeEnvio = 'Buenas tardes!
-Me llamo Hera y te escribo de Hawkins, tu agente digitalizador para las subvenciones del kit digital.
-Te escribo principalmente para preguntarte si estás interesado en que te consigamos las subvención y el portátil gratis o por el contrario te demos de baja de la lista de interesados.
-Te ruego que nos indiques si quieres que te contactemos o en caso contrario que me indiques si quieres que te demos de baja del directorio para no molestarte más.
-Muchas gracias!';
+                    Me llamo Hera y te escribo de , tu agente digitalizador para las subvenciones del kit digital.
+                    Te escribo principalmente para preguntarte si estás interesado en que te consigamos las subvención y el portátil gratis o por el contrario te demos de baja de la lista de interesados.
+                    Te ruego que nos indiques si quieres que te contactemos o en caso contrario que me indiques si quieres que te demos de baja del directorio para no molestarte más.
+                    Muchas gracias!';
             break;
             case 4:
                 $template = 'kit_digital_aceptado';
                 $mensajeEnvio = 'Buenas tardes!
-                    Me llamo Hera y te escribo de Hawkins, tu agente digitalizador para las subvenciones del kit digital.
+                    Me llamo Hera y te escribo de , tu agente digitalizador para las subvenciones del kit digital.
                     Te escribo principalmente para recordarte que tienes tu kit digital aceptado pero que aun no nos has dicho a que servicio lo quieres destinar. Como los plazos de esa subvención están muy justos , te gustaría que te llamásemos y te ayudemos a elegir a que destinar el kit? Quedo a la espera muchas gracias!';
             break;
 
@@ -168,7 +168,7 @@ Muchas gracias!';
 				$curl = curl_init();
 
 				curl_setopt_array($curl, [
-					CURLOPT_URL => 'https://crm.hawkins.es/api/updateAyudas/'.$entry['id'],
+					CURLOPT_URL => url('/api/updateAyudas/'.$entry['id']),
 					CURLOPT_RETURNTRANSFER => true,
 					CURLOPT_ENCODING => '',
 					CURLOPT_MAXREDIRS => 10,
@@ -211,7 +211,7 @@ Muchas gracias!';
         $curl = curl_init();
 
         curl_setopt_array($curl, [
-            CURLOPT_URL => 'https://crmhawkins.com/getAyudasSegmento3',
+            CURLOPT_URL => 'https://crm.com/getAyudasSegmento3',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -248,7 +248,7 @@ Muchas gracias!';
 
             // $phones = array_unique($phones, SORT_REGULAR);
         $mensajeEnvio = "Buenas!
-Me llamo Hera y te escribo de Hawkins, tu agente digitalizador para las subvenciones del kit digital.
+Me llamo Hera y te escribo de , tu agente digitalizador para las subvenciones del kit digital.
 Te escribo principalmente para recordarte que ahora con tu kit digital te podemos solicitar un ordenador portátil o sobre mesa totalmente gratis. Quieres que te llamemos y te ampliemos la información? Quedo a la espera muchas gracias!";
         foreach($phones as $entry){
             $mensajeCreado = Mensaje::where('ayuda_id',$entry['id'] )->first();
@@ -380,7 +380,7 @@ Te escribo principalmente para recordarte que ahora con tu kit digital te podemo
                $curl = curl_init();
 
                curl_setopt_array($curl, [
-                   CURLOPT_URL => 'https://crm.hawkins.es/api/updateMensajes',
+                   CURLOPT_URL => url('/api/updateMensajes'),
                    CURLOPT_RETURNTRANSFER => true,
                    CURLOPT_ENCODING => '',
                    CURLOPT_MAXREDIRS => 10,
@@ -419,7 +419,7 @@ Te escribo principalmente para recordarte que ahora con tu kit digital te podemo
 
 	 $curl = curl_init();
     curl_setopt_array($curl, [
-        CURLOPT_URL => 'https://crm.hawkins.es/api/getAyudas',
+        CURLOPT_URL => url('/api/getAyudas'),
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -449,7 +449,7 @@ Te escribo principalmente para recordarte que ahora con tu kit digital te podemo
                 // Enviar la actualización
                 $curl = curl_init();
                 curl_setopt_array($curl, [
-                    CURLOPT_URL => 'https://crm.hawkins.es/api/updateMensajes',
+                    CURLOPT_URL => url('/api/updateMensajes'),
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => '',
                     CURLOPT_MAXREDIRS => 10,
@@ -482,7 +482,7 @@ Te escribo principalmente para recordarte que ahora con tu kit digital te podemo
     // Obtener los datos de los clientes
     $curl = curl_init();
     curl_setopt_array($curl, [
-        CURLOPT_URL => 'https://crm.hawkins.es/api/getAyudas',
+        CURLOPT_URL => url('/api/getAyudas'),
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -514,7 +514,7 @@ Te escribo principalmente para recordarte que ahora con tu kit digital te podemo
                 // Enviar la actualización
                 $curl = curl_init();
                 curl_setopt_array($curl, [
-                    CURLOPT_URL => 'https://crm.hawkins.es/api/updateMensajes',
+                    CURLOPT_URL => url('/api/updateMensajes'),
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => '',
                     CURLOPT_MAXREDIRS => 10,

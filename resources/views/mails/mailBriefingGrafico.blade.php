@@ -1,5 +1,5 @@
 <div style="background-color: #dcdcdb;margin: 0 auto;width: 100%;height: auto;text-align:center;padding-bottom:20px;">
-    <h1 style="margin:0;text-align: center;font-size: 32px">Los Creativos de Hawkins</h1>
+    <h1 style="margin:0;text-align: center;font-size: 32px">{{$empresa->company_name}}</h1>
     <style>
         h1 {
             font-size: 30px;
@@ -84,7 +84,7 @@
             <p> {{ $datos['diseños_previos'] }} </p>
         </div>
 
-        <h5>Si hay algún error, envía un email a antonio@hawkins.es</h5>
+        <h5>Si hay algún error, envía un email a {{$empresa->email}}</h5>
 
 
 

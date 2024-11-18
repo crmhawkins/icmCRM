@@ -22,8 +22,8 @@
 
 <div class="container-fluid">
     <h2 class="mb-3">Diario de Caja</h2>
-    {{-- route('admin.diarioCaja.create')route('admin.diarioCaja.create') --}}
-    {{-- <a href="{{ route('admin.diarioCaja.create') }}" class="btn bg-color-quinto">Añadir al diario de caja</a> --}}
+    {{-- route('diarioCaja.create')route('diarioCaja.create') --}}
+    {{-- <a href="{{ route('diarioCaja.create') }}" class="btn bg-color-quinto">Añadir al diario de caja</a> --}}
     <button type="button" class="btn bg-color-quinto" data-toggle="modal" data-target="#modalDiarioCaja">
         Añadir al diario de caja
     </button>
@@ -38,8 +38,8 @@
             </button>
             </div>
             <div class="modal-body">
-            <a href="{{ route('admin.diarioCaja.ingreso') }}" class="btn btn-primary">Añadir Ingreso</a>
-            <a href="{{ route('admin.diarioCaja.gasto') }}" class="btn btn-secondary">Añadir Gasto</a>
+            <a href="{{ route('diarioCaja.ingreso') }}" class="btn btn-primary">Añadir Ingreso</a>
+            <a href="{{ route('diarioCaja.gasto') }}" class="btn btn-secondary">Añadir Gasto</a>
             </div>
         </div>
         </div>

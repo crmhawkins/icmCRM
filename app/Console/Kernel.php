@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Mail\MailHorasTrabajadas;
 use App\Mail\MailHorasTrabajadasUsuario;
 use App\Models\Alerts\Alert;
+use App\Models\Company\CompanyDetails;
 use App\Models\HoursMonthly\HoursMonthly;
 use App\Models\Jornada\Jornada;
 use App\Models\Tasks\LogTasks;
@@ -25,10 +26,10 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('vacacioner:add')->monthlyOn(1, '08:00');
-        $schedule->command('correos:get')->everyMinute();
-        $schedule->command('correos:getFacturas')->everyMinute();
+        //$schedule->command('correos:get')->everyMinute();
+        //$schedule->command('correos:getFacturas')->everyMinute();
         $schedule->command('Jornada:finalizar')->dailyAt('03:00');
-        $schedule->command('Alertas:facturaFuera')->dailyAt('03:00');
+        //$schedule->command('Alertas:facturaFuera')->dailyAt('03:00');
         $schedule->command('Alertas:peticiones')->dailyAt('03:00');
         $schedule->command('Alertas:presupuestoAceptadoTareas')->dailyAt('03:00');
         $schedule->command('Alertas:presupuestoAceptadoTareasFinalizar')->dailyAt('03:00');
@@ -195,50 +196,10 @@ class Kernel extends ConsoleKernel
 
             }
 
-            // ///**** ACTUALIZACION DE BASE DE DATOS MARKETING
-            // $fechaNow = Carbon::now();
 
-            // $data = [
-            //     'admin_user_id' => 1,
-            //     'stage_id' => 27,
-            //     'activation_datetime' => $fechaNow->format('Y-m-d H:i:s'),
-            //     'status_id' => 1,
-            //     'reference_id' => 0,
-            //     'description' => "Aviso para actualizacion de base de datos mensual."
-            // ];
-
-            // $alertIvan = Alert::create($data);
-            // $alertSaved = $alertIvan->save();
-
-            // $data = [
-            //     'admin_user_id' => 23,
-            //     'stage_id' => 27,
-            //     'activation_datetime' => $fechaNow->format('Y-m-d H:i:s'),
-            //     'status_id' => 1,
-            //     'reference_id' => 0,
-            //     'description' => "Aviso para actualizacion de base de datos mensual."
-            // ];
-
-            // $alertLaura = Alert::create($data);
-            // $alertSaved = $alertLaura->save();
-
-            // $data = [
-            //     'admin_user_id' => 7,
-            //     'stage_id' => 27,
-            //     'activation_datetime' => $fechaNow->format('Y-m-d H:i:s'),
-            //     'status_id' => 1,
-            //     'reference_id' => 0,
-            //     'description' => "Aviso para actualizacion de base de datos mensual."
-            // ];
-
-            // $alertJose = Alert::create($data);
-            // $alertSaved = $alertJose->save();
 
         })->monthlyOn(1, '08:00');
 
-        // $schedule->command('queue:work --queue=default,newsletter_automatic,newsletter_manual,newsletter_smart --tries=3')
-        //     ->cron('* * * * *')
-        //     ->withoutOverlapping();
     }
 
     protected function sendEmailHoras(){
@@ -322,12 +283,12 @@ class Kernel extends ConsoleKernel
     }
     public function sendEmailHorasTrabajadas($arrayHorasTotal){
 
-        $mail = "ivan@hawkins.es";
-        $mail2 = "nacho.moreno@lchawkins.com";
+        $empresa = CompanyDetails::get()->first();
+        $mail = $empresa->email;
 
         $email = new MailHorasTrabajadas($arrayHorasTotal);
 
-        Mail::to($mail)->cc($mail2)->send($email);
+        Mail::to($mail)->send($email);
 
         return 200;
 

@@ -12,7 +12,7 @@
 </style>
 <div class="container-fluid">
     <h2 class="mb-3">Grupos Contable</h2>
-    <a href="{{ route('admin.cuentasContables.create') }}" class="btn bg-color-quinto">Añadir grupo contable</a>
+    <a href="{{ route('cuentasContables.create') }}" class="btn bg-color-quinto">Añadir grupo contable</a>
     <hr class="mb-5">
     <div class="row justify-content-center">
         <div class="col-md-12">
@@ -22,7 +22,7 @@
                 </div>
             @endif
             <div class="mb-3">
-                <form action="{{ route('admin.cuentasContables.index') }}" method="GET">
+                <form action="{{ route('cuentasContables.index') }}" method="GET">
                     <div class="input-group">
                         <input type="text" name="search" class="form-control" placeholder="Buscar..." value="{{ request('search') }}">
                         {{-- <select name="subGrupo" class="form-control">
@@ -39,7 +39,7 @@
               <thead>
                 <tr>
                     <th scope="col">
-                        <a href="{{ route('admin.grupoContabilidad.index', array_merge(request()->query(), ['sort' => 'numero', 'order' => request('order', 'asc') == 'asc' ? 'desc' : 'asc'])) }}">
+                        <a href="{{ route('grupoContabilidad.index', array_merge(request()->query(), ['sort' => 'numero', 'order' => request('order', 'asc') == 'asc' ? 'desc' : 'asc'])) }}">
                             Número
                             @if (request('sort') == 'numero')
                                 <i class="fa {{ request('order', 'asc') == 'asc' ? 'fa-arrow-up' : 'fa-arrow-down' }}"></i>
@@ -47,7 +47,7 @@
                         </a>
                     </th>
                     <th scope="col">
-                        <a href="{{ route('admin.grupoContabilidad.index', array_merge(request()->query(), ['sort' => 'nombre', 'order' => request('order', 'asc') == 'asc' ? 'desc' : 'asc'])) }}">
+                        <a href="{{ route('grupoContabilidad.index', array_merge(request()->query(), ['sort' => 'nombre', 'order' => request('order', 'asc') == 'asc' ? 'desc' : 'asc'])) }}">
                             Nombre
                             @if (request('sort') == 'nombre')
                                 <i class="fa {{ request('order', 'asc') == 'asc' ? 'fa-arrow-up' : 'fa-arrow-down' }}"></i>
@@ -55,7 +55,7 @@
                         </a>
                     </th>
                     <th scope="col">
-                        <a href="{{ route('admin.grupoContabilidad.index', array_merge(request()->query(), ['sort' => 'descripcion', 'order' => request('order', 'asc') == 'asc' ? 'desc' : 'asc'])) }}">
+                        <a href="{{ route('grupoContabilidad.index', array_merge(request()->query(), ['sort' => 'descripcion', 'order' => request('order', 'asc') == 'asc' ? 'desc' : 'asc'])) }}">
                             Descripción
                             @if (request('sort') == 'descripcion')
                                 <i class="fa {{ request('order', 'asc') == 'asc' ? 'fa-arrow-up' : 'fa-arrow-down' }}"></i>
@@ -73,10 +73,10 @@
                           <td>{{ $item->nombre }}</td>
                           <td>{{ Str::limit($item->descripcion, 50, '...') }}</td>
                           <td>
-                              <a href="{{ route('admin.grupoContabilidad.edit', $item->id) }}" class="btn btn-secundario">Editar</a>
+                              <a href="{{ route('grupoContabilidad.edit', $item->id) }}" class="btn btn-secundario">Editar</a>
                           </td>
                           <td>
-                              <form action="{{ route('admin.grupoContabilidad.destroy', $item->id) }}" method="POST">
+                              <form action="{{ route('grupoContabilidad.destroy', $item->id) }}" method="POST">
                                   @csrf
                                   <button type="button" class="btn btn-danger delete-btn">Eliminar</button>
                               </form>

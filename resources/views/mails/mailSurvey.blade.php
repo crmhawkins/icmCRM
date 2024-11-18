@@ -103,7 +103,7 @@
 </head>
 <body style="background-color: #f4f4f4; margin: 0 !important; padding: 0 !important;">
     <!-- HIDDEN PREHEADER TEXT -->
-    <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: 'Lato', Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;"> Correo electronico enviado desde el CRM & ERP de Los Creativos de Hawkins </div>
+    <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: 'Lato', Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;"> Correo electronico enviado desde el CRM & ERP de {{$empresa->company_name}} </div>
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
         <!-- LOGO -->
         <tr>
@@ -120,7 +120,7 @@
                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 700px;">
                     <tr>
                         <td bgcolor="#ffffff" align="center" valign="top" style="border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
-                            <img src="https://crm.hawkins.es/assets/images/logo/logo.png" width="170" height="100" alt="logo" style="display: block; border: 0px;" />
+                            <img src="{{asset('assets/images/logo/logo.png')}}" width="170" height="100" alt="logo" style="display: block; border: 0px;" />
                         </td>
                     </tr>
                     <tr>
@@ -138,12 +138,12 @@
                         <td colspan="3" bgcolor="#ffffff" align="left" style="padding: 20px 30px 5px 30px; color: #000; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
 						<p>Estimado cliente,<br>
 						Recientemente hemos realizado un trabajo para su empresa y es muy importante para nosotros conocer su grado de satisfacción en el mismo. Le adjuntamos para ello una encuesta anónima, solo le llevará un par de minutos y a nosotros nos servirá para seguir mejorando.</p>
-						<p><a href="https://crmhawkins.com/survey/{{$budget->id}}">Solo tiene que visitar el siguiente enlace</a></p>
+						<p><a href="{{url('/survey/'.$budget->id)}}">Solo tiene que visitar el siguiente enlace</a></p>
                         </td>
                     </tr>
                     <tr>
                         <td bgcolor="#ffffff" align="left" style="padding: 0px 30px 40px 30px; border-radius: 0px 0px 4px 4px; color: #000; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;">Un cordial saludo,<br>Los Creativos de Hawkins</p>
+                            <p style="margin: 0;">Un cordial saludo,<br>{{$empresa->company_name}}</p>
                         </td>
                     </tr>
                 </table>

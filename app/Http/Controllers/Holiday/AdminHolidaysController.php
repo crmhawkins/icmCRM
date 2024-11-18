@@ -214,21 +214,6 @@ class AdminHolidaysController extends Controller
                 $alert = Alert::create($data);
                 $alertSaved = $alert->save();
 
-
-                // $mailBudget = new \stdClass();
-                // $mailBudget->usuario = Auth::user()->name." ".Auth::user()->surname;
-                // $mailBudget->usuarioMail = Auth::user()->email;
-                // $mailBudget->from = $holidayPetition->from;
-                // $mailBudget->to = $holidayPetition->to;
-
-
-                // $allHolidays = Holidays::all();
-                // $mailBudget->usuarios = $allHolidays;
-
-                // Mail::to("ivan@lchawkins.com")
-                // ->cc(Auth::user()->email)
-                // ->send(new MailHoliday($mailBudget));
-
                 $empleado = User::where("id", $holidayPetition->admin_user_id)->first();
 
                 $this->sendEmail($empleado);

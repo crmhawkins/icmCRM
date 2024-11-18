@@ -3,7 +3,6 @@
 namespace App\Models\Other;
 
 use Illuminate\Database\Eloquent\Model;
-use Hawkins\Contracts\Acl\AclGroup;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -24,7 +23,7 @@ class Priority extends Model
 
      /**
      * PRIORIDAD: Baja
-     * 
+     *
      * @var int
      */
     const PRIORITY_LOW = "Baja";

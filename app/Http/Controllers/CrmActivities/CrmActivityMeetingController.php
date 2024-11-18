@@ -118,7 +118,7 @@ class CrmActivityMeetingController extends Controller
         // Preparar y enviar la notificación por correo electrónico
         $mailNotif = new \stdClass();
         $mailNotif->title = "Tienes un comentario de " . $comment->adminUser->name . " en el acta " . $meeting->subject;
-        $mailNotif->subject = "[CRMHAWKINS] Tienes un nuevo comentario en un acta";
+        $mailNotif->subject = "Tienes un nuevo comentario en un acta";
         $mailNotif->description = "El comentario: " . $comment->description;
         $email = new MailNotification($mailNotif);
 
@@ -378,7 +378,7 @@ class CrmActivityMeetingController extends Controller
 
             $mailNotif = new \stdClass();
             $mailNotif->title = "Tienes una nueva acta de reunion";
-            $mailNotif->subject = "[CRMHAWKINS]Tienes una nueva acta de reunion";
+            $mailNotif->subject = "Tienes una nueva acta de reunion";
             $mailNotif->description = $meeting->description;
 
             $email = new MailNotification($mailNotif);
@@ -521,7 +521,7 @@ class CrmActivityMeetingController extends Controller
                     "content" => [
                         [
                             "type" => "text",
-                            "text" => "Analiza esta transcripción de una reunión del equipo Hawkins, que puede involucrar tanto a miembros internos como a clientes. Elabora un resumen conciso que destaque únicamente los temas discutidos y los puntos clave mencionados durante la reunión. Asegúrate de excluir cualquier información confidencial, sensible o relacionada con temas ilegales. El resumen debe ser claro, preciso y enfocado únicamente en los aspectos relevantes de la conversación."
+                            "text" => "Analiza esta transcripción de una reunión del equipo , que puede involucrar tanto a miembros internos como a clientes. Elabora un resumen conciso que destaque únicamente los temas discutidos y los puntos clave mencionados durante la reunión. Asegúrate de excluir cualquier información confidencial, sensible o relacionada con temas ilegales. El resumen debe ser claro, preciso y enfocado únicamente en los aspectos relevantes de la conversación."
                         ],
                         [
                             "type" => "text",

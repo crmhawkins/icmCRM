@@ -109,7 +109,8 @@
                                 <div class="card2">
                                     <div class="mb-3 card-body">
                                         <h5 class="card-title fw-bold">Producción</h5>
-                                        <a href="{{route('presupuestos.status')}}" class="btn btn-outline-secondary mb-2">Ver Status Proyectos</a>
+                                                                                {{-- <a href="{{route('presupuestos.status')}}" class="btn btn-outline-secondary mb-2">Ver Status Proyectos</a> --}}
+
                                         <a href="{{route('tareas.index')}}" class="btn btn-outline-secondary mb-2">Ver Tareas</a>
                                     </div>
                                 </div>
@@ -122,9 +123,9 @@
                                         <a href="{{route('reunion.index')}}" class="btn btn-outline-secondary mb-2">Ver Actas de reunion</a>
                                         <a href="{{route('clientes.index')}}" class="btn btn-outline-secondary mb-2">Ver Clientes</a>
                                         <a href="{{route('proveedores.index')}}" class="btn btn-outline-secondary mb-2">Ver Proveedores</a>
-                                        <a href="{{route('kitDigital.create')}}"  class="btn btn-outline-secondary mb-2">Tramitar Subvención</a>
+                                        {{-- <a href="{{route('kitDigital.create')}}"  class="btn btn-outline-secondary mb-2">Tramitar Subvención</a>
                                         <a target="_blank" href="{{route('kitDigital.index')}}" class="btn btn-outline-secondary mb-2">Kit Digital</a>
-                                        <a target="_blank" href="{{route('kitDigital.indexWhatsapp')}}" class="btn btn-outline-secondary mb-2">Kit Digital Whatsapp</a>
+                                        <a target="_blank" href="{{route('kitDigital.indexWhatsapp')}}" class="btn btn-outline-secondary mb-2">Kit Digital Whatsapp</a> --}}
                                     </div>
                                 </div>
                             </div>
@@ -137,7 +138,7 @@
                             <div class="card-body">
                                 <div class="d-flex flex-wrap">
                                     <div class="col-12 d-flex justify-content-center mb-4 align-items-center">
-                                        <div class="mx-4 text-center">
+                                        <div class="mx-6 text-center">
                                             <h5 class="my-3">{{$user->name}}&nbsp;{{$user->surname}}</h5>
                                             <p class="text-muted mb-1">{{$user->departamento->name}}</p>
                                             <p class="text-muted mb-4">{{$user->acceso->name}}</p>
@@ -146,25 +147,25 @@
                                                 <label for="color" class="form-label m-2">Color</label>
                                             </div>
                                         </div>
-                                        <div class="mx-4">
+                                        <div class="mx-6">
                                             @if ($user->image == null)
                                                 <img alt="avatar" class="rounded-circle img-fluid  m-auto" style="width: 150px;" src="{{asset('assets/images/guest.webp')}}" />
                                             @else
                                                 <img alt="avatar" class="rounded-circle img-fluid  m-auto" style="width: 150px;" src="{{ asset('/storage/avatars/'.$user->image) }}" />
                                             @endif
                                         </div>
-                                        <div class="mx-4 text-center">
+                                        {{-- <div class="mx-4 text-center">
                                             <h1 class="fs-5 ">Productividad</h1>
                                             <div class="progress-circle" data-percentage="70">
                                             </div>
-                                        </div>
-                                        <div class="mx-4 text-center">
+                                        </div> --}}
+                                        {{-- <div class="mx-4 text-center">
                                             <div class="card" style="border: 1px solid {{ $user->bono > 0 ? 'green' : 'gray' }}; padding: 10px;">
                                                 <h5 class="m-0" style="color: {{ $user->bono > 0 ? 'green' : 'gray' }};">
                                                     {{ $user->bono > 0 ? 'Bono: ' . $user->bono.' €' : 'Sin bono' }}
                                                 </h5>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                     <div class="col-12 d-flex flex-wrap justify-content-center">
                                         <div class="my-2 text-center">
@@ -348,8 +349,8 @@
                                     </div>
                                 </div>
                                 <div class=" d-flex justify-content-center">
-                                    <button class="btn btn-primary mx-2">Enviar Archivos</button>
-                                    <button class="btn btn-secondary mx-2">Correo</button>
+                                    {{-- <button class="btn btn-primary mx-2">Enviar Archivos</button>
+                                    <button class="btn btn-secondary mx-2">Correo</button> --}}
                                     <button class="btn btn-primary mx-2" onclick="showLlamadaModal()">Iniciar LLamada</button>
                                 </div>
                             </div>
@@ -886,130 +887,6 @@
             calendar.render();
         });
 
-</script>
-<script>
-    //     document.addEventListener('DOMContentLoaded', function() {
-    //         const clientSelect = document.getElementById('client_id');
-    //         const budgetSelect = document.getElementById('budget_id');
-    //         const projectSelect = document.getElementById('project_id');
-
-    //         // Función para actualizar presupuestos basados en el cliente seleccionado
-    //         function updateBudgets(clientId) {
-    //             fetch('/budgets-by-client', {
-    //                 method: 'POST',
-    //                 headers: {
-    //                     'Content-Type': 'application/json',
-    //                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-    //                 },
-    //                 body: JSON.stringify({ client_id: clientId })
-    //             })
-    //             .then(response => response.json())
-    //             .then(budgets => {
-    //                 budgetSelect.innerHTML = '<option value="">Seleccione presupuesto</option>';
-    //                 budgets.forEach(budget => {
-    //                     budgetSelect.innerHTML += `<option value="${budget.id}">${budget.reference}</option>`;
-    //                 });
-    //                 budgetSelect.disabled = false;
-    //             });
-    //         }
-    //         // Función para actualizar presupuestos basados en el cliente seleccionado
-    //         function updateBudgetsbyprojects(projectId) {
-    //             fetch('/budgets-by-project', {
-    //                 method: 'POST',
-    //                 headers: {
-    //                     'Content-Type': 'application/json',
-    //                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-    //                 },
-    //                 body: JSON.stringify({ project_id: projectId })
-    //             })
-    //             .then(response => response.json())
-    //             .then(budgets => {
-    //                 budgetSelect.innerHTML = '<option value="">Seleccione presupuesto</option>';
-    //                 budgets.forEach(budget => {
-    //                     budgetSelect.innerHTML += `<option value="${budget.id}">${budget.reference}</option>`;
-    //                 });
-    //                 budgetSelect.disabled = false;
-    //             });
-    //         }
-
-    //         // Función para actualizar campañas basadas en el cliente seleccionado
-    //         function updateProjects(clientId) {
-    //             fetch('/projects-from-client', {
-    //                 method: 'POST',
-    //                 headers: {
-    //                     'Content-Type': 'application/json',
-    //                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-    //                 },
-    //                 body: JSON.stringify({ client_id: clientId })
-    //             })
-    //             .then(response => response.json())
-    //             .then(projects => {
-    //                 projectSelect.innerHTML = '<option value="">Seleccione campaña</option>';
-    //                 projects.forEach(project => {
-    //                     projectSelect.innerHTML += `<option value="${project.id}">${project.name}</option>`;
-    //                 });
-    //                 projectSelect.disabled = false;
-    //             });
-    //         }
-
-    //         // Cuando se selecciona un cliente, actualiza presupuestos y campañas
-    //         clientSelect.addEventListener('change', function() {
-    //             const clientId = this.value;
-    //             if (clientId) {
-    //                 updateBudgets(clientId);
-    //                 updateProjects(clientId);
-    //             } else {
-    //                 budgetSelect.innerHTML = '<option value="">Seleccione presupuesto</option>';
-    //                 projectSelect.innerHTML = '<option value="">Seleccione campaña</option>';
-    //                 budgetSelect.disabled = true;
-    //                 projectSelect.disabled = true;
-    //             }
-    //         });
-
-    //         // Cuando se selecciona un presupuesto, actualiza el cliente y la campaña
-    //         budgetSelect.addEventListener('change', function() {
-    //             const budgetId = this.value;
-    //             if (budgetId) {
-    //                 fetch('/budget-by-id', {
-    //                     method: 'POST',
-    //                     headers: {
-    //                         'Content-Type': 'application/json',
-    //                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-    //                     },
-    //                     body: JSON.stringify({ budget_id: budgetId })
-    //                 })
-    //                 .then(response => response.json())
-    //                 .then(budget => {
-    //                     clientSelect.value = budget.client_id;
-    //                     //updateProjects(budget.client_id);
-    //                     projectSelect.value = budget.project_id;
-    //                     //console.log(budget.project_id;);
-
-    //                 });
-    //             }
-    //         });
-
-    //         // Cuando se selecciona una campaña, actualiza el cliente y el presupuesto
-    //         projectSelect.addEventListener('change', function() {
-    //             const projectId = this.value;
-    //             if (projectId) {
-    //                 fetch('/project-by-id', {
-    //                     method: 'POST',
-    //                     headers: {
-    //                         'Content-Type': 'application/json',
-    //                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-    //                     },
-    //                     body: JSON.stringify({ project_id: projectId })
-    //                 })
-    //                 .then(response => response.json())
-    //                 .then(project => {
-    //                     clientSelect.value = project.client_id;
-    //                     updateBudgetsbyprojects(project.id);
-    //                     budgetSelect.value = ''; // O puedes poner una lógica para seleccionar un presupuesto por defecto
-    //                 });
-    //             }
-    //         });
-    //     });
 </script>
 <script>
     function showTodoModal() {

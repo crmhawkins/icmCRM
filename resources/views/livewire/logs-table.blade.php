@@ -37,15 +37,6 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="mr-3">
-                    <label for="">Tipo</label>
-                    <select wire:model="tipo" name="" id="" class="form-select ">
-                        <option value="">-- Seleccione un Tipo --</option>
-                         @foreach ($tipos as $tip)
-                            <option value="{{$tip->id}}">{{$tip->name}}</option>
-                        @endforeach
-                    </select>
-                </div>
             </div>
         </div>
     </div>
@@ -56,7 +47,6 @@
                     <tr>
                         @foreach ([
                             'usuario' => 'USUARIO',
-                            'ayudas.cliente' => 'CLIENTE',
                             'action' => 'ACCION',
                             'description' => 'DESCRIPCION',
                             'reference_id' => 'REFERENCIA',
@@ -77,7 +67,6 @@
                     @foreach ( $logs as $log )
                         <tr>
                             <td>{{$log->usuario}}</td>
-                            <td>{{$log->ayudas->cliente}}</td>
                             <td>{{$log->action}}</td>
                             <td>{{$log->description}}</td>
                             <td>{{$log->reference_id}}</td>

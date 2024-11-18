@@ -62,7 +62,7 @@ class CuentasContableController extends Controller
 
 
                 ->addColumn('action', function ($CuentasContable) {
-                    return '<a href="/admin/cuentas-contables/'.$CuentasContable->id.'/edit" class="btn btn-xs btn-primary"><i class="fas fa-pencil-alt"></i> Editar</a>';
+                    return '<a href="/cuentas-contables/'.$CuentasContable->id.'/edit" class="btn btn-xs btn-primary"><i class="fas fa-pencil-alt"></i> Editar</a>';
                 })
                 // ->addColumn('delete', function ($CuentasContable) {
                 //     $url = route('cuentasContables.destroy', [ 'id'=> $CuentasContable->id]);

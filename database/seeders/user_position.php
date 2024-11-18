@@ -19,7 +19,7 @@ class user_position extends Seeder
             ['name' => 'Ejecutivo de cuentas'],
             ['name' => 'Gestor - Contable'],
             ['name' => 'Empleado'],
-            ['name' => 'Asesor Hawkins'],
+            ['name' => 'Asesor'],
         ];
 
         foreach ($positions as $position) {

@@ -1,16 +1,17 @@
 <?php
- 
+
 namespace App\Mail;
- 
+
+use App\Models\Company\CompanyDetails;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
- 
+
 class MailInvoice extends Mailable
 {
     use Queueable, SerializesModels;
-     
+
     /**
      * The demo object instance.
      *
@@ -18,7 +19,7 @@ class MailInvoice extends Mailable
      */
     public $filename;
     public $mailInvoice;
- 
+    public $empresa;
     /**
      * Create a new message instance.
      *
@@ -28,8 +29,9 @@ class MailInvoice extends Mailable
     {
         $this->mailInvoice = $mailInvoice;
         $this->filename = $filename;
+        $this->empresa = CompanyDetails::get()->first();
     }
- 
+
     /**
      * Build the message.
      *
@@ -37,8 +39,9 @@ class MailInvoice extends Mailable
      */
     public function build()
     {
-        $mail = $this->from("info@crmhawkins.com")
-        ->subject("Factura - Los Creativos de Hawkins")
+        $email = $this->empresa->email;
+        $mail = $this->from($email)
+        ->subject("Factura - ".$this->empresa->company_name)
         ->view('mails.mailInvoice')
         ->attach($this->filename);
 

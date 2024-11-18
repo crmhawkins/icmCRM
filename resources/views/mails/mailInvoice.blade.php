@@ -104,7 +104,7 @@
 </head>
 <body style="background-color: #f4f4f4; margin: 0 !important; padding: 0 !important;">
     <!-- HIDDEN PREHEADER TEXT -->
-    <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: 'Lato', Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;"> Correo electronico enviado desde el CRM & ERP de Los Creativos de Hawkins </div>
+    <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: 'Lato', Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;"> Correo electronico enviado desde el CRM & ERP de {{$empresa->company_name}} </div>
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
         <!-- LOGO -->
         <tr>
@@ -121,7 +121,7 @@
                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 700px;">
                     <tr>
                         <td bgcolor="#ffffff" align="center" valign="top" style="border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
-                            <img src="https://crm.hawkins.es/assets/images/logo/logo.png" width="300" height="100" alt="logo" style="display: block; border: 0px;" />
+                            <img src="{{asset('assets/images/logo/logo.png')}}" width="300" height="100" alt="logo" style="display: block; border: 0px;" />
                         </td>
                     </tr>
                     <tr>
@@ -142,17 +142,17 @@
                                 <p>Adjunto remito factura que corresponde al presupuesto aceptado.
                                 El cargo de dicha factura se pasará por remesa bancaria, como venimos haciendo.</p>
                                 <p>Ruego me confirme que lo ha recibido correctamente y adjunte justificante o indique previsión de su abono, no dudes en contactar con nosotros al 956662942</p>
-                                <p>Gracias por confiar en Hawkins, un saludo</p>
+                                <p>Gracias por confiar en {{$empresa->company_name}}, un saludo</p>
                            @elseif($mailInvoice->paymentMethodId == 9)
                                 <p>Estimado cliente.</p>
                                 <p>Adjunto remito factura que corresponde al presupuesto aceptado.</p>
                                 <p>Ruego me confirme que lo ha recibido correctamente. Si tienes cualquier consulta, no dudes en contactar con nosotros al 956662942</p>
-                                <p>Gracias por confiar en Hawkins, un saludo</p>
+                                <p>Gracias por confiar en {{$empresa->company_name}}, un saludo</p>
                            @else
                                 <p>Estimado cliente.</p>
                                 <p>Adjunto remito factura que corresponde al presupuesto aceptado.</p>
                                 <p>Ruego me confirme que lo ha recibido correctamente. Si tienes cualquier consulta, no dudes en contactar con nosotros al 956662942</p>
-                                <p>Gracias por confiar en Hawkins, un saludo</p>
+                                <p>Gracias por confiar en {{$empresa->company_name}}, un saludo</p>
                            @endif
                         </td>
                     </tr>

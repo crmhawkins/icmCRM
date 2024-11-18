@@ -148,25 +148,12 @@
             <table width="100%;margin-bottom:5px">
                 <tr>
                     <td align="left" style="width: 50%;">
-                        @if ($budget->is_ceuta)
-                            THWORK 3000 SL B72284631 - Calle Delgado Serrano Nº1, 3ºD, 1ªOficina (Ceuta 51001)
-                        @else
-                            @if( Carbon\Carbon::parse($budget->created_at) >= Carbon\Carbon::parse("2021/02/01"))
-                                THWORK 3000 SL B72284631 C/General Primo de Rivera s/N  CP 11201 Algeciras (Cádiz)
-                            @else
-                                IPOINT COMUNICACION MASIVA SL.CIF: B 72139868 - Urb. Parque del Oeste nº5 11205 Algeciras (Cádiz)
-                            @endif
-                        @endif
+                        {{$empresa->company_name . ' '. $empresa->nif . ' - '.$empresa->address . ' '.$empresa->postCode. ' '. $empresa->town. ' ('.$empresa->province.')' }}
                     </td>
                 </tr>
                 <tr>
                     <td align="left" style="width: 50%;">
-                        @if( Carbon\Carbon::parse($budget->created_at) >= Carbon\Carbon::parse("2021/02/01"))
-                            {{-- BBVA: ES90 0182 3232 2802 0161 2178 --}}
-                            BANKINTER: ES84 0128 0733 2001 0007 1396
-                        @else
-                            Santander: ES81 0049 1672 4225 10049483
-                        @endif
+                        {{'Cuenta: '.$empresa->bank_account_data }}
                         </td>
                     </tr>
             </table>
@@ -268,7 +255,7 @@
                             <h3 style="margin-bottom: 0px;">Condiciones Generales</h3>
                                     <p style="font-size:7px;">
                                         Estas condiciones regulan la relación entre las dos partes del presente contrato.
-                                        Hawkins (THWORK3000,s.l.) y el cliente, cuyos datos están en  la pagina 1 del presente contrato.
+                                        {{$empresa->company_name}} y el cliente, cuyos datos están en  la pagina 1 del presente contrato.
                                     </p>
                                     <h4 style="margin-bottom: 0px;">ACEPTACION GENERAL</h4>
                                     <p style="font-size:7px;">
@@ -276,12 +263,12 @@
                                     </p>
                                     <h4 style="margin-bottom: 0px;">INTRODUCCION</h4>
                                     <p style="font-size:7px;">
-                                        Estos Términos y Condiciones de Compra Estándar (STCP, por sus siglas en inglés) se aplicarán a todas las compras de bienes y servicios realizados a todas las empresas bajo la marca HAWKINS, cuyo domicilio social se encuentre en España y prevalecerán sobre cualquier término y condición de venta, a menos que se acuerde lo contrario entre las partes.
+                                        Estos Términos y Condiciones de Compra Estándar (STCP, por sus siglas en inglés) se aplicarán a todas las compras de bienes y servicios realizados a todas las empresas bajo la marca {{$empresa->company_name}}, cuyo domicilio social se encuentre en España y prevalecerán sobre cualquier término y condición de venta, a menos que se acuerde lo contrario entre las partes.
                                     </p>
                                     <h4 style="margin-bottom: 0px;">PRECIO</h4>
                                     <p style="font-size:7px;">
                                         El precio pactado queda recogido en el presente contrato, el cual una vez aceptado, se mantendrá invariable y no podrá ser modificado en ningún caso. Se mantendrá inamovible incluso si no existe conformidad por parte del cliente en la recepción del trabajo. Que podrá hacer uso de las reclamaciones disponibles en el apartado de Garantía.
-                                        Hawkins, es el propietario único y legitimo del producto y/o servicio ofrecido en este contrato hasta el abono total del importe.
+                                        {{$empresa->company_name}}, es el propietario único y legitimo del producto y/o servicio ofrecido en este contrato hasta el abono total del importe.
                                      </p>
                                     <h4 style="margin-bottom: 0px;">PLAZO DE EJECUCION</h4>
                                     <p style="font-size:7px;">
@@ -291,21 +278,21 @@
                                     </p>
                                     <h4 style="margin-bottom: 0px;">GARANTIA GENERAL</h4>
                                     <p style="font-size:7px;">
-                                        Todos los servicios de Hawkins ofrecen la garantía exigida por la legislación vigente en España.
-                                        Para defectos de fabricación. Hawkins podrá ofrecer un descuento a su criterio o bien ofrecerá la retirada total del producto y la reposición de este, sin que ello conlleve una reducción del precio de venta.
-                                        Hawkins no es responsable del uso indebido de las aplicaciones, grafismos, modelos y o cualquier otro servicio ofrecido.
-                                        De igual forma no es responsable del robo de datos, hackeos, infecciones de virus y/o cualquier uso delictivo que se realice sobre cualquier desarrollo o servicio realizado por Hawkins. Siendo el cliente el responsable de su propio producto, el cual deberá proteger y actualizar para cumplir con las normativas de uso privadas y públicas.
+                                        Todos los servicios de {{$empresa->company_name}} ofrecen la garantía exigida por la legislación vigente en España.
+                                        Para defectos de fabricación. {{$empresa->company_name}} podrá ofrecer un descuento a su criterio o bien ofrecerá la retirada total del producto y la reposición de este, sin que ello conlleve una reducción del precio de venta.
+                                        {{$empresa->company_name}} no es responsable del uso indebido de las aplicaciones, grafismos, modelos y o cualquier otro servicio ofrecido.
+                                        De igual forma no es responsable del robo de datos, hackeos, infecciones de virus y/o cualquier uso delictivo que se realice sobre cualquier desarrollo o servicio realizado por {{$empresa->company_name}}. Siendo el cliente el responsable de su propio producto, el cual deberá proteger y actualizar para cumplir con las normativas de uso privadas y públicas.
                                     </p>
                                     <h4 style="margin-bottom: 0px;">GARANTIA Y PROCEDIMIENTO DEL DEPARTAMENTO DE DISEÑO</h4>
                                     <p style="font-size:7px;">
-                                       El procedimiento a seguir en el departamento de creatividad grafica parte de la reunión inicial donde el cliente facilita a Hawkins la idea o briefing sobre el que iniciar el trabajo.
-                                        Hawkins, independientemente del tipo de trabajo de diseño gráfico, realizará las modificaciones necesarias satisfacer las preferencias del cliente. Si estas modificaciones superan las 3 revisiones, Hawkins podrá unilateralmente rescindir el contrato sin cobro alguno en la partida de diseño.
+                                       El procedimiento a seguir en el departamento de creatividad grafica parte de la reunión inicial donde el cliente facilita a {{$empresa->company_name}} la idea o briefing sobre el que iniciar el trabajo.
+                                        {{$empresa->company_name}}, independientemente del tipo de trabajo de diseño gráfico, realizará las modificaciones necesarias satisfacer las preferencias del cliente. Si estas modificaciones superan las 3 revisiones, {{$empresa->company_name}} podrá unilateralmente rescindir el contrato sin cobro alguno en la partida de diseño.
                                     </p>
                                     <p style="font-size:7px;">
                                         En la elaboración de artes finales o “archivo final que se envía a impresión” El cliente debe hacer una revisión exhaustiva de que todo está a su gusto, sin faltas tipográficas, bailes de números y/o cualquier otro elemento que considere que no debe estar.
                                         El cliente es el único responsable si una vez impreso el diseño, este tiene elementos erróneos o que no son del agrado del cliente.
-                                        Todos los trabajos de impresión de Hawkins están firmados salvo que el cliente exprese por escrito lo contrario.
-                                        Si el cliente decide no terminar el diseño por los motivos que fuere, no podrá solicitar la devolución total ni parcial de las cantidades abonadas y quedará a criterio de Hawkins la reclamación de las cantidades.
+                                        Todos los trabajos de impresión de {{$empresa->company_name}} están firmados salvo que el cliente exprese por escrito lo contrario.
+                                        Si el cliente decide no terminar el diseño por los motivos que fuere, no podrá solicitar la devolución total ni parcial de las cantidades abonadas y quedará a criterio de {{$empresa->company_name}} la reclamación de las cantidades.
 
                                     </p>
                                 </div>
@@ -315,7 +302,7 @@
                                         El procedimiento del departamento de desarrollo se basa en los principios de briefing inicial- mapa de desarrollo – desarrollo. Por lo que el cliente podrá realizar los cambios que estime oportuno mientras el software esté en su etapa inicial de “Boceto” o “diseño de apariencia”
                                         Todas las modificaciones a realizar una vez el software esté en desarrollo, deberán presupuestarse independientemente.
                                         Las aplicaciones web, app y desktop incluyen todo lo que esté descrito en el presente presupuesto y/o anexos firmados. El resto de los elementos deberá presupuestarse independientemente.
-                                        Si el cliente decide no terminar la aplicación por los motivos que fuere, no podrá solicitar la devolución total ni parcial de las cantidades abonadas y quedará a criterio de Hawkins la reclamación de las cantidades restantes.
+                                        Si el cliente decide no terminar la aplicación por los motivos que fuere, no podrá solicitar la devolución total ni parcial de las cantidades abonadas y quedará a criterio de {{$empresa->company_name}} la reclamación de las cantidades restantes.
                                     </p>
                                     <h4>GARANTIA Y PROCEDIMIENTO DEL DEPARTAMENTO DE 3D 4D y METAVERSO</h4>
                                     <p style="font-size:7px;">
@@ -324,29 +311,29 @@
                                         El cliente recibirá imágenes en resolución 4K mediante fichero nube.
                                         El metaverso no incluye el servidor host salvo que el presupuesto indique lo contrario.
 
-                                        Si el cliente decide no terminar la aplicación por los motivos que fuere, no podrá solicitar la devolución total ni parcial de las cantidades abonadas y quedará a criterio de Hawkins la reclamación de las cantidades restantes.
+                                        Si el cliente decide no terminar la aplicación por los motivos que fuere, no podrá solicitar la devolución total ni parcial de las cantidades abonadas y quedará a criterio de {{$empresa->company_name}} la reclamación de las cantidades restantes.
 
                                     </p>
                                     <h4>GARANTIA Y PROCEDIMIENTO DEL DEPARTAMENTO RRSS</h4>
                                     <p style="font-size:7px;">
-                                        Hawkins ofrecerá al cliente mediante comunicación mensual un plan detallado de publicaciones, el cual será aceptado.
+                                        {{$empresa->company_name}} ofrecerá al cliente mediante comunicación mensual un plan detallado de publicaciones, el cual será aceptado.
                                     El cliente es el único responsable si el plan autorizado por el mismo genera algún perjuicio a terceros.
-                                    Hawkins podrá negarse a la publicación de contenido que considere inapropiado incluso aunque la iguala del contrato esté vigente.
+                                    {{$empresa->company_name}} podrá negarse a la publicación de contenido que considere inapropiado incluso aunque la iguala del contrato esté vigente.
                                      </p>
                                      <p style="font-size:7px;">
                                     Las cantidades abonadas mediante iguala (fee) no serán devueltas en ninguna circunstancia, siendo el cliente la parte responsable del ritmo y calidad de las publicaciones.
-                                    Hawkins a su vez se compromete a mantener una comunicación fluida donde se muestre con la periodicidad contratada los planes y estrategias de comunicación en redes sociales.
+                                    {{$empresa->company_name}} a su vez se compromete a mantener una comunicación fluida donde se muestre con la periodicidad contratada los planes y estrategias de comunicación en redes sociales.
                                      </p>
                                     <h4>CONFIDENCIALIDAD</h4>
                                     <p style="font-size:7px;">
-                                        No se considerará información privilegiada o confidencial ningún conocimiento o dato, relacionado con los Materiales o los Servicios abarcados en las OC, que el comprador haya revelado a Hawkins. , a no ser que Hawkins   acceda a ello de manera expresa y por escrito.
+                                        No se considerará información privilegiada o confidencial ningún conocimiento o dato, relacionado con los Materiales o los Servicios abarcados en las OC, que el comprador haya revelado a {{$empresa->company_name}}. , a no ser que {{$empresa->company_name}}   acceda a ello de manera expresa y por escrito.
                                     </p>
                                     <h4>GARANTIA GENERAL</h4>
                                     <p style="font-size:7px;">
-                                        Todos los servicios de Hawkins ofrecen la garantía exigida por la legislación vigente en España.
-                                        Para defectos de fabricación. Hawkins podrá ofrecer un descuento a su criterio o bien ofrecerá la retirada total del producto y la reposición de este, sin que ello conlleve una reducción del precio de venta.
-                                        Hawkins no es responsable del uso indebido de las aplicaciones, grafismos, modelos y o cualquier otro servicio ofrecido.
-                                        De igual forma no es responsable del robo de datos, hackeos, infecciones de virus y/o cualquier uso delictivo que se realice sobre cualquier desarrollo o servicio realizado por Hawkins. Siendo el cliente el responsable de su propio producto, el cual deberá proteger y actualizar para cumplir con las normativas de uso privadas y públicas.
+                                        Todos los servicios de {{$empresa->company_name}} ofrecen la garantía exigida por la legislación vigente en España.
+                                        Para defectos de fabricación. {{$empresa->company_name}} podrá ofrecer un descuento a su criterio o bien ofrecerá la retirada total del producto y la reposición de este, sin que ello conlleve una reducción del precio de venta.
+                                        {{$empresa->company_name}} no es responsable del uso indebido de las aplicaciones, grafismos, modelos y o cualquier otro servicio ofrecido.
+                                        De igual forma no es responsable del robo de datos, hackeos, infecciones de virus y/o cualquier uso delictivo que se realice sobre cualquier desarrollo o servicio realizado por {{$empresa->company_name}}. Siendo el cliente el responsable de su propio producto, el cual deberá proteger y actualizar para cumplir con las normativas de uso privadas y públicas.
                                     </p>
                                     <h4>INTEGRIDAD DEL ACUERDO, MODIFICACIONES.</h4>
                                     <p style="font-size:7px;">

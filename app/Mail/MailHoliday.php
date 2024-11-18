@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Company\CompanyDetails;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -18,6 +19,7 @@ class MailHoliday extends Mailable
      */
     public $estado;
     public $empleado;
+    public $empresa;
 
     /**
      * Create a new message instance.
@@ -28,6 +30,7 @@ class MailHoliday extends Mailable
     {
         $this->estado = $estado;
         $this->empleado = $empleado;
+        $this->empresa = CompanyDetails::get()->first();
     }
 
     /**
@@ -37,8 +40,9 @@ class MailHoliday extends Mailable
      */
     public function build()
     {
-        $mail = $this->from('holidays@crmhawkins.com')
-        ->subject("Vacaciones - Los Creativos de Hawkins")
+        $email = $this->empresa->email;
+        $mail = $this->from($email)
+        ->subject("Vacaciones - ".$this->empresa->company_name)
         ->view('mails.mailHoliday');
 
         return $mail;

@@ -11,6 +11,7 @@ use App\Models\Holidays\HolidaysPetitions;
 use Carbon\Carbon;
 use App\Mail\MailHoliday;
 use App\Models\Alerts\Alert;
+use App\Models\Company\CompanyDetails;
 use App\Models\Logs\LogsEmail;
 use Illuminate\Support\Facades\Mail;
 
@@ -363,16 +364,15 @@ class HolidayController extends Controller
 
        // Función para enviar email, se solicita los datos a enviar y el usuario, luego serán mostrados en mailHoliday.blade.php
     public function sendEmail($empleado){
-
-        $mail = "ivan@lchawkins.com";
+        $empresa = CompanyDetails::get()->first();
+        $mail = $empresa->email;
         // $mailsCC[] = "";
-        $mailsCC[] = "elena@lchawkins.com";
 
         // Si el estado es 1, es solicitud de vacaciones, el 2 es aceptada, el 3 es rechazada
         $estado = 1;
         $email = new MailHoliday($estado, $empleado);
 
-        Mail::to($mail)->cc($mailsCC)->send($email);
+        Mail::to($mail)->send($email);
          //Mail::to($mail)->send($email);
 
         return 200;

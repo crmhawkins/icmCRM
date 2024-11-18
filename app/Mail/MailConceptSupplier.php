@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Company\CompanyDetails;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -18,6 +19,7 @@ class MailConceptSupplier extends Mailable
      */
     public $MailConceptSupplier;
     public $atta;
+    public $empresa;
 
     /**
      * Create a new message instance.
@@ -28,6 +30,7 @@ class MailConceptSupplier extends Mailable
     {
         $this->MailConceptSupplier = $MailConceptSupplier;
         $this->atta = $atta;
+        $this->empresa = CompanyDetails::get()->first();
     }
 
     /**
@@ -37,8 +40,9 @@ class MailConceptSupplier extends Mailable
      */
     public function build()
     {
+
         $mail = $this->from($this->MailConceptSupplier->gestorMail)
-        ->subject("Orden de Compra - Los Creativos de Hawkins")
+        ->subject("Orden de Compra - ".$this->empresa->company_name)
         ->view('mails.mailConceptSupplier');
 
         foreach($this->atta as $filePath){

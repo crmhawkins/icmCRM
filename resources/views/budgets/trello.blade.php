@@ -73,7 +73,7 @@
                 color: #4f5b66;
                 padding: 0.5rem 0.8rem;
             }
-            .fixed-top-nav #page_cont .contenedorGral .contenedorLogo .claseInicio {   /* enlace <a> a:"CRM Hawkins"*/
+            .fixed-top-nav #page_cont .contenedorGral .contenedorLogo .claseInicio {   /* enlace <a> a:"CRM "*/
                 color: #fff;
                 font-weight: 400;
                 text-decoration: none;
@@ -167,9 +167,9 @@
 
 <div class=contenedorGral>  <!--contenedor general de formulario-->
     <div class=contenedorLogo> <!--contenedor botón inicio-->
-        <a class="claseInicio" href="https://crmhawkins.com/admin/dashboard">  <!--botón inicio-->
+        <a class="claseInicio" href="/dashboard">  <!--botón inicio-->
             <i class="fab fa-trello"></i>
-            CRM Hawkins
+            CRM
         </a>
     </div>
     <div class=contenedorInput> <!--contenedor formulario--->

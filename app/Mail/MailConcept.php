@@ -1,16 +1,17 @@
 <?php
- 
+
 namespace App\Mail;
- 
+
+use App\Models\Company\CompanyDetails;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
- 
+
 class MailConcept extends Mailable
 {
     use Queueable, SerializesModels;
-     
+
     /**
      * The demo object instance.
      *
@@ -18,7 +19,8 @@ class MailConcept extends Mailable
      */
     public $MailConcept;
     public $atta;
- 
+    public $empresa;
+
     /**
      * Create a new message instance.
      *
@@ -28,8 +30,9 @@ class MailConcept extends Mailable
     {
         $this->MailConcept = $MailConcept;
         $this->atta = $atta;
+        $this->empresa = CompanyDetails::get()->first();
     }
- 
+
     /**
      * Build the message.
      *
@@ -37,8 +40,9 @@ class MailConcept extends Mailable
      */
     public function build()
     {
+
         $mail = $this->from($this->MailConcept->gestorMail)
-        ->subject("Solicitud de presupuesto - Los Creativos de Hawkins")
+        ->subject("Solicitud de presupuesto - ".$this->empresa->company_name)
         ->view('mails.mailConcept');
 
         foreach($this->atta as $filePath){

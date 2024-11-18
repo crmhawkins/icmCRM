@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Contabilidad;
 
+use App\Http\Controllers\Controller;
 use App\Models\Accounting\GrupoContable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -31,7 +32,7 @@ class GrupoContabilidadController extends Controller
         // Ejecuta la ordenación y paginación en la consulta.
         $response = $query->orderBy($sort, $order)->paginate($perPage);
 
-        return view('admin.contabilidad.grupoContabilidad.index', compact('response'));
+        return view('contabilidad.grupoContabilidad.index', compact('response'));
     }
 
 
@@ -40,7 +41,7 @@ class GrupoContabilidadController extends Controller
     {
         $response = 'Hola mundo';
 
-        return view('admin.contabilidad.grupoContabilidad.create', compact('response'));
+        return view('contabilidad.grupoContabilidad.create', compact('response'));
     }
 
 
@@ -48,7 +49,7 @@ class GrupoContabilidadController extends Controller
     {
         $response = GrupoContable::find($request->id);
 
-        return view('admin.contabilidad.grupoContabilidad.edit', compact('response'));
+        return view('contabilidad.grupoContabilidad.edit', compact('response'));
 
     }
 
@@ -68,7 +69,7 @@ class GrupoContabilidadController extends Controller
         $validatedData = $request->validate($rules);
         GrupoContable::create($request->all());
 
-        return redirect()->route('admin.ingresos.index')->with('status', 'El Grupo fue creado con éxito!');
+        return redirect()->route('ingresos.index')->with('status', 'El Grupo fue creado con éxito!');
 
     }
 
@@ -95,7 +96,7 @@ class GrupoContabilidadController extends Controller
 
             return response()->json([
                 'message' => 'Peticion guardada.',
-                'entryUrl' => route('admin.grupoContabilidad.index'),
+                'entryUrl' => route('grupoContabilidad.index'),
              ]);
 
         }
@@ -126,7 +127,7 @@ class GrupoContabilidadController extends Controller
 
         return response()->json([
             'message' => 'Grupo Borrado.',
-            'entryUrl' => route('admin.grupoContabilidad.index'),
+            'entryUrl' => route('grupoContabilidad.index'),
          ]);;
     }
 }

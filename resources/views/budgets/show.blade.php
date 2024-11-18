@@ -40,7 +40,7 @@
                                                 <div class="row">
                                                     <div class="col-sm-6 col-12 mr-auto">
                                                         <div class="d-flex">
-                                                            <img class="company-logo" src={{ asset('assets/images/logo/logo.png') }} alt="company" style="width: auto">
+                                                            <img class="company-logo" src="{{asset('assets/images/logo/logo.png')}}" alt="company" style="width: auto">
                                                         </div>
                                                         <p class="inv-street-addr mt-3">{{$empresa->address}}</p>
                                                         <p class="inv-email-address">{{$empresa->email}}</p>

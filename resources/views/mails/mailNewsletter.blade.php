@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
-    <title>Los Creativos de Hawkins - HORARIO DE VERANO</title>
+    <title>{{$empresa->company_name}} - HORARIO DE VERANO</title>
     <style>
         body {
             box-sizing: border-box;
@@ -99,12 +99,12 @@
     </style>
 </head>
 <body>
-    
+
 
     <div class="flex">
-    
+
     <div class="page">
-        <img class="logo" src="https://i.ibb.co/ydzjGTK/Recurso-1.png" alt="Los Creativos de Hawkins">
+        <img class="logo" src="{{ asset('assets/images/logo/logo.png') }}" alt="{{$empresa->company_name}}">
         <hr/>
         <div class="texto">
             <h2 style="color: #EA592C">
@@ -122,20 +122,20 @@
             <p>
                 <img src="https://i.ibb.co/L0kBRLw/Recurso-2.png" alt="">
             </p>
-            
+
         </div>
         <br>
         <br>
         <hr>
         <br>
         <br>
-        <p style="text-align: center;"><a href="">lchawkins.com</a></p>
+        <p style="text-align: center;"><a href="">{{$empresa->website}}</a></p>
         <br>
         <br>
         <img src="https://i.ibb.co/RBcTHbd/Recurso-3.png" alt="">
     </div>
     </div>
-    <img src='https://crmhawkins.com/checkEmail/{{$newsletter->id_newsletter}}' width='1' height='1' border='0' alt='' hidden>
+    <img src='{{url('checkEmail/'.$newsletter->id_newsletter)}}' width='1' height='1' border='0' alt='' hidden>
 
 </body>
 </html>

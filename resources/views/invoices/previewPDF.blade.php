@@ -192,25 +192,13 @@
             <table width="100%;margin-bottom:5px">
                 <tr>
                     <td align="left" style="width: 50%;">
-                        @if ($invoice->is_ceuta)
-                        THWORK 3000 SL B72284631 - Calle Delgado Serrano Nº1, 3ºD, 1ªOficina (Ceuta 51001)
-                        @else
-                        @if( Carbon\Carbon::parse($invoice->created_at) >= Carbon\Carbon::parse("2021/02/01"))
-                            THWORK 3000 SL B72284631 C/General Primo de Rivera s/N  CP 11201 Algeciras (Cádiz)
-                        @else
-                            IPOINT COMUNICACION MASIVA SL.CIF: B 72139868 - Urb. Parque del Oeste nº5 11205 Algeciras (Cádiz)
-                        @endif
-                        @endif
+                        {{$empresa->company_name . ' '. $empresa->nif . ' - '.$empresa->address . ' '.$empresa->postCode. ' '. $empresa->town. ' ('.$empresa->province.')' }}
+
                     </td>
                 </tr>
                 <tr>
                     <td align="left" style="width: 50%;">
-                        @if( Carbon\Carbon::parse($invoice->created_at) >= Carbon\Carbon::parse("2021/02/01"))
-                            BANKINTER: ES84 0128 0733 2001 0007 1396
-                        @else
-                            Santander: ES81 0049 1672 4225 10049483
-                        @endif
-                        </td>
+                        {{'Cuenta: '.$empresa->bank_account_data }}
                     </tr>
             </table>
         </footer>

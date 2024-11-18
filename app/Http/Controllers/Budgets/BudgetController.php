@@ -1716,6 +1716,7 @@ class BudgetController extends Controller
 
     public function createPdf($budget, $sumatorio){
      // Los conceptos de este presupuesto
+     $empresa = CompanyDetails::get()->first();
      $thisBudgetConcepts = BudgetConcept::where('budget_id', $budget->id)->get();
      // Condiciones de categoría de los servicios
      $conceptCategoriesID = array();
@@ -1788,7 +1789,7 @@ class BudgetController extends Controller
          $budgetConceptsFormated[$budgetConcept->id]['description'] = $arrayConceptStringsAndBreakLines;
      }
 
-     $pdf = PDF::loadView('budgets.previewPDF', compact('budget','data', 'budgetConceptsFormated','sumatorio'));
+     $pdf = PDF::loadView('budgets.previewPDF', compact('empresa','budget','data', 'budgetConceptsFormated','sumatorio'));
 
      return $pdf;
 
@@ -1866,7 +1867,7 @@ class BudgetController extends Controller
         }
 
         $mailBudget = new \stdClass();
-        $mailBudget->url = 'https://crm.hawkins.es/budget/cliente/'.$filename;
+        $mailBudget->url = url('/budget/cliente/'.$filename);
         $mailBudget->gestor = Auth::user()->name." ".Auth::user()->surname;
         $mailBudget->gestorMail = Auth::user()->email;
         $mailBudget->gestorTel = '956 662 942';
@@ -1875,9 +1876,9 @@ class BudgetController extends Controller
 
         $mailsCC = [];
         $mailsBCC = [];
-
-        $mailsBCC[] = "emma@lchawkins.com";
-        $mailsBCC[] = "ivan@lchawkins.com";
+        $empresa = CompanyDetails::get()->first();
+        $mail = $empresa->email;
+        $mailsBCC[] = $mail;
         $mailsBCC[] = $mailBudget->gestorMail;
         $mailsBCC[] = $budget->usuario->email ;
 
@@ -1927,7 +1928,8 @@ class BudgetController extends Controller
         $alert = Alert::create($alertNew);
         $alertSaved = $alert->save();
 
-        $mailEmisor = "budget@crmhawkins.com";
+        $empresa = CompanyDetails::get()->first();
+        $mailEmisor = $empresa->email;
 
         $logData = [
             'mailEmisor' => $mailEmisor,

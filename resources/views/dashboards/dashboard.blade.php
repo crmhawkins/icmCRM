@@ -109,7 +109,8 @@
                                 <div class="card2">
                                     <div class="mb-3 card-body">
                                         <h5 class="card-title fw-bold">Producción</h5>
-                                        <a href="{{route('presupuestos.status')}}" class="btn btn-outline-secondary mb-2">Ver Status Proyectos</a>
+                                                                                {{-- <a href="{{route('presupuestos.status')}}" class="btn btn-outline-secondary mb-2">Ver Status Proyectos</a> --}}
+
                                         <a href="{{route('tareas.index')}}" class="btn btn-outline-secondary mb-2">Ver Tareas</a>
                                     </div>
                                 </div>
@@ -122,9 +123,9 @@
                                         <a href="{{route('reunion.index')}}" class="btn btn-outline-secondary mb-2">Ver Actas de reunion</a>
                                         <a href="{{route('clientes.index')}}" class="btn btn-outline-secondary mb-2">Ver Clientes</a>
                                         <a href="{{route('proveedores.index')}}" class="btn btn-outline-secondary mb-2">Ver Proveedores</a>
-                                        <a href="{{route('kitDigital.create')}}"  class="btn btn-outline-secondary mb-2">Tramitar Subvención</a>
+                                        {{-- <a href="{{route('kitDigital.create')}}"  class="btn btn-outline-secondary mb-2">Tramitar Subvención</a>
                                         <a target="_blank" href="{{route('kitDigital.index')}}" class="btn btn-outline-secondary mb-2">Kit Digital</a>
-                                        <a target="_blank" href="{{route('kitDigital.indexWhatsapp')}}" class="btn btn-outline-secondary mb-2">Kit Digital Whatsapp</a>
+                                        <a target="_blank" href="{{route('kitDigital.indexWhatsapp')}}" class="btn btn-outline-secondary mb-2">Kit Digital Whatsapp</a> --}}
                                     </div>
                                 </div>
                             </div>
@@ -178,7 +179,7 @@
                             <div class="card-body">
                                 <div class="d-flex flex-wrap">
                                     <div class="col-12 d-flex justify-content-center mb-4 align-items-center">
-                                        <div class="mx-4 text-center">
+                                         <div class="mx-6 text-center">
                                             <h5 class="my-3">{{$user->name}}&nbsp;{{$user->surname}}</h5>
                                             <p class="text-muted mb-1">{{$user->departamento->name}}</p>
                                             <p class="text-muted mb-4">{{$user->acceso->name}}</p>
@@ -187,25 +188,25 @@
                                                 <label for="color" class="form-label m-2">Color</label>
                                             </div>
                                         </div>
-                                        <div class="mx-4">
+                                        <div class="mx-6">
                                             @if ($user->image == null)
                                                 <img alt="avatar" class="rounded-circle img-fluid  m-auto" style="width: 150px;" src="{{asset('assets/images/guest.webp')}}" />
                                             @else
                                                 <img alt="avatar" class="rounded-circle img-fluid  m-auto" style="width: 150px;" src="{{ asset('/storage/avatars/'.$user->image) }}" />
                                             @endif
                                         </div>
-                                        <div class="mx-4 text-center">
+                                        {{-- <div class="mx-4 text-center">
                                             <h1 class="fs-5 ">Productividad</h1>
                                             <div class="progress-circle" data-percentage="70">
                                             </div>
-                                        </div>
-                                        <div class="mx-4 text-center">
+                                        </div> --}}
+                                      {{-- <div class="mx-4 text-center">
                                             <div class="card" style="border: 1px solid {{ $user->bono > 0 ? 'green' : 'gray' }}; padding: 10px;">
                                                 <h5 class="m-0" style="color: {{ $user->bono > 0 ? 'green' : 'gray' }};">
                                                     {{ $user->bono > 0 ? 'Bono: ' . $user->bono.' €' : 'Sin bono' }}
                                                 </h5>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                     <div class="col-12 d-flex flex-wrap justify-content-center">
                                         <div class="my-2 text-center">
@@ -322,8 +323,8 @@
                                     </div>
                                 </div>
                                 <div class=" d-flex justify-content-center">
-                                    <button class="btn btn-primary mx-2">Enviar Archivos</button>
-                                    <button class="btn btn-secondary mx-2">Correo</button>
+                                    {{-- <button class="btn btn-primary mx-2">Enviar Archivos</button>
+                                    <button class="btn btn-secondary mx-2">Correo</button> --}}
                                     <button class="btn btn-primary mx-2" onclick="showLlamadaModal()">Iniciar LLamada</button>
                                 </div>
                             </div>

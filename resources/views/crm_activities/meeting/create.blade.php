@@ -123,9 +123,9 @@
                                     </select>
                                 </div>
 
-                                <!-- Hawkins Team in Meeting -->
+                                <!--  Team in Meeting -->
                                 <div class="col-md-12 my-2 form-group">
-                                    <label for="team" class="form-label">Equipo Hawkins Asistente en la reunión</label>
+                                    <label for="team" class="form-label">Equipo Asistente en la reunión</label>
                                     <select class="form-select" id="team" name="team[]" multiple >
                                         <option value="">Buscar ...</option>
                                         @foreach($usuarios as $user)
@@ -134,9 +134,9 @@
                                     </select>
                                 </div>
 
-                                <!-- Hawkins Team Linked to the Meeting Minutes -->
+                                <!--  Team Linked to the Meeting Minutes -->
                                 <div class="col-md-12 my-2 form-group">
-                                    <label for="teamActa" class="form-label">Equipo Hawkins Vinculado al Acta</label>
+                                    <label for="teamActa" class="form-label">Equipo Vinculado al Acta</label>
                                     <select class="form-select" id="teamActa" name="teamActa[]" multiple >
                                         <option value="">Buscar ...</option>
                                         <option value="1" selected="selected"> Iván Fernández Cardosa </option>

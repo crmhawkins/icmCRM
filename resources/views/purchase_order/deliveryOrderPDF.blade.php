@@ -115,7 +115,7 @@
                         <h1 style="font-size:19px;font-weight: normal;vertical-align:bottom"><cite>ALBARÁN DE ENTREGA</cite></h1>
                     </td>
                     <td align="right" style="width: 60%;padding-left:20px;padding-right:45px">
-                        <img src="https://crm.hawkins.es/assets/images/logo/logo.png" alt="Logo" width="150" class="logo"/>
+                        <img src="{{asset('assets/images/logo/logo.png')}}" alt="Logo" width="150" class="logo"/>
 
                     </td>
                 </tr>
@@ -128,19 +128,19 @@
                     <table class="info" style="width:100%;padding-left:30px;padding-right:30px">
                         <tr>
                             <td style="width:20%;padding-left:10px;">Empresa: </td>
-                            <td style="padding-left:10px;">HAWKINS, (THWORK 3000 SL)</td>
+                            <td style="padding-left:10px;">{{$empresa->company_name}}</td>
                         </tr>
                         <tr>
                             <td style="width:20%;padding-left:10px;">NIF: </td>
-                            <td style="padding-left:10px;">B72284631</td>
+                            <td style="padding-left:10px;">{{$empresa->nif}}</td>
                         </tr>
                         <tr>
                             <td style="width:20%;padding-left:10px;">Direccions: </td>
-                            <td style="padding-left:10px;">C/GENERAL PRIMO DE RIVERA S/N 11201 ALGECIRAS</td>
+                            <td style="padding-left:10px;">{{$empresa->address. ' ' . $empresa->postCode . ' ' . $empresa->city . ' ' . $empresa->province}}</td>
                         </tr>
                         <tr>
                             <td style="width:20%;padding-left:10px;">Telefono:</td>
-                            <td style="padding-left:10px;">956 662 942</td>
+                            <td style="padding-left:10px;">{{$empresa->telephone}}</td>
                         </tr>
                     </table>
                 </div>

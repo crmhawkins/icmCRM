@@ -14,8 +14,6 @@ class LogActionsController extends Controller
 {
     public function index()
     {
-        $logActions = LogActions::all();
-
         return view('logs.index', compact('logActions'));
     }
 

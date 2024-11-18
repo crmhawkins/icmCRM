@@ -3,7 +3,7 @@
         <div class="sidebar-header">
             <div class="d-flex justify-content-between">
                 <div class="logo">
-                    <a href="/dashboard"><img src={{asset('assets/images/logo/logo.png') }} alt="Logo" srcset="" class="img-fluid"></a>
+                    <a href="/dashboard"><img src="{{asset('assets/images/logo/logo.png')}}" alt="Logo" srcset="" class="img-fluid"></a>
                 </div>
                 <div class="toggler">
                     <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
@@ -25,7 +25,7 @@
                 @php
                     $clientesActive = request()->routeIs('clientes.index') || request()->routeIs('clientes.create') || request()->routeIs('clientes.show') || request()->routeIs('cliente.createFromBudget') || request()->routeIs('clientes.edit');
                     $presupuestoActive = request()->routeIs('presupuestos.index') || request()->routeIs('presupuesto.create') || request()->routeIs('presupuesto.show');
-                    $dominiosActive = request()->routeIs('dominios.index') || request()->routeIs('dominios.create') || request()->routeIs('dominios.edit');
+                    //$dominiosActive = request()->routeIs('dominios.index') || request()->routeIs('dominios.create') || request()->routeIs('dominios.edit');
                     $projectActive = request()->routeIs('campania.*') ;
                     $servicesActive = request()->routeIs('servicios.*') || request()->routeIs('serviciosCategoria.*');
                     $peticionesActive = request()->routeIs('peticion.*');
@@ -188,7 +188,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="sidebar-item has-sub {{ $dominiosActive ? 'active' : '' }}">
+                {{-- <li class="sidebar-item has-sub {{ $dominiosActive ? 'active' : '' }}">
                     <a href="#" class='sidebar-link'>
                         <i class="fa-solid fa-globe fs-5"></i>
                         <span>Dominios</span>
@@ -211,7 +211,7 @@
                             </a>
                         </li>
                     </ul>
-                </li>
+                </li> --}}
                 <li class="sidebar-item has-sub {{ $poveedoresActive ? 'active' : '' }}">
                     <a href="#" class='sidebar-link'>
                         <i class="fa-solid fa-user-tie fs-5"></i>
@@ -236,7 +236,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="sidebar-item has-sub {{ $actasActive ? 'active' : '' }}">
+                {{-- <li class="sidebar-item has-sub {{ $actasActive ? 'active' : '' }}">
                     <a href="#" class='sidebar-link'>
                         <i class="fa-solid fa-address-book fs-5"></i>
                         <span>Actas de reunion</span>
@@ -259,12 +259,18 @@
                             </a>
                         </li>
                     </ul>
-                </li>
+                </li> --}}
                 @if ($admin || $gerente || $contable)
                     <li class="sidebar-item {{ request()->routeIs('facturas.index') ? 'active' : '' }}">
                         <a href="{{route('facturas.index')}}" class='sidebar-link'>
                             <i class="fa-solid fa-file-invoice-dollar fs-5"></i>
                             <span>Facturas</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item {{ request()->routeIs('order.indexAll') ? 'active' : '' }}">
+                        <a href="{{route('order.indexAll')}}" class='sidebar-link'>
+                            <i class="fa-solid fa-receipt"></i>
+                            <span>Todas las ordenes</span>
                         </a>
                     </li>
                     <li class="sidebar-item has-sub {{ $tesoreriaActive ? 'active' : '' }}">
@@ -485,14 +491,14 @@
                                     </span>
                                 </a>
                             </li>
-                            <li class="submenu-item {{ request()->routeIs('logs.clasificado') ? 'active' : '' }}">
+                            {{-- <li class="submenu-item {{ request()->routeIs('logs.clasificado') ? 'active' : '' }}">
                                 <a href="{{route('logs.clasificado')}}">
                                     <i class="fa-solid fa-eye"></i>
                                     <span>
                                         Ver Logs por usuario
                                     </span>
                                 </a>
-                            </li>
+                            </li> --}}
                         </ul>
                     </li>
                     <li class="sidebar-item {{ request()->routeIs('estadistica.index') ? 'active' : '' }}">
@@ -653,7 +659,7 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="sidebar-item has-sub {{ $EmailConfig ? 'active' : '' }}">
+                        {{-- <li class="sidebar-item has-sub {{ $EmailConfig ? 'active' : '' }}">
                             <a href="#" class='sidebar-link'>
                                 <i class="fa-solid fa-sliders fs-5"></i>
                                 <span>Configuración Email</span>
@@ -693,7 +699,7 @@
                                     </a>
                                 </li>
                             </ul>
-                        </li>
+                        </li> --}}
                     @endif
                 @endif
 

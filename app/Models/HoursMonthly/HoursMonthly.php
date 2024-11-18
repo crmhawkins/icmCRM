@@ -6,7 +6,6 @@ use App\Models\Users\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use Hawkins\Models\AdminUser;
 
 class HoursMonthly extends Model
 {

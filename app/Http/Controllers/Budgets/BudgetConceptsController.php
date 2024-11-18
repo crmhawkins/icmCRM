@@ -1131,7 +1131,7 @@ class BudgetConceptsController extends Controller
             "province" => $preForm['provincia'] ?? '',
             "cp" => $preForm['cp'] ?? '',
         ];
-
+        $empresa = CompanyDetails::get()->first();
 
         $name = 'orden_compra_' .$order->id . '_' . Carbon::now()->format('Y-m-d');
 
@@ -1140,7 +1140,7 @@ class BudgetConceptsController extends Controller
 
         // Generate the PDF file for the supplier
         $pathToSaveSupplier = 'Ordenes/' . $encrypted . '.pdf';
-        $path = Storage::disk('public')->put($pathToSaveSupplier, PDF::loadView('purchase_order.purchaseOrderPDF', compact('data', 'logoURL', 'budgetCustomPDF'))->output());
+        $path = Storage::disk('public')->put($pathToSaveSupplier, PDF::loadView('purchase_order.purchaseOrderPDF', compact('empresa','data', 'logoURL', 'budgetCustomPDF'))->output());
         $fileUrl = Storage::url($pathToSaveSupplier);
         // Add the supplier file path to the array
         $pathFiles[] =  storage_path('app/public/' . $pathToSaveSupplier);
@@ -1148,7 +1148,7 @@ class BudgetConceptsController extends Controller
         // Generate the name and path for the delivery order (albarán)
         $nameAlbaran = 'albaran_' . $order->id . '_' . Carbon::now()->format('Y-m-d');
         $pathToSaveAlbaran = 'Albaranes/' . $nameAlbaran . '.pdf';
-        Storage::disk('public')->put($pathToSaveAlbaran, PDF::loadView('purchase_order.deliveryOrderPDF', compact('data', 'logoURL', 'budgetCustomPDF'))->output());
+        Storage::disk('public')->put($pathToSaveAlbaran, PDF::loadView('purchase_order.deliveryOrderPDF', compact('empresa','data', 'logoURL', 'budgetCustomPDF'))->output());
         $fileUrl2 = storage_path('app/public/' . $pathToSaveAlbaran);
 
         // Add the delivery order path to the array
@@ -1183,8 +1183,10 @@ class BudgetConceptsController extends Controller
             }
         }
 
-        $mailsBCC[] = "emma@lchawkins.com";
-        $mailsBCC[] = "ivan@lchawkins.com";
+        $empresa = CompanyDetails::get()->first();
+        $mail = $empresa->email;
+
+        $mailsBCC[] =  $mail;
         $mailsBCC[] = Auth::user()->email;
         $supplierMail = BudgetConceptSupplierRequest::where('budget_concept_id',$order->budget_concept_id)->where('selected',1)->first()->mail;
         $email = new MailConceptSupplier($mailConcept, $pathFiles);

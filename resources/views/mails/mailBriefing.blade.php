@@ -123,7 +123,7 @@
     <!-- HIDDEN PREHEADER TEXT -->
     <div
         style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: 'Lato', Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
-        Correo electronico enviado desde el CRM & ERP de Los Creativos de Hawkins </div>
+        Correo electronico enviado desde el CRM & ERP de {{$empresa->company_name}} </div>
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
         <!-- LOGO -->
         <tr>
@@ -141,7 +141,7 @@
                     <tr>
                         <td bgcolor="#ffffff" align="center" valign="top"
                             style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
-                            <img src="https://crm.hawkins.es/assets/images/logo/logo.png" width="350" height="200" alt="logo" style="display: block; border: 0px;" />
+                            <img src="{{asset('assets/images/logo/logo.png')}}" width="350" height="200" alt="logo" style="display: block; border: 0px;" />
                         </td>
                     </tr>
                 </table>
@@ -275,7 +275,7 @@
         <tr>
             <td bgcolor="#ffffff" align="left"
                 style="padding: 0px 30px 40px 30px; border-radius: 0px 0px 4px 4px; color: #000; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                <p style="margin: 0;">Un cordial saludo,<br>Los Creativos de Hawkins</p>
+                <p style="margin: 0;">Un cordial saludo,<br>{{$empresa->company_name}}</p>
             </td>
         </tr>
     </table>
