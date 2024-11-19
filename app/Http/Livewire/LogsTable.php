@@ -66,7 +66,6 @@ class LogsTable extends Component
             $query->where('log_actions.tipo', $this->tipo);
         })
         ->join('admin_user', 'log_actions.admin_user_id', '=', 'admin_user.id')
-        ->join('ayudas', 'ayudas.id', '=', 'log_actions.reference_id')
         ->select('log_actions.*','admin_user.name as usuario','ayudas.cliente as cliente');
 
         $query->orderBy($this->sortColumn, $this->sortDirection);
