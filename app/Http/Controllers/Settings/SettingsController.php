@@ -66,11 +66,11 @@ class SettingsController extends Controller
         $configuracion = CompanyDetails::findOrFail($id);
 
         $request->validate([
-            'price_hour' => 'required|numeric',
+            'price_hour' => 'nullable|numeric',
             'logo' => 'nullable|image',
-            'company_name' => 'required|string|max:255',
-            'nif' => 'required|string|max:50',
-            'address' => 'required|string|max:255',
+            'company_name' => 'nullable|string|max:255',
+            'nif' => 'nullable|string|max:50',
+            'address' => 'nullable|string|max:255',
             'bank_account_data' => 'nullable|string|max:255',
             'telephone' => 'nullable|string|max:20',
             'email' => 'nullable|email|max:255',
