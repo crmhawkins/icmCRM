@@ -50,9 +50,6 @@ class LogsTable extends Component
                 $query->whereHas('usuario', function ($subQuery) {
                     $subQuery->where('name', 'like', '%' . $this->buscar . '%');
                 })
-                ->whereHas('ayudas', function ($subQuery) {
-                    $subQuery->where('ayudas.cliente', 'like', '%' . $this->buscar . '%');
-                })
                 ->orWhere('action', 'like', '%' . $this->buscar . '%')
                 ->orWhere('description', 'like', '%' . $this->buscar . '%')
                 ->orWhere('reference_id', 'like', '%' . $this->buscar . '%')

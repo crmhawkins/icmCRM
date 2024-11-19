@@ -14,6 +14,7 @@ class ClientsTable extends Component
     public $gestores;
     public $buscar;
     public $selectedGestor = '';
+    public $isClient = 1;
     public $perPage = 10;
     public $sortColumn = 'created_at'; // Columna por defecto
     public $sortDirection = 'desc'; // Dirección por defecto
@@ -33,8 +34,7 @@ class ClientsTable extends Component
 
     protected function actualizarClientes()
     {
-        $query = Client::where('is_client', 1)
-            ->when($this->buscar, function ($query) {
+        $query = Client::when($this->buscar, function ($query) {
                 $query->where('name', 'like', '%' . $this->buscar . '%')
                       ->orWhere('email', 'like', '%' . $this->buscar . '%')
                       ->orWhere('cif', 'like', '%' . $this->buscar . '%')
@@ -43,6 +43,9 @@ class ClientsTable extends Component
             })
             ->when($this->selectedGestor, function ($query) {
                 $query->where('admin_user_id', $this->selectedGestor);
+            })
+            ->when(isset($this->isClient), function ($query) {
+                $query->where('is_client', $this->isClient);
             });
 
             $query->orderBy($this->sortColumn, $this->sortDirection);
@@ -64,7 +67,7 @@ class ClientsTable extends Component
 
     public function updating($propertyName)
     {
-        if ($propertyName === 'buscar' || $propertyName === 'selectedGestor') {
+        if ($propertyName === 'buscar' || $propertyName === 'selectedGestor' || $propertyName === 'isClient') {
             $this->resetPage();
         }
     }
