@@ -162,19 +162,6 @@
         margin-top: 5px;
     }
 
-    .tooltip.custom-tooltip .tooltip-inner {
-        background-color: #343a40;
-        color: #fff;
-        font-size: 1.2rem;
-        padding: 15px;
-        border-radius: 5px;
-        max-width: 500px;
-    }
-
-    .tooltip.custom-tooltip .tooltip-arrow {
-        border-top-color: #343a40;
-    }
-
     .card-header {
         background-color: #f8f9fa;
         color: #333;
@@ -225,7 +212,7 @@
         background: rgba(0, 0, 0, 0.7);
     }
 
-    /* Estilos para la responsividad del calendario */
+    /* Estilos para la responsividad */
     .calendar-view {
         display: grid;
         gap: 10px;
@@ -275,8 +262,8 @@
         padding: 15px;
         background-color: white;
         margin-top: 5px;
-        transition: all 0.3s ease; /* Agregar transición para el efecto visual */
-        overflow: hidden; /* Asegura que el contenido no se desborde */
+        transition: all 0.3s ease;
+        overflow: hidden;
     }
 
     .scroll{
@@ -315,24 +302,21 @@
                 <div class="col-12 col-md-6 order-md-1 order-last">
                     <h3>Dashboard</h3>
                 </div>
-
                 <div class="col-12 col-md-6 order-md-2 order-first">
-                    <div class="row justify-end ">
-                        <h2 id="timer" class="display-6 fw-bolder col-4">00:00:00</h2>
-                        {{-- <button id="startJornadaBtn" class="btn jornada btn-primary mx-2 col-3" onclick="startJornada()">Inicio Jornada</button> --}}
-                        <button id="startPauseBtn" class="btn jornada btn-secondary mx-2 col-3" onclick="startPause()" style="display:none;">Iniciar Pausa</button>
-                        <button id="endPauseBtn" class="btn jornada btn-dark mx-2 col-3" onclick="endPause()" style="display:none;">Finalizar Pausa</button>
-                        {{-- <button id="endJornadaBtn" class="btn jornada btn-danger mx-2 col-3" onclick="endJornada()" style="display:none;">Fin de Jornada</button> --}}
+                    <div class="row justify-content-end">
+                        <h2 id="timer" class="display-6 fw-bolder col-4 text-center">00:00:00</h2>
+                        <button id="startPauseBtn" class="btn jornada btn-secondary col-3 mx-2" onclick="startPause()" style="display:none;">Iniciar Pausa</button>
+                        <button id="endPauseBtn" class="btn jornada btn-dark col-3 mx-2" onclick="endPause()" style="display:none;">Finalizar Pausa</button>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="card2 mt-4">
-            <div class="card-body2">
-                <div class="row justify-between">
-                    <div class="col-md-7">
-                        <div class="side-column d-flex" >
-                            <div class="card mb-3" style="flex:1;" >
+        <div class="card mt-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-7 mb-3">
+                        <div class="side-column d-flex flex-column h-100">
+                            <div class="card mb-3 flex-grow-1">
                                 <div class="card-body">
                                     <h3 class="card-title h4">Tareas</h3>
                                     <ul class="nav nav-tabs" id="taskTabs" role="tablist">
@@ -352,13 +336,11 @@
                                             </button>
                                         </li>
                                     </ul>
-
-                                    <div class="tab-content mt-3 ">
-                                        <!-- Tarea Activa -->
-                                        <div class=" scroll tab-pane p-3 fade {{ $tasks['taskPlay'] ? 'show active' : '' }}" id="active-task" role="tabpanel" aria-labelledby="active-task-tab">
+                                    <div class="tab-content mt-3">
+                                        <div class="scroll tab-pane p-3 fade {{ $tasks['taskPlay'] ? 'show active' : '' }}" id="active-task" role="tabpanel" aria-labelledby="active-task-tab">
                                             @if ($tasks['taskPlay'])
-                                                <div class="card2 tarea tarea-activa mb-3 p-2">
-                                                    <div id="{{ $tasks['taskPlay']->id }}" class="tarea-sing card-body2">
+                                                <div class="card tarea tarea-activa mb-3 p-2">
+                                                    <div id="{{ $tasks['taskPlay']->id }}" class="tarea-sing card-body">
                                                         <div class="d-flex align-items-center">
                                                             <div class="col-2 text-center">
                                                                 <span class="tarea-numero">
@@ -380,9 +362,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="infotask">
-                                                        <!-- Información Detallada de la Tarea -->
-                                                    </div>
+                                                    <div class="infotask"></div>
                                                 </div>
                                             @else
                                                 <div class="text-center">
@@ -393,7 +373,7 @@
                                         <!-- Tareas Pendientes -->
                                         <div class="scroll tab-pane p-4 fade {{ !$tasks['taskPlay'] ? 'show active' : '' }}" id="pending-tasks" role="tabpanel" aria-labelledby="pending-tasks-tab">
                                             <div class="mb-3">
-                                                <select class="js-select2 form-control js-select2-enabled select-task " style="width: 100%;" data-placeholder="Buscar..." tabindex="-1" name="cliente" id="selectTask">
+                                                <select class="js-select2 form-control select-task" style="width: 100%;" data-placeholder="Buscar..." name="cliente" id="selectTask">
                                                     <option value="0">Seleccion o busque tarea...</option>
                                                     @if ($tasks['tasksPause'])
                                                         @foreach ($tasks['tasksPause'] as $taskSingle)
@@ -407,203 +387,16 @@
                                                                 @if ($taskSingle->gestor)
                                                                         {{ $taskSingle->gestor->name }}
                                                                 @endif
-
                                                             </option>
                                                         @endforeach
                                                     @endif
                                                 </select>
-
                                             </div>
-                                            <?php
-                                            if (!function_exists('fechaEstimadaDashboard')) {
-                                                function fechaEstimadaDashboard($horasFaltan)
-                                                {
-                                                    $arrayHoras = explode(':', $horasFaltan);
-                                                    $horas = $arrayHoras['0'];
-                                                    $minutos = $arrayHoras['1'];
-                                                    $segundos = $arrayHoras['2'];
-                                                    $dia = 0;
-
-                                                    if ($horas > 8) {
-                                                        $horas -= 8;
-                                                        $dia += 1;
-                                                    }
-
-                                                    return $dia . ':' . $horas . ':' . $minutos . ':' . $segundos;
-                                                }
-                                            }
-                                            ?>
-                                            <?php
-                                                $acumuladorTiempo = 0;
-                                                $diasAcumulados = 0;
-                                                $bufferTiempo = 0;
-                                                $segundosAlDia = 28800;
-                                                $inicioJornadaLaboral = '09:00:00';
-                                                $paradaJornadaLaboral = '14:00:00';
-                                                $vueltaJornadaLaboral = '16:00:00';
-                                                $finJornadaLaboral = '19:00:00';
-                                                $fechaEstimada;
-                                                $diasAcumulados = 0;
-                                                $horasAcumulados = 0;
-                                                $minutosAcumulados = 0;
-                                                $segundosAcumulados = 0;
-
-                                                $prioridad = "";
-
-                                                $actualFecha;
-
-                                                $paso = 0;
-                                                $contador = 1;
-                                                $fechaCalendario = [];
-
-                                            ?>
                                             @if ($tasks['tasksPause']->isNotEmpty())
                                                 @php($numero = 1)
                                                 @foreach ($tasks['tasksPause'] as $tarea)
-                                                    <?php
-                                                    // TIEMPO ESTIMADO
-                                                    $tiempoEstimado = explode(':', $tarea->estimated_time);
-                                                    // PASAR EL TIEMPO ESTIPADO A SEGUNDOS
-                                                    $minutosASegundos = $tiempoEstimado['1'] * 60;
-
-                                                    $horasAMinutos = $tiempoEstimado['0'] * 60;
-                                                    $horasASegundos = $horasAMinutos * 60;
-                                                    // TOTAL DE SEGUNDOS DE TIEMPO ESTIMADO
-                                                    $segundosTotalEstimado = $horasASegundos + $minutosASegundos + intval($tiempoEstimado['2']);
-
-                                                    // TIEMPO CONSUMIDO
-                                                    $tiempoConsumido = explode(':', $tarea->real_time);
-
-                                                    // PASAR EL TIEMPO ESTIPADO A SEGUNDOS
-                                                    if (! isset($tiempoConsumido['1'])) {
-                                                        dd($tarea);
-                                                    }
-                                                    $minutosASegundosConsumido = $tiempoConsumido['1'] * 60;
-
-                                                    $horasAMinutosConsumido = $tiempoConsumido['0'] * 60;
-                                                    $horasASegundosConsumido = $horasAMinutosConsumido * 60;
-                                                    // TOTAL DE SEGUNDOS DE TIEMPO ESTIMADO
-                                                    $segundosTotalConsumido = $horasASegundosConsumido + $minutosASegundosConsumido + intval($tiempoConsumido['2']);
-
-                                                    $tiempoRestante = $segundosTotalEstimado - $segundosTotalConsumido;
-
-                                                    $bufferTiempo += $tiempoRestante;
-
-                                                    $hoy;
-
-                                                    $horasHoy = date('H:i:s');
-                                                    $horasHoyArray = explode(':', $horasHoy);
-
-                                                    //$prueba = date('H:i:s', $ts_fin);
-                                                    //$prueba2 = date('H:i:s', $ts_ini);
-
-                                                    $horas = floor($tiempoRestante / 3600);
-                                                    $minutos = floor(($tiempoRestante - $horas * 3600) / 60);
-                                                    $segundos = $tiempoRestante - $horas * 3600 - $minutos * 60;
-                                                    $horaImprimir = $horas . ':' . $minutos . ':' . $segundos;
-
-                                                    $actual = date('Y-m-d H:i:s');
-                                                    $fecha = date('Y-m-d');
-                                                    $hora = date('H:i:s');
-                                                    $diasAcumulador = 0;
-
-                                                    $tiempoACaclcular = fechaEstimadaDashboard($horaImprimir);
-                                                    $tiempoACaclcularArray = explode(':', $tiempoACaclcular);
-
-                                                    $diasAcumulados = $tiempoACaclcularArray['0'];
-                                                    $horasAcumulados = $tiempoACaclcularArray['1'];
-                                                    $minutosAcumulados = $tiempoACaclcularArray['2'];
-                                                    $segundosAcumulados = $tiempoACaclcularArray['3'];
-                                                    $dia = 0;
-
-                                                    if ($horasAcumulados >= 24) {
-                                                        $dia += 1;
-                                                        $horasAcumulados -= 24;
-                                                    }
-                                                    if ($minutosAcumulados >= 60) {
-                                                        $horasAcumulados += 1;
-                                                        $minutosAcumulados -= 60;
-                                                    }
-                                                    if ($segundosAcumulados >= 60) {
-                                                        $minutosAcumulados += 1;
-                                                        $segundosAcumulados -= 60;
-                                                    }
-
-                                                    if ($horasAcumulados < 0) {
-                                                        $horasAcumulados = $tiempoEstimado['0'];
-                                                    }
-
-                                                    $dia += $tiempoACaclcularArray['0'];
-                                                    $param = $dia . 'days';
-                                                    $paramHoras = $horasAcumulados . 'hour';
-                                                    $paramMinutos = $minutosAcumulados . 'minute';
-                                                    $paramSegundos = $segundosAcumulados . 'second';
-
-                                                    if ($paso == 0) {
-                                                        $actualNew = strtotime($param, strtotime($actual));
-                                                        $actualNew = strtotime($paramHoras, $actualNew);
-                                                        $actualNew = strtotime($paramMinutos, $actualNew);
-                                                        $actualNew = strtotime($paramSegundos, $actualNew);
-
-                                                        while (date('N', $actualNew) >= 6) {
-                                                            $actualNew = strtotime('+1 day', $actualNew);
-                                                        }
-
-
-                                                        $newActualFechaFinal = date('d-m-Y H:i:s', $actualNew);
-
-                                                        $actualFecha = $newActualFechaFinal;
-                                                        $paso = 1;
-                                                        $actualFechaArray = explode(' ', $newActualFechaFinal);
-                                                        $actualFechaFinal = $actualFechaArray[0];
-                                                        $fechaCalendario[$contador] = date('Y-m-d', $actualNew);
-                                                    } else {
-                                                        $newActualFecha = strtotime($param, strtotime($actualFecha));
-                                                        $newActualFecha = strtotime($paramHoras, $newActualFecha);
-                                                        $newActualFecha = strtotime($paramMinutos, $newActualFecha);
-                                                        $newActualFecha = strtotime($paramSegundos, $newActualFecha);
-
-                                                        while (date('N', $newActualFecha) >= 6) {
-                                                            $newActualFecha = strtotime('+1 day', $newActualFecha);
-                                                        }
-
-                                                        $newActualFechaFinal = date('d-m-Y H:i:s', $newActualFecha);
-
-                                                        $actualFecha = $newActualFechaFinal;
-
-                                                        $actualFechaArray = explode(' ', $newActualFechaFinal);
-                                                        $actualFechaFinal = $actualFechaArray[0];
-                                                        $fechaCalendario[$contador] = date('Y-m-d', $newActualFecha);
-                                                        //var_dump($actualFechaFinal );
-                                                    }
-
-                                                    switch ($tarea->priority_id) {
-                                                        case 1:
-                                                            $prioridad = "Baja";
-                                                            break;
-                                                        case 2:
-                                                            $prioridad = "Media";
-                                                            break;
-                                                        case 3:
-                                                            $prioridad = "Alta";
-                                                            break;
-                                                        case 4:
-                                                            $prioridad = "Urgente";
-                                                            break;
-                                                        default:
-                                                            $prioridad = "n/a";
-                                                            break;
-                                                    }
-
-                                                    $fechaNow = getdate();
-                                                    $fechaCalendario[0] = $fechaNow['year'] . '-0' . $fechaNow['mon'] . '-' . $fechaNow['mday'];
-                                                    $tareaCalendar[$contador] = ['id' => $tarea->id, 'title' => $tarea->title, 'start' => $fechaCalendario[$contador - 1], 'end' => $fechaCalendario[$contador], 'horas_estimadas' => $tarea->estimated_time, 'horas_reales' => $tarea->real_time, 'prioridad' => $prioridad, 'fecha_descripcion' => $actualFechaFinal];
-                                                    $tareaDesc[$tarea->id] = ['description' => $tarea->description];
-                                                    $contador += 1;
-
-                                                    ?>
-                                                    <div class="card2 tarea task-item mb-3 p-2" id="task-{{ $tarea->id }}">
-                                                        <div id="{{ $tarea->id }}" class="tarea-sing card-body2 ">
+                                                    <div class="card tarea task-item mb-3 p-2" id="task-{{ $tarea->id }}">
+                                                        <div id="{{ $tarea->id }}" class="tarea-sing card-body">
                                                             <div class="d-flex align-items-center">
                                                                 <div class="col-2 text-center">
                                                                     <span class="tarea-numero">{{ $numero }}ª</span>
@@ -620,15 +413,13 @@
                                                                             {{ $tarea->gestor->name }}
                                                                         @endif | {{ $tarea->id }}
                                                                     </span>
-                                                                    <span class="tarea-gestor text-success fw-bolder animate__animated animate__pulse animate__infinite" style="color:green; font-weight:bold; !important">
+                                                                    <span class="tarea-gestor text-success fw-bolder" style="color:green; font-weight:bold;">
                                                                         Fecha estimada entrega: {{ $actualFechaFinal }}
                                                                     </span>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="infotask">
-                                                            <!-- Información Detallada de la Tarea -->
-                                                        </div>
+                                                        <div class="infotask"></div>
                                                     </div>
                                                     @php($numero += 1)
                                                 @endforeach
@@ -644,8 +435,8 @@
                                                 @if ($tasks['tasksRevision']->isNotEmpty())
                                                     @php($nombre = 1)
                                                     @foreach ($tasks['tasksRevision'] as $tarea)
-                                                        <div class="card2 tarea mb-3 p-2">
-                                                            <div id="{{ $tarea->id }}" class="tarea-sing card-body2">
+                                                        <div class="card tarea mb-3 p-2">
+                                                            <div id="{{ $tarea->id }}" class="tarea-sing card-body">
                                                                 <div class="d-flex align-items-center">
                                                                     <div class="col-2 text-center">
                                                                         <span class="tarea-numero">{{ $nombre }}ª</span>
@@ -665,9 +456,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="infotask">
-                                                                <!-- Información Detallada de la Tarea -->
-                                                            </div>
+                                                            <div class="infotask"></div>
                                                         </div>
                                                         @php($nombre += 1)
                                                     @endforeach
@@ -693,26 +482,23 @@
                                                 <h5 class="my-3">{{$user->name}}&nbsp;{{$user->surname}}</h5>
                                                 <p class="text-muted mb-1">{{$user->departamento->name}}</p>
                                                 <p class="text-muted mb-4">{{$user->acceso->name}}</p>
-                                                <div class="d-flex  align-items-center my-2">
+                                                <div class="d-flex align-items-center my-2">
                                                     <input type="color" class="form-control form-control-color" style="padding: 0.4rem" id="color">
                                                     <label for="color" class="form-label m-2">Color</label>
                                                 </div>
                                             </div>
                                             <div class="mx-4">
                                                 @if ($user->image == null)
-                                                    <img alt="avatar" class="rounded-circle img-fluid  m-auto" style="width: 150px;" src="{{asset('assets/images/guest.webp')}}" />
+                                                    <img alt="avatar" class="rounded-circle img-fluid m-auto" style="width: 150px;" src="{{asset('assets/images/guest.webp')}}" />
                                                 @else
-                                                    <img alt="avatar" class="rounded-circle img-fluid  m-auto" style="width: 150px;" src="{{ asset('/storage/avatars/'.$user->image) }}" />
+                                                    <img alt="avatar" class="rounded-circle img-fluid m-auto" style="width: 150px;" src="{{ asset('/storage/avatars/'.$user->image) }}" />
                                                 @endif
                                             </div>
                                             <div>
                                                 <div class="d-flex justify-content-center align-items-center">
                                                     <div class="mx-4 text-center">
                                                         <h1 class="fs-5">Productividad</h1>
-                                                        <div class="progress-circle"
-                                                            data-percentage="{{ number_format($productividadIndividual, 2) }}">
-                                                        </div>
-
+                                                        <div class="progress-circle" data-percentage="{{ number_format($productividadIndividual, 2) }}"></div>
                                                     </div>
                                                     <div class="mx-4 text-center">
                                                         <div class="card" style="border: 1px solid {{ $user->bono > 0 ? 'green' : 'gray' }}; padding: 10px;">
@@ -725,280 +511,29 @@
                                                 <div class="mx-4 my-2">
                                                     <p style="color:#4D989E">Horas Producidas Hoy</p>
                                                     <p style="font-weight: bold;font-size: 2rem;">{{ $tiempoProducidoHoy['horas'] }}</p>
-                                                    <p style="color:#4D989E">Horas Producidas Mesual</p>
+                                                    <p style="color:#4D989E">Horas Producidas Mensual</p>
                                                     <p style="font-weight: bold;font-size: 2rem;">{{ $horasMes }}</p>
-                                                    {{-- <div class="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
-                                                        <div class="progress-bar progress-bar-striped progress-bar-animated @if(round($tiempoProducidoHoy['porcentaje'],2) >= 100) @else bg-warning @endif bg-success" style="width: {{round($tiempoProducidoHoy['porcentaje'],2)}}%">{{round($tiempoProducidoHoy['porcentaje'],2)}}%</div>
-                                                    </div> --}}
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 d-flex flex-wrap justify-content-center">
-                                            <div class="my-2 text-center">
-                                                <a class="btn btn-outline-secondary"
-                                                href="{{route('contratos.index_user', $user->id)}}">Contrato</a>
-                                                <a class="btn btn-outline-secondary"
-                                                href="{{route('nominas.index_user', $user->id)}}">Nomina</a>
-                                                <a class="btn btn-outline-secondary"
-                                                href="{{route('holiday.index')}}">Vacaciones</a>
-                                                <a class="btn btn-outline-secondary"
-                                                href="{{route('passwords.index')}}">Contraseñas</a>
-                                            </div>
-                                            <div class="my-2 ml-4 text-center col-auto" role="tablist">
-                                                <a class=" btn btn-outline-secondary active"
-                                                    id="list-todo-list" data-bs-toggle="list" href="#list-todo"
-                                                    role="tab">TO-DO</a>
-                                                <a class=" btn btn-outline-danger"
-                                                    id="list-todo-list-finalizados" data-bs-toggle="list" href="#list-todo-finalizados"
-                                                    role="tab">Finalizados</a>
-                                                <a class="btn btn-outline-secondary"
-                                                    id="list-agenda-list" data-bs-toggle="list"
-                                                    href="#list-agenda" role="tab">Agenda</a>
-                                            </div>
-                                        </div>
-
                                     </div>
-                                    <div class="tab-content text-justify" id="nav-tabContent">
-                                        <div class="tab-pane show active" id="list-todo" role="tabpanel"
-                                            aria-labelledby="list-todo-list">
-                                            <div class="card2 mt-4">
-                                                <div class="card-body2">
-                                                    <div id="to-do-container" class="d-flex flex-column"  style="" >
-                                                        <button class="btn btn-outline-secondary mt-4 mx-3" onclick="showTodoModal()">
-                                                            <i class="fa-solid fa-plus"></i>
-                                                        </button>
-                                                        <div id="to-do" class="p-3">
-                                                            @foreach ($to_dos as $to_do)
-                                                                <div class="card mt-2" id="todo-card-{{$to_do->id}}">
-                                                                    <div class="card-body d-flex justify-content-between clickable" id="todo-card-body-{{$to_do->id}}" data-todo-id="{{$to_do->id}}" style="{{$to_do->isCompletedByUser($user->id) ? 'background-color: #CDFEA4' : '' }}">
-                                                                        <div style="flex: 0 0 60%;">
-                                                                            <h3>{{ $to_do->titulo }}</h3>
-                                                                        </div>
-                                                                        <div class="d-flex align-items-center justify-content-around" style="flex: 0 0 40%;">
-                                                                            @if(!($to_do->isCompletedByUser($user->id)))
-                                                                            <button onclick="completeTask(event,{{ $to_do->id }})" id="complete-button-{{$to_do->id}}" class="btn btn-success btn-sm">Completar</button>
-                                                                            @endif
-                                                                            @if ($to_do->admin_user_id == $user->id)
-                                                                            <button onclick="finishTask(event,{{ $to_do->id }})" class="btn btn-danger btn-sm">Finalizar</button>
-                                                                            @endif
-                                                                            <div id="todo-card-{{ $to_do->id }}" class="pulse justify-center align-items-center" style="{{ $to_do->unreadMessagesCountByUser($user->id) > 0 ? 'display: flex;' : 'display: none;' }}">
-                                                                                {{ $to_do->unreadMessagesCountByUser($user->id) }}
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="info">
-                                                                        <div class="d-flex justify-content-evenly flex-wrap">
-                                                                            @if($to_do->project_id)<a class="btn btn-outline-secondary mb-2"> Campaña {{$to_do->proyecto ? $to_do->proyecto->name : 'borrada'}}</a>@endif
-                                                                            @if($to_do->client_id)<a class="btn btn-outline-secondary mb-2"> Cliente {{$to_do->cliente ? $to_do->cliente->name : 'borrado'}}</a>@endif
-                                                                            @if($to_do->budget_id)<a class="btn btn-outline-secondary mb-2"> Presupuesto {{$to_do->presupuesto ? $to_do->presupuesto->concept : 'borrado'}}</a>@endif
-                                                                            @if($to_do->task_id) <a class="btn btn-outline-secondary mb-2"> Tarea {{$to_do->tarea ? $to_do->tarea->title : 'borrada'}}</a> @endif
-                                                                        </div>
-                                                                        <div class="participantes d-flex flex-wrap mt-2">
-                                                                            <h3 class="m-2">Participantes</h3>
-                                                                            @foreach ($to_do->TodoUsers as $usuario )
-                                                                                <span class="badge m-2 {{$usuario->completada ? 'bg-success' :'bg-secondary'}}">
-                                                                                    {{$usuario->usuarios->name}}
-                                                                                </span>
-                                                                            @endforeach
-                                                                        </div>
-                                                                        <h3 class="m-2">Descripcion </h3>
-                                                                        <p class="m-2">{{ $to_do->descripcion }}</p>
-                                                                        <div class="chat mt-4">
-                                                                            <div class="chat-container" >
-                                                                                @foreach ($to_do->mensajes as $mensaje)
-                                                                                    <div class="p-3 message {{ $mensaje->admin_user_id == $user->id ? 'mine' : 'theirs' }}">
-                                                                                        @if ($mensaje->archivo)
-                                                                                            <div class="file-icon">
-                                                                                                <a href="{{ asset('storage/' . $mensaje->archivo) }}" target="_blank"><i class="fa-regular fa-file-lines fa-2x"></i></a>
-                                                                                            </div>
-                                                                                        @endif
-                                                                                        <strong>{{ $mensaje->user->name }}:</strong> {{ $mensaje->mensaje }}
-                                                                                    </div>
-                                                                                @endforeach
-                                                                            </div>
-                                                                            <form id="mensaje" action="{{ route('message.store') }}" method="post" enctype="multipart/form-data">
-                                                                                @csrf
-                                                                                <input type="hidden" name="todo_id" value="{{ $to_do->id }}">
-                                                                                <input type="hidden" name="admin_user_id" value="{{ $user->id }}">
-                                                                                <div class="input-group my-2">
-                                                                                    <input type="text" class="form-control" name="mensaje" placeholder="Escribe un mensaje...">
-                                                                                    <label class="input-group-text" style="background: white; ">
-                                                                                        <i class="fa-solid fa-paperclip" id="file-clip"></i>
-                                                                                        <input type="file" class="form-control" style="display: none;" id="file-input" name="archivo">
-                                                                                        <i class="fa-solid fa-check" id="file-icon" style="display: none; color: green;"></i>
-                                                                                    </label>
-                                                                                    <button id="enviar" class="btn btn-primary" type="button"><i class="fa-regular fa-paper-plane"></i></button>
-                                                                                </div>
-                                                                            </form>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            @endforeach
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                    <div class="col-12 d-flex flex-wrap justify-content-center">
+                                        <div class="my-2 text-center">
+                                            <a class="btn btn-outline-secondary" href="{{route('contratos.index_user', $user->id)}}">Contrato</a>
+                                            <a class="btn btn-outline-secondary" href="{{route('nominas.index_user', $user->id)}}">Nomina</a>
+                                            <a class="btn btn-outline-secondary" href="{{route('holiday.index')}}">Vacaciones</a>
+                                            <a class="btn btn-outline-secondary" href="{{route('passwords.index')}}">Contraseñas</a>
                                         </div>
-                                        <div class="tab-pane show" id="list-todo-finalizados" role="tabpanel"
-                                            aria-labelledby="list-todo-finalizados-list">
-                                            <div class="card2 mt-4">
-                                                <div class="card-body2">
-                                                    <div id="to-do-container" class="d-flex flex-column"  style="" >
-                                                        <div id="to-do" class="p-3">
-                                                            @foreach ($to_dos_finalizados as $to_do_finalizado)
-                                                                <div class="card mt-2" id="todo-card-{{$to_do_finalizado->id}}">
-                                                                    <div class="card-body d-flex justify-content-between clickable" id="todo-card-body-{{$to_do_finalizado->id}}" data-todo-id="{{$to_do_finalizado->id}}" style="{{$to_do_finalizado->isCompletedByUser($user->id) ? 'background-color: #CDFEA4' : '' }}">
-                                                                        <h3>{{ $to_do_finalizado->titulo }}</h3>
-                                                                    </div>
-                                                                    <div class="info">
-                                                                        <div class="d-flex justify-content-evenly flex-wrap">
-                                                                            @if($to_do_finalizado->project_id)<a class="btn btn-outline-secondary mb-2"> Campaña {{$to_do_finalizado->proyecto ? $to_do_finalizado->proyecto->name : 'borrada'}}</a>@endif
-                                                                            @if($to_do_finalizado->client_id)<a class="btn btn-outline-secondary mb-2"> Cliente {{$to_do_finalizado->cliente ? $to_do_finalizado->cliente->name : 'borrado'}}</a>@endif
-                                                                            @if($to_do_finalizado->budget_id)<a class="btn btn-outline-secondary mb-2"> Presupuesto {{$to_do_finalizado->presupuesto ? $to_do_finalizado->presupuesto->concept : 'borrado'}}</a>@endif
-                                                                            @if($to_do_finalizado->task_id) <a class="btn btn-outline-secondary mb-2"> Tarea {{$to_do_finalizado->tarea ? $to_do_finalizado->tarea->title : 'borrada'}}</a> @endif
-                                                                        </div>
-                                                                        <div class="participantes d-flex flex-wrap mt-2">
-                                                                            <h3 class="m-2">Participantes</h3>
-                                                                            @foreach ($to_do_finalizado->TodoUsers as $usuario )
-                                                                                <span class="badge m-2 {{$usuario->completada ? 'bg-success' :'bg-secondary'}}">
-                                                                                    {{$usuario->usuarios->name}}
-                                                                                </span>
-                                                                            @endforeach
-                                                                        </div>
-                                                                        <h3 class="m-2">Descripcion </h3>
-                                                                        <p class="m-2">{{ $to_do_finalizado->descripcion }}</p>
-                                                                        <div class="chat mt-4">
-                                                                            <div class="chat-container" >
-                                                                                @foreach ($to_do_finalizado->mensajes as $mensaje)
-                                                                                    <div class="p-3 message {{ $mensaje->admin_user_id == $user->id ? 'mine' : 'theirs' }}">
-                                                                                        @if ($mensaje->archivo)
-                                                                                            <div class="file-icon">
-                                                                                                <a href="{{ asset('storage/' . $mensaje->archivo) }}" target="_blank"><i class="fa-regular fa-file-lines fa-2x"></i></a>
-                                                                                            </div>
-                                                                                        @endif
-                                                                                        <strong>{{ $mensaje->user->name }}:</strong> {{ $mensaje->mensaje }}
-                                                                                    </div>
-                                                                                @endforeach
-                                                                            </div>
-                                                                            <form id="mensaje" action="{{ route('message.store') }}" method="post" enctype="multipart/form-data">
-                                                                                @csrf
-                                                                                <input type="hidden" name="todo_id" value="{{ $to_do_finalizado->id }}">
-                                                                                <input type="hidden" name="admin_user_id" value="{{ $user->id }}">
-                                                                                <div class="input-group my-2">
-                                                                                    <input type="text" class="form-control" name="mensaje" placeholder="Escribe un mensaje..." disabled>
-                                                                                    <label class="input-group-text" style="background: white; ">
-                                                                                        <i class="fa-solid fa-paperclip" id="file-clip"></i>
-                                                                                        <input type="file" class="form-control" style="display: none;" id="file-input" name="archivo" disabled>
-                                                                                        <i class="fa-solid fa-check" id="file-icon" style="display: none; color: green;"></i>
-                                                                                    </label>
-                                                                                    <button id="enviar" class="btn btn-primary" type="button" disabled><i class="fa-regular fa-paper-plane"></i></button>
-                                                                                </div>
-                                                                            </form>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            @endforeach
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="tab-pane" id="list-agenda" role="tabpanel"
-                                            aria-labelledby="list-agenda-list">
-                                            <div class="card2 mt-4">
-                                                <div class="card-body2 text-center">
-                                                    <div id="calendar" class="p-4" style="min-height: 600px; margin-top: 0.75rem; margin-bottom: 0.75rem; overflow-y: auto; border-color:black; border-width: thin; border-radius: 20px;" >
-                                                        <!-- Aquí se renderizarán las tareas según la vista seleccionada -->
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <div class="my-2 ml-4 text-center col-auto" role="tablist">
+                                            <a class="btn btn-outline-secondary active" id="list-todo-list" data-bs-toggle="list" href="#list-todo" role="tab">TO-DO</a>
+                                            <a class="btn btn-outline-danger" id="list-todo-list-finalizados" data-bs-toggle="list" href="#list-todo-finalizados" role="tab">Finalizados</a>
+                                            <a class="btn btn-outline-secondary" id="list-agenda-list" data-bs-toggle="list" href="#list-agenda" role="tab">Agenda</a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        <!-- Modal -->
-        <div class="modal fade" id="todoModal" tabindex="-1" aria-labelledby="todoModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg"> <!-- Cambio a modal-lg para mayor ancho -->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="eventModalLabel">Añadir To-do</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form id="todoform" action="{{ route('todos.store') }}" method="POST">
-                        @csrf
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-12 mb-3">
-                                    <label for="titulo" class="form-label">Título</label>
-                                    <input type="text" class="form-control" id="titulo" name="titulo" required>
-                                </div>
-                                <div class="col-md-12 mb-3">
-                                    <label for="descripcion" class="form-label">Descripción</label>
-                                    <textarea class="form-control" id="descripcion" name="descripcion" rows="4"></textarea>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="task_id" class="form-label">Tareas</label>
-                                    <select class="form-select choices" id="task_id" name="task_id">
-                                        <option value="">Seleccione una tarea</option>
-                                        @foreach ($tareas as $tarea)
-                                            <option value="{{ $tarea->id }}" {{ old('task_id') == $tarea->id ? 'selected' : '' }}>
-                                                {{ $tarea->title }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('client_id')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="admin_user_ids" class="form-label">Usuarios</label>
-                                    <select class="form-select choices__inner" id="admin_user_ids" name="admin_user_ids[]" multiple>
-                                        <option value="">Seleccione usuarios</option>
-                                        @foreach ($users as $gestor)
-                                            @if ($gestor->id !== auth()->id()) <!-- Excluir al usuario logueado -->
-                                                <option value="{{ $gestor->id }}" {{ in_array($gestor->id, old('admin_user_ids', [])) ? 'selected' : '' }}>
-                                                    {{ $gestor->name }} {{ $gestor->surname }}
-                                                </option>
-                                            @endif
-                                        @endforeach
-                                    </select>
-                                    @error('admin_user_ids')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="start" class="form-label">Inicio</label>
-                                    <input type="datetime-local" class="form-control" id="start" name="start" required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="end" class="form-label">Fin</label>
-                                    <input type="datetime-local" class="form-control" id="end" name="end">
-                                </div>
-                                <div class="col-md-6 mb-3 d-flex align-items-center justify-content-center">
-                                    <input type="color" style="padding: 0.4rem" class="form-control form-control-color" id="color1" name="color">
-                                    <label for="color1" class="form-label ml-2">Color</label>
-                                </div>
-                                <div class=" col-md-6 mb-3 d-flex align-items-center justify-content-center">
-                                    <input type="checkbox" style="height:25px; width:25px; " class="form-check-input" id="agendar" name="agendar">
-                                    <label for="agendar" class="form-check-label ml-2">Agendar</label>
-                                </div>
-                                <input type="hidden" name="admin_user_id" value="{{ $user->id }}">
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            <button id="todoboton" type="button" class="btn btn-primary">Guardar</button>
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>
