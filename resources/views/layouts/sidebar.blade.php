@@ -702,6 +702,12 @@
                         </li> --}}
                     @endif
                 @endif
+                <li class="sidebar-item {{ request()->routeIs('file-manager') ? 'active' : '' }}">
+                    <a href="{{route('file-manager')}}" class='sidebar-link'>
+                        <i class="fa-solid fa-folder-open"></i>
+                        <span>Archivos</span>
+                    </a>
+                </li>
 
 
             </ul>
