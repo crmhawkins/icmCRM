@@ -15,6 +15,11 @@ class VerifyCsrfToken extends Middleware
         '/transcribir-acta',
         '/api/getAyudas',
         '/api/updateAyudas/{id}',
-        '/api/updateMensajes'
+        '/api/updateMensajes',
+        '/api/Clientes',
+        '/api/Presupuestos',
+        '/api/Facturas',
+        '/api/Proyectos',
+        '/api/Servicios',
     ];
 }

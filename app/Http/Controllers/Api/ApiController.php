@@ -3,7 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Budgets\Budget;
+use App\Models\Clients\Client;
+use App\Models\Invoices\Invoice;
 use App\Models\KitDigital;
+use App\Models\Projects\Project;
+use App\Models\Services\Service;
 use Illuminate\Http\Request;
 
 class ApiController extends Controller
@@ -53,5 +58,28 @@ class ApiController extends Controller
         }
 
     }
+
+    public function getClientes(){
+        $clientes = Client::all();
+        return response()->json(['clientes' => $clientes],200  );
+    }
+    public function getpresupuestos(){
+        $presupuestos = Budget::all();
+        return response()->json(['presupuestos' => $presupuestos],200  );
+    }
+    public function getfacturas(){
+        $facturas = Invoice::all();
+        return response()->json(['facturas' => $facturas],200  );
+    }
+    public function getproyectos(){
+        $proyectos = Project::all();
+        return response()->json(['proyectos' => $proyectos],200  );
+    }
+    public function getservicios(){
+        $servicios = Service::all();
+        return response()->json(['servicios' => $servicios],200  );
+    }
+
+
 
 }
