@@ -52,7 +52,7 @@ return [
      *
      * null - root directory
      */
-    'leftPath'          => null,
+    'leftPath'          => 'files/',
 
     /**
      * Default path for right manager
