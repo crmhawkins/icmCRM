@@ -31,7 +31,7 @@ return [
      * List of disk names that you want to use
      * (from config/filesystems)
      */
-    'diskList'          => ['public'],
+    'diskList'          => ['public_fm'],
 
     /**
      * Default disk for left manager
@@ -52,7 +52,7 @@ return [
      *
      * null - root directory
      */
-    'leftPath'          => 'files/',
+    'leftPath'          => null,
 
     /**
      * Default path for right manager

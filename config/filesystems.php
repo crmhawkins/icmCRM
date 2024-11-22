@@ -43,6 +43,12 @@ return [
             'visibility' => 'public',
             // 'throw' => false,
         ],
+        'public_fm' => [
+            'driver' => 'local',
+            'root' => public_path('files'),  // Cambiar la ruta aquí para apuntar a public/files
+            'url' => env('APP_URL').'/files',  // Actualizar la URL para reflejar el nuevo path
+            'visibility' => 'public',
+        ],
 
         's3' => [
             'driver' => 's3',
