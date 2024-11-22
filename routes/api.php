@@ -28,7 +28,7 @@ Route::post('/getAyudas', action: [ApiController::class, 'getayudas']);
 Route::post('/updateAyudas/{id}', action: [ApiController::class, 'updateAyudas']);
 Route::post('/updateMensajes', action: [ApiController::class, 'updateMensajes']);
 
-Route::post('/Clientes', action: [ApiController::class, 'getservicios']);
+Route::post('/Clientes', action: [ApiController::class, 'getClientes']);
 Route::post('/Presupuestos', action: [ApiController::class, 'getpresupuestos']);
 Route::post('/Facturas', action: [ApiController::class, 'getfacturas']);
 Route::post('/Proyectos', action: [ApiController::class, 'getproyectos']);
