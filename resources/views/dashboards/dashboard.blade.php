@@ -16,8 +16,8 @@
                 <h3>Dashboard</h3>
             </div>
 
-            <div class="col-12 col-md-8 order-md-2 order-first">
-                <div class="row justify-end ">
+            <div class="col-12 col-md-8 order-md-2 order-s">
+                <div class="row justify-end">
                     <button id="endllamadaBtn" class="btn jornada btn-danger mx-2 col-2" onclick="endLlamada()" style="display:none;">Finalizar llamada</button>
                      <h2 id="timer" class="display-6 font-weight-bold col-3">00:00:00</h2>
                     <button id="startJornadaBtn" class="btn jornada btn-primary mx-2 col-2" onclick="startJornada()">Inicio Jornada</button>

@@ -39,9 +39,7 @@
                         $agent = new Agent();
                     @endphp
                     @if ($agent->isMobile())
-                        <div>
-                            <span>Es movil</span>
-                        </div>
+
                         @livewire('petitions-user-table')
 
                     @else

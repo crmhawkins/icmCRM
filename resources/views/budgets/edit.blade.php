@@ -30,7 +30,7 @@
 
         <section class="section mt-4">
             <div class="row">
-                <div class="col-9">
+                <div class=" col-lg-9 col-12">
                     <div class="card">
                         <div class="card-body">
                             <form id="update" action="{{route('presupuesto.update', $presupuesto->id)}}" method="POST">
@@ -188,143 +188,145 @@
                                         </div>
                                     </div>
                                 </div>
-                                <table id="conceptsTable" class="table dt_custom_budget_concepts table-hover table-striped table-bordered mt-4" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>Concepto</th>
-                                            <!--<th>Descripcion</th>-->
-                                            <th>Unidades</th>
-                                            <th>Precio/Unidad</th>
-                                            <th>SUBTOTAL</th>
-                                            <th>DTO</th>
-                                            <th>TOTAL</th>
-                                            <th>ACCIONES</th>
-                                            <th hidden></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @if($budgetConcepts)
-                                            @foreach($budgetConcepts as $budgetConcept)
-                                            <?php
-                                                $subtotalOwn = $budgetConcept->units*$budgetConcept->sale_price;
-                                                $subtotalSupplier = $budgetConcept->total_no_discount;
-                                                $subtotal = 0;
-                                                if ($budgetConcept->concept_type_id == 1 ){
-                                                    $subtotal = $subtotalSupplier;
-                                                }
-                                                if ($budgetConcept->concept_type_id == 2 ){
-                                                    $subtotal = $subtotalOwn;
-                                                }
-                                                if ($budgetConcept->concept_type_id == 1 ){
-                                                    $purchasePriceWithoutMarginBenefit = $budgetConcept->purchase_price;
-                                                    $benefitMargin = $budgetConcept->benefit_margin;
-                                                    $marginBenefitToAdd  =  ($purchasePriceWithoutMarginBenefit*$benefitMargin)/100;
-                                                    $purchasePriceWithMarginBenefit  =  $purchasePriceWithoutMarginBenefit + $marginBenefitToAdd;
-                                                }
-                                            ?>
-                                                <tr class="budgetRow" data-child-value="{{$budgetConcept->concept}}">
-                                                    <td class="details-control">
-                                                        @if($budgetConcept->concept_type_id == 2)
-                                                            <a href="{{route('budgetConcepts.editTypeOwn', $budgetConcept->id)}}" class="btn btn-success">
-                                                                <i class="fas fa-arrow-down" style="color:white;"></i>
-                                                            </a>
-                                                        @else
-                                                            <a href="{{route('budgetConcepts.editTypeSupplier', $budgetConcept->id)}}" class="btn btn-success">
-                                                                <i class="fas fa-arrow-down" style="color:white;"></i>
-                                                            </a>
-                                                        @endif
-
-                                                    </td>
-                                                    <td hidden >{{ $budgetConcept->id }}</td>
-                                                    <td>{{ $budgetConcept->title }}</td>
-                                                    <!--<td>{{ $budgetConcept->concept }}</td>-->
-                                                    <td >
-                                                        @if($budgetConcept->concept_type_id == 1)
-                                                            {{ $budgetConcept->units }}
-                                                        @else
-                                                            {{ $budgetConcept->units }}
-                                                        @endif
-                                                    </td>
-                                                    <td class="budgetPriceRow" >
-                                                        @if($budgetConcept->concept_type_id == 1)
-                                                            @if( $purchasePriceWithMarginBenefit != null)
-                                                                 {{  round(
-                                                                        (number_format((float)$budgetConcept->purchase_price, 2, '.', '') / $budgetConcept->units / 100 * number_format((float)$budgetConcept->benefit_margin, 2, '.', ''))
-                                                                        + (number_format((float)$budgetConcept->purchase_price, 2, '.', '') / $budgetConcept->units), 2) }}
-
-                                                                 <!--
-                                                                     {{  round((number_format((float)$budgetConcept->purchase_price, 2, '.', '') / $budgetConcept->units / 100 * number_format((float)$budgetConcept->benefit_margin, 2, '.', '')) + (number_format((float)$budgetConcept->purchase_price, 2, '.', '') / $budgetConcept->units), 2) }}
-                                                                 -->
+                                <div class="table-responsive">
+                                    <table id="conceptsTable" class="table dt_custom_budget_concepts table-hover table-striped table-bordered mt-4" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Concepto</th>
+                                                <!--<th>Descripcion</th>-->
+                                                <th>Unidades</th>
+                                                <th>Precio/Unidad</th>
+                                                <th>SUBTOTAL</th>
+                                                <th>DTO</th>
+                                                <th>TOTAL</th>
+                                                <th>ACCIONES</th>
+                                                <th hidden></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if($budgetConcepts)
+                                                @foreach($budgetConcepts as $budgetConcept)
+                                                <?php
+                                                    $subtotalOwn = $budgetConcept->units*$budgetConcept->sale_price;
+                                                    $subtotalSupplier = $budgetConcept->total_no_discount;
+                                                    $subtotal = 0;
+                                                    if ($budgetConcept->concept_type_id == 1 ){
+                                                        $subtotal = $subtotalSupplier;
+                                                    }
+                                                    if ($budgetConcept->concept_type_id == 2 ){
+                                                        $subtotal = $subtotalOwn;
+                                                    }
+                                                    if ($budgetConcept->concept_type_id == 1 ){
+                                                        $purchasePriceWithoutMarginBenefit = $budgetConcept->purchase_price;
+                                                        $benefitMargin = $budgetConcept->benefit_margin;
+                                                        $marginBenefitToAdd  =  ($purchasePriceWithoutMarginBenefit*$benefitMargin)/100;
+                                                        $purchasePriceWithMarginBenefit  =  $purchasePriceWithoutMarginBenefit + $marginBenefitToAdd;
+                                                    }
+                                                ?>
+                                                    <tr class="budgetRow" data-child-value="{{$budgetConcept->concept}}">
+                                                        <td class="details-control">
+                                                            @if($budgetConcept->concept_type_id == 2)
+                                                                <a href="{{route('budgetConcepts.editTypeOwn', $budgetConcept->id)}}" class="btn btn-success">
+                                                                    <i class="fas fa-arrow-down" style="color:white;"></i>
+                                                                </a>
+                                                            @else
+                                                                <a href="{{route('budgetConcepts.editTypeSupplier', $budgetConcept->id)}}" class="btn btn-success">
+                                                                    <i class="fas fa-arrow-down" style="color:white;"></i>
+                                                                </a>
                                                             @endif
-                                                        @else
-                                                            {{ number_format((float)$budgetConcept->sale_price, 2, '.', '')  }}
-                                                        @endif
-                                                    </td>
-                                                    <td class="budgetSubtotalRow">
-                                                        @if($budgetConcept->concept_type_id == 1)
-                                                            @if($budgetConcept->purchase_price != null)
-                                                                {{ number_format((float)$subtotalSupplier, 2, '.', '')  }}
+
+                                                        </td>
+                                                        <td hidden >{{ $budgetConcept->id }}</td>
+                                                        <td>{{ $budgetConcept->title }}</td>
+                                                        <!--<td>{{ $budgetConcept->concept }}</td>-->
+                                                        <td >
+                                                            @if($budgetConcept->concept_type_id == 1)
+                                                                {{ $budgetConcept->units }}
+                                                            @else
+                                                                {{ $budgetConcept->units }}
                                                             @endif
-                                                        @else
-                                                            {{ number_format((float)$subtotalOwn, 2, '.', '')  }}
-                                                        @endif
-                                                    </td>
-                                                    <td class="budgetDiscountRow">
-                                                        @if(!$budgetConcept->discount)
-                                                            <input type="number" data-id-budget="{{ $presupuesto->id }}" data-id="{{ $budgetConcept->id }}" class="form-control discountInput" style="width:80px" name="discount[{{ $budgetConcept->id }}]" min="0" max="100"  value="0" data-subtotal="{{$subtotal}}">
-                                                        @else
-                                                            <input type="number" data-id-budget="{{ $presupuesto->id }}" data-id="{{ $budgetConcept->id }}" class="form-control discountInput" style="width:80px" name="discount[{{ $budgetConcept->id }}]" min="0" max="100" value="{{ $budgetConcept->discount }}" data-subtotal="{{$subtotal}}">
-                                                        @endif
-                                                    </td>
-                                                    <td class="conceptTotal"> {{ number_format((float)$budgetConcept->total, 2, '.', '')  }}</td>
-                                                    <td>
-                                                        @if($budgetConcept->concept_type_id == 1)
-                                                            {{-- <a class="btn btn-success" href="{{ route('admin.budget_concepts.editTypeSupplier',$budgetConcept->id) }}"><i class="fas fa-pencil-alt"></i></a> --}}
-                                                        @else
-                                                            {{-- <a class="btn btn-success" href="{{ route('admin.budget_concepts.editTypeOwn',$budgetConcept->id) }}"><i class="fas fa-pencil-alt"></i></a> --}}
-                                                        @endif
-                                                        @if($budgetConcept->concept_type_id == 1)
-                                                            <a id="deleteOwn" data-id="{{$budgetConcept->id}}" class="btn btn-danger destroyConceptOwn" data-concept-id="{{$budgetConcept->id}}" style="color:white" ><i class="fas fa-times"></i></a>
-                                                        @else
-                                                            <a id="deleteOwn" data-id="{{$budgetConcept->id}}" class="btn btn-danger destroyConceptOwn" data-concept-id="{{$budgetConcept->id}}" style="color:white" ><i class="fas fa-times"></i></a>
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        @endif
-                                    </tbody>
-                                </table>
+                                                        </td>
+                                                        <td class="budgetPriceRow" >
+                                                            @if($budgetConcept->concept_type_id == 1)
+                                                                @if( $purchasePriceWithMarginBenefit != null)
+                                                                    {{  round(
+                                                                            (number_format((float)$budgetConcept->purchase_price, 2, '.', '') / $budgetConcept->units / 100 * number_format((float)$budgetConcept->benefit_margin, 2, '.', ''))
+                                                                            + (number_format((float)$budgetConcept->purchase_price, 2, '.', '') / $budgetConcept->units), 2) }}
+
+                                                                    <!--
+                                                                        {{  round((number_format((float)$budgetConcept->purchase_price, 2, '.', '') / $budgetConcept->units / 100 * number_format((float)$budgetConcept->benefit_margin, 2, '.', '')) + (number_format((float)$budgetConcept->purchase_price, 2, '.', '') / $budgetConcept->units), 2) }}
+                                                                    -->
+                                                                @endif
+                                                            @else
+                                                                {{ number_format((float)$budgetConcept->sale_price, 2, '.', '')  }}
+                                                            @endif
+                                                        </td>
+                                                        <td class="budgetSubtotalRow">
+                                                            @if($budgetConcept->concept_type_id == 1)
+                                                                @if($budgetConcept->purchase_price != null)
+                                                                    {{ number_format((float)$subtotalSupplier, 2, '.', '')  }}
+                                                                @endif
+                                                            @else
+                                                                {{ number_format((float)$subtotalOwn, 2, '.', '')  }}
+                                                            @endif
+                                                        </td>
+                                                        <td class="budgetDiscountRow">
+                                                            @if(!$budgetConcept->discount)
+                                                                <input type="number" data-id-budget="{{ $presupuesto->id }}" data-id="{{ $budgetConcept->id }}" class="form-control discountInput" style="width:80px" name="discount[{{ $budgetConcept->id }}]" min="0" max="100"  value="0" data-subtotal="{{$subtotal}}">
+                                                            @else
+                                                                <input type="number" data-id-budget="{{ $presupuesto->id }}" data-id="{{ $budgetConcept->id }}" class="form-control discountInput" style="width:80px" name="discount[{{ $budgetConcept->id }}]" min="0" max="100" value="{{ $budgetConcept->discount }}" data-subtotal="{{$subtotal}}">
+                                                            @endif
+                                                        </td>
+                                                        <td class="conceptTotal"> {{ number_format((float)$budgetConcept->total, 2, '.', '')  }}</td>
+                                                        <td>
+                                                            @if($budgetConcept->concept_type_id == 1)
+                                                                {{-- <a class="btn btn-success" href="{{ route('admin.budget_concepts.editTypeSupplier',$budgetConcept->id) }}"><i class="fas fa-pencil-alt"></i></a> --}}
+                                                            @else
+                                                                {{-- <a class="btn btn-success" href="{{ route('admin.budget_concepts.editTypeOwn',$budgetConcept->id) }}"><i class="fas fa-pencil-alt"></i></a> --}}
+                                                            @endif
+                                                            @if($budgetConcept->concept_type_id == 1)
+                                                                <a id="deleteOwn" data-id="{{$budgetConcept->id}}" class="btn btn-danger destroyConceptOwn" data-concept-id="{{$budgetConcept->id}}" style="color:white" ><i class="fas fa-times"></i></a>
+                                                            @else
+                                                                <a id="deleteOwn" data-id="{{$budgetConcept->id}}" class="btn btn-danger destroyConceptOwn" data-concept-id="{{$budgetConcept->id}}" style="color:white" ><i class="fas fa-times"></i></a>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                </div>
 
                                 {{-- Boton --}}
                                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 form-group">
-                                    <div class="container">
-                                        <table class="table display responsive no-wrap">
-                                          <thead class="thead-dark">
-                                            <tr>
-                                              <th>Bruto</th>
-                                              <!--<th>Retenciones %</th>-->
-                                              <th>Descuento</th>
-                                              <th>Base</th>
-                                              <th>% IVA</th>
-                                              <th>IVA</th>
-                                              <th>TOTAL</th>
-                                            </tr>
-                                          </thead>
-                                          <tbody>
-                                            <tr>
-                                                <td><span id="gross">{{ number_format((float)$presupuesto->gross, 2, '.', '')  }}</span></td>
-                                                <!--<td><input id ="withhold" type="number" class="form-control" style="width:80px" id="gross" name="gross" min="0" max="1000" value="0" ></td>-->
-                                                <td id="discount_summary_amount">{{ number_format((float)$presupuesto->discount, 2, '.', '')  }}</td>
-                                                <td id="base_amount"> {{ number_format((float)$presupuesto->base, 2, '.', '')  }}</td>
-                                                <td>
-                                                    <input type="number" class="form-control" style="width:80px" id="iva" name="iva_percentage" min="0" max="100"
-                                                value="{{ number_format((float)$presupuesto->iva_percentage, 2, '.', '')  }}" >
-                                                </td>
-                                                <td id="iva_amount">{{ number_format((float)$presupuesto->iva, 2, '.', '')  }}</td>
-                                                <td id="budget_total"><strong>{{ number_format((float)$presupuesto->total, 2, '.', '')  }} €</strong></td>
-                                            </tr>
-                                          </tbody>
+                                    <div class="container table-responsive">
+                                        <table class=" table display no-wrap" >
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                <th>Bruto</th>
+                                                <!--<th>Retenciones %</th>-->
+                                                <th>Descuento</th>
+                                                <th>Base</th>
+                                                <th>% IVA</th>
+                                                <th>IVA</th>
+                                                <th>TOTAL</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><span id="gross">{{ number_format((float)$presupuesto->gross, 2, '.', '')  }}</span></td>
+                                                    <!--<td><input id ="withhold" type="number" class="form-control" style="width:80px" id="gross" name="gross" min="0" max="1000" value="0" ></td>-->
+                                                    <td id="discount_summary_amount">{{ number_format((float)$presupuesto->discount, 2, '.', '')  }}</td>
+                                                    <td id="base_amount"> {{ number_format((float)$presupuesto->base, 2, '.', '')  }}</td>
+                                                    <td>
+                                                        <input type="number" class="form-control" style="width:80px" id="iva" name="iva_percentage" min="0" max="100"
+                                                    value="{{ number_format((float)$presupuesto->iva_percentage, 2, '.', '')  }}" >
+                                                    </td>
+                                                    <td id="iva_amount">{{ number_format((float)$presupuesto->iva, 2, '.', '')  }}</td>
+                                                    <td id="budget_total"><strong>{{ number_format((float)$presupuesto->total, 2, '.', '')  }} €</strong></td>
+                                                </tr>
+                                            </tbody>
                                         </table>
                                       </div>
                                       <input type="hidden" id="base" name="base" value="0">
@@ -350,7 +352,7 @@
                     </div>
 
                 </div>
-                <div class="col-3">
+                <div class="col-lg-3 col-12 mt-lg-0 mt-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="card-title">

@@ -191,7 +191,6 @@ class CrmActivityMeetingController extends Controller
             'date' => 'required',
             'subject' => 'required',
             'files.*' => 'mimes:doc,pdf,docx,txt,zip,jpeg,jpg,png|size:20000',
-            'audio' => 'nullable',  // Validación para el archivo de audio
         ]);
 
         if ($request->hasFile('archivos')) {
@@ -231,34 +230,7 @@ class CrmActivityMeetingController extends Controller
         $meeting = CrmActivitiesMeetings::create($data);
         $meeting->save();
 
-        $fileCount = 0;  // Inicializar el contador de archivos
 
-        if ($request->has('audio_filenames')) {
-            foreach ($request->audio_filenames as $tempFilename) {
-                // Ruta del archivo temporal
-                $tempPath = storage_path('app/public/meetings/audios/temp/' . $tempFilename);
-                if (file_exists($tempPath)) {
-                    // Generar un nuevo nombre de archivo con el ID de la reunión y un número incremental de dos cifras
-                    $incrementalNumber = str_pad(++$fileCount, 2, '0', STR_PAD_LEFT);
-                    $newFilename = $meeting->id . '_' . $incrementalNumber . '.mp3';
-                    // Nueva ruta
-                    $newPath = storage_path('app/public/meetings/audios/' . $newFilename);
-                    // Mover el archivo
-                    rename($tempPath, $newPath);
-                }
-            }
-        }
-
-      // Manejo del archivo de audio
-        // if ($request->hasFile('audio')) {
-        //     $audioFile = $request->file('audio');
-        //     $incrementalNumber = str_pad(++$fileCount, 2, '0', STR_PAD_LEFT);
-        //     $audioFilename = $meeting->id . '_'. $incrementalNumber .'.' . $audioFile->getClientOriginalExtension();
-        //     // Guardar el archivo en el almacenamiento
-        //     $audioPath = $audioFile->storeAs('public/reuniones', $audioFilename);
-        //     // Generar la URL pública del archivo guardado
-        //     $audioUrl = storage_path('app/public/reuniones/' . $audioFilename);
-        // }
 
         // Guardar los datos relacionados con el equipo, contactos, etc. (esto se mantiene igual)
         if ($request->has('teamActa')) {
@@ -322,26 +294,13 @@ class CrmActivityMeetingController extends Controller
                 }
             }
         }
-        if(isset($audioUrl)){
-            ProcessMeetingTranscription::dispatch($meeting, $audioUrl);
-        }
 
         return redirect()->route('reunion.index')->with('toast', [
             'icon' => 'success',
-            'mensaje' => 'Se creó un acta de reunión correctamente, ahora puedes enviar el correo manualmente.'
+            'mensaje' => 'Se creó un acta de reunión correctamente.'
         ]);
     }
 
-    public function storeAudio(Request $request){
-        $audioFile = $request->file('audio');
-        // Generar un UUID para el nombre del archivo temporal
-        $uuid = (string) \Illuminate\Support\Str::uuid();
-        $audioFilename = 'Temp_' . uniqid() . '.' . $audioFile->getClientOriginalExtension();
-        // Guardar el archivo en el almacenamiento temporal
-        $audioFile->storeAs('public/meetings/audios/temp', $audioFilename);
-        $audioUrl = asset('storage/meetings/audios/temp/' . $audioFilename);
-        return response()->json(['audio_url' => $audioUrl, 'audio_filename' => $audioFilename]);
-    }
 
 
 

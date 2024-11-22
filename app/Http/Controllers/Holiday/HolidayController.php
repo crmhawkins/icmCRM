@@ -13,6 +13,7 @@ use App\Mail\MailHoliday;
 use App\Models\Alerts\Alert;
 use App\Models\Company\CompanyDetails;
 use App\Models\Logs\LogsEmail;
+use App\Models\Users\User;
 use Illuminate\Support\Facades\Mail;
 
 
@@ -255,18 +256,21 @@ class HolidayController extends Controller
                     ],
                 ]);
 
-                $data = [
-                    "admin_user_id" => 8,
-                    "stage_id" => 16,
-                    "activation_datetime" => Carbon::now()->format('Y-m-d H:i:s'),
-                    "status_id" => 1,
-                    "reference_id" => $holidayPetition->id,
-                    "description" => "Tienes una nueva petición de vacaciones",
-                ];
+                $users = User::where('inactive',0)->where('access_level_id',1)->get();
 
-            $alerta = Alert::create($data);
-            $alerta->save();
+                foreach ($users as $user) {
+                    $data = [
+                        "admin_user_id" => $user->id,
+                        "stage_id" => 16,
+                        "activation_datetime" => Carbon::now()->format('Y-m-d H:i:s'),
+                        "status_id" => 1,
+                        "reference_id" => $holidayPetition->id,
+                        "description" => "Tienes una nueva petición de vacaciones",
+                    ];
 
+                    $alerta = Alert::create($data);
+                    $alerta->save();
+                }
             }
         }
 

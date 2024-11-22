@@ -3,6 +3,7 @@
 use App\Events\RecargarPagina;
 use App\Http\Controllers\AccionesController;
 use App\Http\Controllers\Alert\AlertController;
+use App\Http\Controllers\Archivos\FileController;
 use App\Http\Controllers\Bajas\BajaController;
 use App\Http\Controllers\CrmActivities\CrmActivityMeetingController;
 use App\Http\Controllers\Suppliers\SuppliersController;
@@ -558,7 +559,8 @@ Route::get('/plan-contable/json', [PlanContableController::class, 'json']);
 
 Route::post('/save-order', [BudgetController::class, 'saveOrder'])->name('save.order');
 
-
+//filemanager
+Route::get('/archivos', [FileController::class, 'manager'])->name('file-manager');
 
 // Kit Digital
 // Route::get('/kit-digital-whatsapp', [KitDigitalController::class, 'index'])->name('kitDigital.indexWhatsapp');

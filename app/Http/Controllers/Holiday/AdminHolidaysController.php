@@ -198,9 +198,12 @@ class AdminHolidaysController extends Controller
 
             if($holidaySaved){
                 //Alerta resuelta
-                $alertHoliday = Alert::where('stage_id', 16)->where('reference_id', $holidayPetition->id)->get()->first();
-                $alertHoliday->status_id = 2;
-                $alertHoliday->save();
+                $alertHoliday = Alert::where('stage_id', 16)->where('reference_id', $holidayPetition->id)->get();
+                foreach ($alertHoliday as $alert) {
+                    $alert->status_id = 2;
+                    $alert->save();
+                }
+
 
                 // Crear alerta para avisar al usuario
                 $data = [
@@ -264,9 +267,11 @@ class AdminHolidaysController extends Controller
                     }
 
                     //Alerta resuelta
-                    $alertHoliday = Alert::where('stage_id', 16)->where('reference_id', $holidayPetition->id)->get()->first();
-                    $alertHoliday->status_id = 2;
-                    $alertHoliday->save();
+                    $alertHoliday = Alert::where('stage_id', 16)->where('reference_id', $holidayPetition->id)->get();
+                    foreach ($alertHoliday as $alert) {
+                        $alert->status_id = 2;
+                        $alert->save();
+                    }
                     $fechaNow = Carbon::now();
                     //Crear alerta para avisar al usuario
                     $data = [

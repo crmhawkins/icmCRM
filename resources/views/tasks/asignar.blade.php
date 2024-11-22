@@ -39,9 +39,9 @@
                     @endphp
                     @if ($agent->isMobile())
                         {{-- Contenido para dispositivos móviles --}}
-                        <div>
-                            <span>Es movil</span>
-                        </div>
+
+                        @livewire('tasks-asignar-table')
+
                     @else
                         {{-- Contenido para dispositivos de escritorio --}}
                         {{-- <livewire:users-table-view> --}}

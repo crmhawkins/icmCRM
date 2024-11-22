@@ -49,7 +49,7 @@
                     @if ($agent->isMobile())
                         {{-- Contenido para dispositivos móviles --}}
                         <div>
-                            <span>Es movil</span>
+                            @livewire('clients-table')
                         </div>
                     @else
                         {{-- Contenido para dispositivos de escritorio --}}

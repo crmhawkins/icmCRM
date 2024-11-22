@@ -29,7 +29,7 @@
 
     <section class="section mt-4">
         <div class="row">
-            <div class="col-9">
+            <div class="col-lg-9 col-12">
                 <div class="card">
                     <div class="card-body">
                         <form action="{{ route('gasto.store') }}" method="POST" enctype="multipart/form-data">
@@ -168,7 +168,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-3">
+            <div class="col-lg-3 col-12 mt-lg-0 mt-4">
                 <div class="card">
                     <div class="card-body">
                         <div class="card-title">

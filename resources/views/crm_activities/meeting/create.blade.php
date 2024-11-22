@@ -30,7 +30,7 @@
     </div>
     <section class="section mt-4">
         <div class="row">
-            <div class="col-9">
+            <div class="col-lg-9 col-12">
                 <div class="card">
                     <div class="card-body">
                         <form id="reunionForm" method="POST" action="{{ route('reunion.store')}}" enctype="multipart/form-data">
@@ -160,18 +160,13 @@
                 </div>
             </div>
 
-            <div class="col-3">
+            <div class="col-lg-3 col-12 mt-lg-0 mt-4">
                 <div class="card-body p-3">
                     <div class="card-title">
                         Acciones
                         <hr>
                     </div>
-                <div class="card-body">
-                    <div class="card-body">
-                        <button id="guardar" class="btn btn-success btn-block mb-2">Guardar</button>
-                        <button id="startRecording" type="button" class="btn btn-dark btn-block mb-2">Iniciar Grabación</button>
-
-                    </div>
+                    <button id="guardar" class="btn btn-success btn-block ">Guardar</button>
                 </div>
             </div>
         </div>
@@ -240,92 +235,12 @@
     document.addEventListener('DOMContentLoaded', function () {
 
         const form = document.getElementById('reunionForm');
-        const audioInput = document.getElementById('audioInput');
-        let mediaRecorder;
-        let audioChunks = [];
-        let recordingInterval;
-
-        document.getElementById('startRecording').addEventListener('click', function () {
-            navigator.mediaDevices.getUserMedia({ audio: true })
-                .then(stream => {
-                    mediaRecorder = new MediaRecorder(stream);
-                    mediaRecorder.start();
-
-                    mediaRecorder.ondataavailable = event => {
-                        audioChunks.push(event.data);
-                    };
-
-                    mediaRecorder.onstop = () => {
-                        const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
-                        const audioFile = new File([audioBlob], 'audio.mp3', { type: 'audio/mp3' });
-
-                        // Crear un objeto FormData y añadir el archivo de audio
-                        const formData = new FormData();
-                        formData.append('audio', audioFile);
-
-                        // Enviar el archivo de audio al servidor
-                        fetch('{{ route('audio.store') }}', {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            body: formData
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.audio_filename) {
-                                console.log('Archivo subido:', data.audio_filename);
-
-                                // Guardar el nombre del archivo en la sesión automáticamente
-                                // Actualizar el campo oculto del formulario si lo necesitas después
-                                let audioFilenamesField = document.getElementById('audio_filenames');
-                                if (audioFilenamesField) {
-                                    if (audioFilenamesField.value) {
-                                        audioFilenamesField.value += ',' + data.audio_filename;
-                                    } else {
-                                        audioFilenamesField.value = data.audio_filename;
-                                    }
-                                }
-
-                                // Mostrar el audio grabado en el reproductor
-                                const audioUrl = data.audio_url;
-                                document.getElementById('audioPlayback').src = audioUrl;
-                                document.getElementById('audioPlayback').style.display = 'block';
-                            }
-                        })
-                        .catch(error => console.error('Error al subir el archivo:', error));
-
-                        // Limpiar los chunks de audio para la próxima grabación
-                        audioChunks = [];
-                    };
-
-                    // Grabar y enviar cada 15 minutos (900000 ms)
-                    recordingInterval = setInterval(() => {
-                        if (mediaRecorder.state !== 'inactive') {
-                            mediaRecorder.stop(); // Detiene la grabación actual y la sube
-                            mediaRecorder.start(); // Inicia una nueva grabación
-                        }
-                    }, 900000); // 15 minutos
-
-                    document.getElementById('startRecording').disabled = true;
-                })
-                .catch(error => {
-                    console.error("Error al acceder al micrófono", error);
-                });
-        });
-
-
 
         document.getElementById('guardar').addEventListener('click', function (e) {
             e.preventDefault();
-            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-                mediaRecorder.stop();
-            }
-            //esperar 10 segundos para que finalice la grabación
-            setTimeout(function () {
+
                 form.submit(); // Enviar el formulario normalmente
-            }, 10000);
-            //form.submit();
+
         });
 
         const contactselect = document.getElementById('contacts');

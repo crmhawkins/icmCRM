@@ -49,9 +49,7 @@
                     @endphp
                     @if ($agent->isMobile())
                         {{-- Contenido para dispositivos móviles --}}
-                        <div>
-                            <span>Es movil</span>
-                        </div>
+
                         @livewire('budgets-user-table')
 
                     @else

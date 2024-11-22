@@ -36,7 +36,7 @@
             <form action="{{route('holiday.admin.acceptHolidays', $holidayPetition->id)}}" method="POST" class="form-primary">
                 @csrf
             <div class="row">
-                <div class="col-9">
+                <div class="col-lg-9 col-12">
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
@@ -73,7 +73,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-3">
+                    <div class="col-lg-3 col-12 mt-lg-0 mt-4">
                         <div class="card-body p-3">
                             <div class="card-title">
                                 Acciones

@@ -236,7 +236,7 @@
                         </li>
                     </ul>
                 </li>
-                {{-- <li class="sidebar-item has-sub {{ $actasActive ? 'active' : '' }}">
+                <li class="sidebar-item has-sub {{ $actasActive ? 'active' : '' }}">
                     <a href="#" class='sidebar-link'>
                         <i class="fa-solid fa-address-book fs-5"></i>
                         <span>Actas de reunion</span>
@@ -259,7 +259,7 @@
                             </a>
                         </li>
                     </ul>
-                </li> --}}
+                </li>
                 @if ($admin || $gerente || $contable)
                     <li class="sidebar-item {{ request()->routeIs('facturas.index') ? 'active' : '' }}">
                         <a href="{{route('facturas.index')}}" class='sidebar-link'>

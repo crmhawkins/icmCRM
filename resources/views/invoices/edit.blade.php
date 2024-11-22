@@ -31,7 +31,7 @@
 
         <section class="section mt-4">
             <div class="row">
-                <div class="col-9">
+                <div class=" col-lg-9 col-12">
                     <div class="card">
                         <div class="card-body">
                             <form action="{{route('factura.update', $factura->id)}}" method="POST">
@@ -146,84 +146,86 @@
                                         <h3 class="text-center text-uppercase fs-5 mb-3">Conceptos</h3>
                                     </div>
                                 </div>
-                                <table id="conceptsTable" class="table dt_custom_budget_concepts table-hover table-striped table-bordered mt-4" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Concepto</th>
-                                            <th>Unidades</th>
-                                            <th>Precio/Unidad</th>
-                                            <th>SUBTOTAL</th>
-                                            <th>DTO</th>
-                                            <th>TOTAL</th>
-                                            <th hidden></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @if($invoice_concepts)
-                                            @foreach($invoice_concepts as $concept)
-                                            <?php
-                                                $subtotalOwn = $concept->units*$concept->sale_price;
-                                                $subtotalSupplier = $concept->total_no_discount;
-                                                $subtotal = 0;
-                                                if ($concept->concept_type_id == 1 ){
-                                                    $subtotal = $subtotalSupplier;
-                                                }
-                                                if ($concept->concept_type_id == 2 ){
-                                                    $subtotal = $subtotalOwn;
-                                                }
-                                                if ($concept->concept_type_id == 1 ){
-                                                    $purchasePriceWithoutMarginBenefit = $concept->purchase_price;
-                                                    $benefitMargin = $concept->benefit_margin;
-                                                    $marginBenefitToAdd  =  ($purchasePriceWithoutMarginBenefit*$benefitMargin)/100;
-                                                    $purchasePriceWithMarginBenefit  =  $purchasePriceWithoutMarginBenefit+ $marginBenefitToAdd;
-                                                }
-                                            ?>
-                                                <tr class="budgetRow" data-child-value="{{$concept->concept}}">
+                                <div class="table-responsive">
+                                    <table id="conceptsTable" class="table dt_custom_budget_concepts table-hover table-striped table-bordered mt-4" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>Concepto</th>
+                                                <th>Unidades</th>
+                                                <th>Precio/Unidad</th>
+                                                <th>SUBTOTAL</th>
+                                                <th>DTO</th>
+                                                <th>TOTAL</th>
+                                                <th hidden></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if($invoice_concepts)
+                                                @foreach($invoice_concepts as $concept)
+                                                <?php
+                                                    $subtotalOwn = $concept->units*$concept->sale_price;
+                                                    $subtotalSupplier = $concept->total_no_discount;
+                                                    $subtotal = 0;
+                                                    if ($concept->concept_type_id == 1 ){
+                                                        $subtotal = $subtotalSupplier;
+                                                    }
+                                                    if ($concept->concept_type_id == 2 ){
+                                                        $subtotal = $subtotalOwn;
+                                                    }
+                                                    if ($concept->concept_type_id == 1 ){
+                                                        $purchasePriceWithoutMarginBenefit = $concept->purchase_price;
+                                                        $benefitMargin = $concept->benefit_margin;
+                                                        $marginBenefitToAdd  =  ($purchasePriceWithoutMarginBenefit*$benefitMargin)/100;
+                                                        $purchasePriceWithMarginBenefit  =  $purchasePriceWithoutMarginBenefit+ $marginBenefitToAdd;
+                                                    }
+                                                ?>
+                                                    <tr class="budgetRow" data-child-value="{{$concept->concept}}">
 
-                                                    <td>{{ $concept->title }}</td>
-                                                    <td >
-                                                        @if($concept->concept_type_id == 1)
-                                                            @if($concept->purchase_price != null)
+                                                        <td>{{ $concept->title }}</td>
+                                                        <td >
+                                                            @if($concept->concept_type_id == 1)
+                                                                @if($concept->purchase_price != null)
+                                                                    {{ $concept->units }}
+                                                                @endif
+                                                            @else
                                                                 {{ $concept->units }}
                                                             @endif
-                                                        @else
-                                                            {{ $concept->units }}
-                                                        @endif
-                                                    </td>
-                                                    <td class="budgetPriceRow" >
-                                                        @if($concept->concept_type_id == 1)
-                                                            @if( $purchasePriceWithMarginBenefit != null)
-                                                                {{  round(
-                                                                        (number_format((float)$concept->purchase_price, 2, '.', '') / $concept->units / 100 * number_format((float)$concept->benefit_margin, 2, '.', ''))
-                                                                        + (number_format((float)$concept->purchase_price, 2, '.', '') / $concept->units), 2)
-                                                                }}
+                                                        </td>
+                                                        <td class="budgetPriceRow" >
+                                                            @if($concept->concept_type_id == 1)
+                                                                @if( $purchasePriceWithMarginBenefit != null)
+                                                                    {{  round(
+                                                                            (number_format((float)$concept->purchase_price, 2, '.', '') / $concept->units / 100 * number_format((float)$concept->benefit_margin, 2, '.', ''))
+                                                                            + (number_format((float)$concept->purchase_price, 2, '.', '') / $concept->units), 2)
+                                                                    }}
+                                                                @endif
+                                                            @else
+                                                                {{ number_format((float)$concept->sale_price, 2, '.', '')  }}
                                                             @endif
-                                                        @else
-                                                            {{ number_format((float)$concept->sale_price, 2, '.', '')  }}
-                                                        @endif
-                                                    </td>
-                                                    <td class="budgetSubtotalRow">
-                                                        @if($concept->concept_type_id == 1)
-                                                            @if($concept->purchase_price != null)
-                                                                {{ number_format((float)$subtotalSupplier, 2, '.', '')  }}
+                                                        </td>
+                                                        <td class="budgetSubtotalRow">
+                                                            @if($concept->concept_type_id == 1)
+                                                                @if($concept->purchase_price != null)
+                                                                    {{ number_format((float)$subtotalSupplier, 2, '.', '')  }}
+                                                                @endif
+                                                            @else
+                                                                {{ number_format((float)$subtotalOwn, 2, '.', '')  }}
                                                             @endif
-                                                        @else
-                                                            {{ number_format((float)$subtotalOwn, 2, '.', '')  }}
-                                                        @endif
-                                                    </td>
-                                                    <td class="budgetDiscountRow">
-                                                        {{ $concept->discount ?? '0 ' }}%
-                                                    </td>
-                                                    <td class="conceptTotal"> {{ number_format((float)$concept->total, 2, '.', '')  }}</td>
+                                                        </td>
+                                                        <td class="budgetDiscountRow">
+                                                            {{ $concept->discount ?? '0 ' }}%
+                                                        </td>
+                                                        <td class="conceptTotal"> {{ number_format((float)$concept->total, 2, '.', '')  }}</td>
 
-                                                </tr>
-                                            @endforeach
-                                        @endif
-                                    </tbody>
-                                </table>
+                                                    </tr>
+                                                @endforeach
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                </div>
                                 {{-- Boton --}}
                                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 form-group">
-                                    <div class="container">
+                                    <div class="container table-responsive">
                                         <table class="table display responsive no-wrap">
                                           <thead class="thead-dark">
                                             <tr>
@@ -257,7 +259,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-3">
+                <div class="col-lg-3 col-12 mt-lg-0 mt-4">
                     <div class="card-body p-3">
                         <div class="card-title">
                             Acciones

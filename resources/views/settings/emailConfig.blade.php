@@ -201,7 +201,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-3">
+            <div class="col-lg-3 col-12 mt-lg-0 mt-4">
                 <div class="card-body p-3">
                     <div class="card-title">
                         Acciones
