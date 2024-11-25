@@ -1140,7 +1140,7 @@ class BudgetConceptsController extends Controller
 
         // Generate the PDF file for the supplier
         $pathToSaveSupplier = 'Ordenes/' . $encrypted . '.pdf';
-        $path = Storage::disk('public')->put($pathToSaveSupplier, PDF::loadView('purchase_order.purchaseOrderPDF', compact('empresa','data', 'logoURL', 'budgetCustomPDF'))->output());
+        $path = Storage::disk('public')->put($pathToSaveSupplier, PDF::loadView('purchase_order.purchaseOrderPDF', compact('empresa','data', 'logoURL'))->output());
         $fileUrl = Storage::url($pathToSaveSupplier);
         // Add the supplier file path to the array
         $pathFiles[] =  storage_path('app/public/' . $pathToSaveSupplier);
@@ -1148,7 +1148,7 @@ class BudgetConceptsController extends Controller
         // Generate the name and path for the delivery order (albarán)
         $nameAlbaran = 'albaran_' . $order->id . '_' . Carbon::now()->format('Y-m-d');
         $pathToSaveAlbaran = 'Albaranes/' . $nameAlbaran . '.pdf';
-        Storage::disk('public')->put($pathToSaveAlbaran, PDF::loadView('purchase_order.deliveryOrderPDF', compact('empresa','data', 'logoURL', 'budgetCustomPDF'))->output());
+        Storage::disk('public')->put($pathToSaveAlbaran, PDF::loadView('purchase_order.deliveryOrderPDF', compact('empresa','data', 'logoURL'))->output());
         $fileUrl2 = storage_path('app/public/' . $pathToSaveAlbaran);
 
         // Add the delivery order path to the array
@@ -1293,7 +1293,7 @@ class BudgetConceptsController extends Controller
         ];
 
 
-        $pdf = PDF::loadView('purchase_order.purchaseOrderPDF', compact('data','logoURL', 'budgetCustomPDF'));
+        $pdf = PDF::loadView('purchase_order.purchaseOrderPDF', compact('data','logoURL'));
 
         return $pdf->download('orden_compra_' .$order->id . '_' . Carbon::now()->format('Y-m-d') . '.pdf');
 

@@ -180,23 +180,6 @@
         -->
         <footer class="information pagenum" style="page-break-after: avoid;position: fixed; bottom: -60px;padding-left:30px;padding-right:30px;height: 140px;" >
             <hr style="margin-bottom: 0.1em;border-style:inset;border-width: 0.5px;color:black">
-            <table width="100%;margin-bottom:5px; font-size:14px">
-                <tr>
-                    <td align="left" style="width: 50%;">
-                        {{  $budgetCustomPDF->footer_string_1}}
-                    </td>
-                    <!--
-                        <td align="right" style="width: 50%;">
-                            Company Slogan
-                        </td>
-                    -->
-                </tr>
-                <tr>
-                    <td align="left" style="width: 50%;">
-                            {{  $budgetCustomPDF->footer_string_2}}
-                        </td>
-                    </tr>
-            </table>
         </footer>
         <div class="information" style="display: block; page-break-before: always;">
             <table class="order" style="border: 0px solid black;width:100%;padding-left:30px;padding-right:30px; font-size: 10px">
