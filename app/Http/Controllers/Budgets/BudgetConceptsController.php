@@ -1043,11 +1043,11 @@ class BudgetConceptsController extends Controller
         }
 
         // PDF personalización
-        $budgetCustomPDF = BudgetCustomPDF::where('id', 1)->get()->first();
+        $empresa = CompanyDetails::get()->first();
 
         $supplier = Supplier::where('id',$order->supplier_id)->get()->first();
 
-        $name = $budgetCustomPDF->company_name;
+        $name = $empresa->company_name;
 
         $proveedor = $order->Proveedor->name;
 
@@ -1057,7 +1057,7 @@ class BudgetConceptsController extends Controller
         ->where('purchase_order.id', '=', $order->id)
         ->value('reference');
 
-        $logoURL =  config('app.appUrl') . $budgetCustomPDF['logo_image'];
+        $logoURL =  asset($empresa->logo);
 
         $arrayConceptStringsAndBreakLines = explode(PHP_EOL, $order->concepto->concept);
 
@@ -1210,9 +1210,9 @@ class BudgetConceptsController extends Controller
     public function generatePDF($id){
         // PDF personalización
         $order = PurcharseOrder::find($id);
-        $budgetCustomPDF = BudgetCustomPDF::where('id', 1)->get()->first();
+        $empresa = CompanyDetails::get()->first();
 
-        $name = $budgetCustomPDF->company_name;
+        $name = $empresa->company_name;
 
         $proveedor = $order->Proveedor->name;
 
@@ -1221,7 +1221,7 @@ class BudgetConceptsController extends Controller
             ->where('purchase_order.id', '=', $order->id)
             ->value('reference');
 
-        $logoURL =  config('app.appUrl') . $budgetCustomPDF['logo_image'];
+        $logoURL =  asset($empresa->logo);
 
         $arrayConceptStringsAndBreakLines = explode(PHP_EOL, $order->concepto->concept);
 
