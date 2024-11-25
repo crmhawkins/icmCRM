@@ -562,6 +562,10 @@ Route::post('/save-order', [BudgetController::class, 'saveOrder'])->name('save.o
 //filemanager
 Route::get('/archivos', [FileController::class, 'manager'])->name('file-manager');
 
+Route::group(['prefix' => 'laravel-filemanager'], function () {
+    \UniSharp\LaravelFilemanager\Lfm::routes();
+});
+
 // Kit Digital
 // Route::get('/kit-digital-whatsapp', [KitDigitalController::class, 'index'])->name('kitDigital.indexWhatsapp');
 // Route::get('/kit-digital', [KitDigitalController::class, 'listarClientes'])->name('kitDigital.index');
