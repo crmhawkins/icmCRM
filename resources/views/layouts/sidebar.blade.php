@@ -43,6 +43,7 @@
                     $EmailConfig = request()->routeIs('admin.categoriaEmail.*') || request()->routeIs('admin.statusMail.*');
                     $BajaActive = request()->routeIs('bajas.*');
                     $StadisticsActive = request()->routeIs('estadistica.*');
+                    $ContabilidadActive = request()->routeIs('cuentasContables.*') || request()->routeIs('subCuentasContables.*') || request()->routeIs('subCuentasHijaContables.*') || request()->routeIs('grupoContabilidad.*') || request()->routeIs('subGrupoContabilidad.*') || request()->routeIs('admin.planContable.index');
                     $admin = (Auth::user()->access_level_id == 1);
                     $gerente = (Auth::user()->access_level_id == 2);
                     $contable = (Auth::user()->access_level_id == 3);
@@ -183,6 +184,62 @@
                                 <i class="fa-solid fa-list"></i>
                                 <span>
                                     En Revisión
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="sidebar-item has-sub {{ $ContabilidadActive ? 'active' : '' }}">
+                    <a href="#" class='sidebar-link'>
+                        <i class="fa-solid fa-calculator fs-5"></i>
+                        <span>Contablilidad</span>
+                    </a>
+                    <ul class="submenu" style="{{ $ContabilidadActive ? 'display:block;' : 'display:none;' }}">
+                        <li class="submenu-item {{ request()->routeIs('admin.planContable.index') ? 'active' : '' }}">
+                            <a href="{{route('admin.planContable.index')}}">
+                                <i class="fa-solid fa-list"></i>
+                                <span>
+                                    Plan Contable
+                                </span>
+                            </a>
+                        </li>
+                        <li class="submenu-item {{ request()->routeIs('grupoContabilidad.index') ? 'active' : '' }}">
+                            <a href="{{route('grupoContabilidad.index')}}">
+                                <i class="fa-solid fa-list"></i>
+                                <span>
+                                    Grupo Contable
+                                </span>
+                            </a>
+                        </li>
+                        <li class="submenu-item {{ request()->routeIs('subGrupoContabilidad.index') ? 'active' : '' }}">
+                            <a href="{{route('subGrupoContabilidad.index')}}">
+                                <i class="fa-solid fa-list"></i>
+                                <span>
+                                    Subgrupo Contable
+                                </span>
+                            </a>
+                        </li>
+                        <li class="submenu-item {{ request()->routeIs('cuentasContables.index') ? 'active' : '' }}">
+                            <a href="{{route('cuentasContables.index')}}">
+                                <i class="fa-solid fa-list"></i>
+                                <span>
+                                    Cuenta Contable
+                                </span>
+                            </a>
+                        </li>
+                        <li class="submenu-item {{ request()->routeIs('subCuentasContables.index') ? 'active' : '' }}">
+                            <a href="{{route('subCuentasContables.index')}}">
+                                <i class="fa-solid fa-list"></i>
+                                <span>
+                                    Subcuenta Contable
+                                </span>
+                            </a>
+                        </li>
+                        <li class="submenu-item {{ request()->routeIs('subCuentasHijaContables.index') ? 'active' : '' }}">
+                            <a href="{{route('subCuentasHijaContables.index')}}">
+                                <i class="fa-solid fa-list"></i>
+                                <span>
+                                    Subcuenta hija Contable
                                 </span>
                             </a>
                         </li>
