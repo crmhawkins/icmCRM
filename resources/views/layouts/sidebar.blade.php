@@ -711,6 +711,13 @@
 
 
             </ul>
+            <div class="sidebar-footer mt-3">
+                <p>
+                    <b>Versión de software:</b> <br> 5.0.1<br>
+                    <b>Build:</b> <br> 3.0.1<br>
+                    <b>Versión de la IU:</b> <br> 2.5
+                </p>
+            </div>
         </div>
         {{-- <button class="sidebar-toggler btn x"><i data-feather="x"></i></button> --}}
     </div>
