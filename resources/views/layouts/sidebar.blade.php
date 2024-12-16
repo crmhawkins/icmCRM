@@ -434,7 +434,7 @@
                             </li>
                             <li class="submenu-item {{ request()->routeIs('diarioCaja.index') ? 'active' : '' }}">
                                 <a target="_blank" href="{{route('diarioCaja.index')}}">
-                                    <i class="fa-solid fa-plus"></i>
+                                    <i class="fa-solid fa-list"></i>
                                     <span>
                                        Diario de caja
                                     </span>
