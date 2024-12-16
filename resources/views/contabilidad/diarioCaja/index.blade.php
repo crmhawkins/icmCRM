@@ -107,7 +107,7 @@
     </div>
 </div>
 
-@include('sweetalert::alert')
+
 
 @section('scripts')
 <script>
