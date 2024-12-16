@@ -44,7 +44,7 @@
         </div>
     </div>
 
-    <section class="section">
+    <section class="section pt-4">
         <div class="card">
             <div class="card-body">
                 <form method="POST" action="{{ route('diarioCaja.store') }}" class="row" enctype="multipart/form-data">
