@@ -18,6 +18,7 @@ use App\Http\Controllers\Budgets\BudgetController;
 use App\Http\Controllers\Tasks\TasksController;
 use App\Http\Controllers\Budgets\BudgetConceptsController;
 use App\Http\Controllers\Contabilidad\CuentasContableController;
+use App\Http\Controllers\Contabilidad\DiarioCajaController;
 use App\Http\Controllers\Contabilidad\PlanContableController;
 use App\Http\Controllers\Contabilidad\SubCuentasContableController;
 use App\Http\Controllers\Contabilidad\SubCuentasHijoController;
@@ -555,6 +556,16 @@ Route::delete('/sub-grupo-contable/destroy/{id}', [SubGrupoContabilidadControlle
 Route::get('/plan-contable', [PlanContableController::class, 'index'])->name('admin.planContable.index');
 Route::get('/plan-contable/json', [PlanContableController::class, 'json']);
 
+//Diarioo de caja
+Route::get('/diario-caja', [DiarioCajaController::class, 'index'])->name('diarioCaja.index');
+Route::get('/diario-caja/ingreso', [DiarioCajaController::class, 'createIngreso'])->name('diarioCaja.ingreso');
+Route::get('/diario-caja/gasto', [DiarioCajaController::class, 'createGasto'])->name('diarioCaja.gasto');
+Route::post('/diario-caja/store', [DiarioCajaController::class, 'store'])->name('diarioCaja.store');
+Route::post('/diario-caja/store/gasto', [DiarioCajaController::class, 'storeGasto'])->name('diarioCaja.storeGasto');
+Route::get('/diario-caja/{id}/edit', [DiarioCajaController::class, 'edit'])->name('diarioCaja.edit');
+Route::post('/diario-caja/{id}/update', [DiarioCajaController::class, 'update'])->name('diarioCaja.update');
+Route::post('/diario-caja/{id}/destroy', [DiarioCajaController::class, 'destroy'])->name('diarioCaja.destroy');
+Route::post('/diario-caja/{id}/destroy-linea', [DiarioCajaController::class, 'destroyDiarioCaja'])->name('diarioCaja.destroyDiarioCaja');
 
 
 Route::post('/save-order', [BudgetController::class, 'saveOrder'])->name('save.order');

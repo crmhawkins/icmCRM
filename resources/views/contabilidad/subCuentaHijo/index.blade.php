@@ -38,7 +38,7 @@
     <section class="section pt-4">
         <div class="card">
             <div class="card-body">
-                <a href="{{ route('subCuentasHijaContables.create') }}" class="btn bg-color-quinto">Añadir sub cuenta hija contable</a>
+                {{-- <a href="{{ route('subCuentasHijaContables.create') }}" class="btn bg-color-quinto">Añadir sub cuenta hija contable</a> --}}
                 <hr class="mb-5">
                 <div class="row justify-content-center">
                     <div class="col-md-12">

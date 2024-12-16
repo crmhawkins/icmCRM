@@ -38,7 +38,7 @@
                     $actasActive= request()->routeIs('reunion.*');
                     $cargoActive= request()->routeIs('cargo.*');
                     $departamentoActive= request()->routeIs('departamento.*');
-                    $tesoreriaActive = request()->routeIs('ingreso.*') || request()->routeIs('gasto.*') || request()->routeIs('gasto-asociado.*') || request()->routeIs('gasto-sin-clasificar.*') || request()->routeIs('gastos-asociado.*') || request()->routeIs('categorias-gastos*');
+                    $tesoreriaActive = request()->routeIs('ingreso.*')  || request()->routeIs('diarioCaja.*') || request()->routeIs('gasto.*') || request()->routeIs('gasto-asociado.*') || request()->routeIs('gasto-sin-clasificar.*') || request()->routeIs('gastos-asociado.*') || request()->routeIs('categorias-gastos*');
                     $cofiguracionActive = request()->routeIs('configuracion.*');
                     $EmailConfig = request()->routeIs('admin.categoriaEmail.*') || request()->routeIs('admin.statusMail.*');
                     $BajaActive = request()->routeIs('bajas.*');
@@ -429,6 +429,14 @@
                                     <i class="fa-solid fa-plus"></i>
                                     <span>
                                        Crear categoria de gastos asociados
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="submenu-item {{ request()->routeIs('diarioCaja.index') ? 'active' : '' }}">
+                                <a target="_blank" href="{{route('diarioCaja.index')}}">
+                                    <i class="fa-solid fa-plus"></i>
+                                    <span>
+                                       Diario de caja
                                     </span>
                                 </a>
                             </li>
