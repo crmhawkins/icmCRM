@@ -926,12 +926,10 @@ class BudgetConceptsController extends Controller
                 $searchOrder->cancelled = 0;
 
                 $searchOrder->save();
-                $empresa = CompanyDetails::get()->first();
-
 
                 return response()->json([
                     'message' => 'Orden de compra actualizada',
-                    'entryUrl' => route('purchase_order.purchaseOrderPDF',compact('searchOrder','empresa')),
+                    'entryUrl' => route('purchase_order.purchaseOrderPDF',  $searchOrder),
                     ]);
 
             }else{
@@ -955,10 +953,10 @@ class BudgetConceptsController extends Controller
                 $savedPurchaseOrder->cancelled = 0;
 
                 $savedPurchaseOrder->save();
-                $empresa = CompanyDetails::get()->first();
+
                 return response()->json([
                     'message' => 'Orden de compra generada',
-                    'entryUrl' => route('purchase_order.purchaseOrderPDF',compact('savedPurchaseOrder','empresa')),
+                    'entryUrl' => route('purchase_order.purchaseOrderPDF',  $savedPurchaseOrder),
                     ]);
             }
         }else{
@@ -1294,7 +1292,7 @@ class BudgetConceptsController extends Controller
         ];
 
 
-        $pdf = PDF::loadView('purchase_order.purchaseOrderPDF', compact('data','logoURL'));
+        $pdf = PDF::loadView('purchase_order.purchaseOrderPDF', compact('data','logoURL','empresa'));
 
         return $pdf->download('orden_compra_' .$order->id . '_' . Carbon::now()->format('Y-m-d') . '.pdf');
 
