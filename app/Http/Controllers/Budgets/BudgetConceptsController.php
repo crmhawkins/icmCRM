@@ -931,7 +931,7 @@ class BudgetConceptsController extends Controller
 
                 return response()->json([
                     'message' => 'Orden de compra actualizada',
-                    'entryUrl' => route('purchase_order.purchaseOrderPDF',compact('savedPurchaseOrder','empresa')),
+                    'entryUrl' => route('purchase_order.purchaseOrderPDF',compact('searchOrder','empresa')),
                     ]);
 
             }else{
