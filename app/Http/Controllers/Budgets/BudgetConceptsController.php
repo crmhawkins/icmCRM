@@ -926,11 +926,12 @@ class BudgetConceptsController extends Controller
                 $searchOrder->cancelled = 0;
 
                 $searchOrder->save();
+                $empresa = CompanyDetails::get()->first();
 
 
                 return response()->json([
                     'message' => 'Orden de compra actualizada',
-                    'entryUrl' => route('purchase_order.purchaseOrderPDF',  $searchOrder),
+                    'entryUrl' => route('purchase_order.purchaseOrderPDF',  $searchOrder,$empresa),
                     ]);
 
             }else{
@@ -954,10 +955,10 @@ class BudgetConceptsController extends Controller
                 $savedPurchaseOrder->cancelled = 0;
 
                 $savedPurchaseOrder->save();
-
+                $empresa = CompanyDetails::get()->first();
                 return response()->json([
                     'message' => 'Orden de compra generada',
-                    'entryUrl' => route('purchase_order.purchaseOrderPDF',  $savedPurchaseOrder),
+                    'entryUrl' => route('purchase_order.purchaseOrderPDF',  $savedPurchaseOrder,$empresa),
                     ]);
             }
         }else{
