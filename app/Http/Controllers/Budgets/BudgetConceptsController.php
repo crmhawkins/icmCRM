@@ -931,7 +931,7 @@ class BudgetConceptsController extends Controller
 
                 return response()->json([
                     'message' => 'Orden de compra actualizada',
-                    'entryUrl' => route('purchase_order.purchaseOrderPDF',  $searchOrder,$empresa),
+                    'entryUrl' => route('purchase_order.purchaseOrderPDF',compact('savedPurchaseOrder','empresa')),
                     ]);
 
             }else{
@@ -958,7 +958,7 @@ class BudgetConceptsController extends Controller
                 $empresa = CompanyDetails::get()->first();
                 return response()->json([
                     'message' => 'Orden de compra generada',
-                    'entryUrl' => route('purchase_order.purchaseOrderPDF',  $savedPurchaseOrder,$empresa),
+                    'entryUrl' => route('purchase_order.purchaseOrderPDF',compact('savedPurchaseOrder','empresa')),
                     ]);
             }
         }else{
