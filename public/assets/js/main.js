@@ -87,6 +87,19 @@ if(typeof PerfectScrollbar == 'function') {
         wheelPropagation: false
     });
 }
+// Wait for the DOM to load before executing the scroll logic
+document.addEventListener('DOMContentLoaded', function () {
+    // Scroll to the bottom of the sidebar if the current path is /configuracion
+    if (window.location.pathname.includes('/configuracion')) {
+        const sidebarWrapper = document.querySelector('.sidebar-wrapper');
+        if (sidebarWrapper) {
+            console.log("scrolling to bottom");
+            sidebarWrapper.scrollTop = sidebarWrapper.scrollHeight;
+            console.log("scrollHeight:", sidebarWrapper.scrollHeight);
+        }
+    }
+});
+
 
 // Scroll into active sidebar
 document.querySelector('.sidebar-item.active').scrollIntoView(false)
