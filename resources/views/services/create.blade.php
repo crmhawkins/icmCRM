@@ -37,7 +37,7 @@
                             <div class="col-sm-12 col-md-12">
                                 <div class="form-group mb-3">
                                     <label for="title">Titulo:</label>
-                                    <input placeholder="Titulo del servicio" type="text" class="form-control @error('title') is-invalid @enderror" id="title" value="{{ old('title') }}" name="title">
+                                    <input placeholder="Titulo del servicio" type="text" class="form-control @error('title') is-invalid @enderror" id="title" value="{{ old('title') ?? 'Servicio de ejemplo' }}" name="title">
                                     @error('title')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -50,12 +50,14 @@
                                     <label class="mb-2 text-left" for="services_categories_id">Categoria</label>
                                     <div class="flex flex-row align-items-start mb-0">
                                         <select id="services_categories_id" class="choices w-100 form-select  @error('services_categories_id') is-invalid @enderror" name="services_categories_id">
-                                            <option value="">Seleccione una Categoria</option>
+                                            <option value="" {{ old('services_categories_id') ? '' : 'selected' }}>Seleccione una Categoria</option>
+                                            <option value="test" {{ old('services_categories_id') == 'test' ? 'selected' : '' }}>Categoria de Test</option>
                                             @foreach ($categorias as $categoria)
-                                                <option {{old('services_categories_id') == $categoria->id ? 'selected' : '' }} value="{{ $categoria->id }}">{{ $categoria->name }}</option>
+                                                <option {{ old('services_categories_id') == $categoria->id ? 'selected' : '' }} value="{{ $categoria->id }}">{{ $categoria->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
+
                                     @error('services_categories_id')
                                     <p class="invalid-feedback d-block" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -66,7 +68,9 @@
                             <div class="col-sm-12 col-md-12">
                                 <div class="form-group mb-3">
                                     <label class="mb-2 text-left" for="concept">Descripcion:</label>
-                                    <textarea class="form-control @error('concept') is-invalid @enderror" id="concept" name="concept">{{ old('concept') }}</textarea>
+                                    <textarea class="form-control @error('concept') is-invalid @enderror"
+                                              id="concept"
+                                              name="concept">{{ old('concept') ?? 'Servicio de ejemplo para justificación' }}</textarea>
                                     @error('concept')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -74,10 +78,17 @@
                                     @enderror
                                 </div>
                             </div>
+
                             <div class="col-sm-12 col-md-12">
                                 <div class="form-group mb-3">
                                     <label for="price">Precio:</label>
-                                    <input placeholder="Precio..." type="text" class="form-control @error('price') is-invalid @enderror" id="phone" value="{{ old('price') }}" name="price" step="0.01">
+                                    <input placeholder="Precio..."
+                                           type="text"
+                                           class="form-control @error('price') is-invalid @enderror"
+                                           id="price"
+                                           value="{{ old('price') ?? 50 }}"
+                                           name="price"
+                                           step="0.01">
                                     @error('price')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -85,6 +96,7 @@
                                     @enderror
                                 </div>
                             </div>
+
                         </div>
                     </div>
                     <div class="form-group mt-5">

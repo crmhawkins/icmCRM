@@ -62,8 +62,8 @@
                                     <div class="flex flex-row align-items-start mb-0">
                                         <select id="type" class="choices w-100 form-select  @error('type') is-invalid @enderror" name="type">
                                             <option value="">Seleccione un tipo</option>
-                                            <option {{ old('type') == 1 ? 'selected' : '' }} value="1">Proveedor</option>
-                                            <option {{ old('type') == 2 ? 'selected' : '' }} value="2">Propio</option>
+                                            <option {{ (old('type') ?? 2) == 1 ? 'selected' : '' }} value="1">Proveedor</option>
+                                            <option {{ (old('type') ?? 2) == 2 ? 'selected' : '' }} value="2">Propio</option>
                                         </select>
                                     </div>
                                     @error('type')
