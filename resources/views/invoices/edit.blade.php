@@ -597,6 +597,7 @@
             const defaultEmail = "justificaciones@hawkins.es"; // Asegúrate de que aquí estás obteniendo el correo del cliente correctamente
 
             // Salta la alerta para pedir el correo
+
             Swal.fire({
                 title: "Enviar correo",
                 html: '<input id="swal-input1" class="swal2-input" value="' + defaultEmail + '" placeholder="Correo">',
