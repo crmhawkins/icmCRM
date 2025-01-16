@@ -594,9 +594,9 @@
         function botonEnviar(id) {
             // Obtén el correo del cliente asociado desde el backend
             // const defaultEmail = "{{ $factura->cliente->email ?? '' }}"; // Asegúrate de que aquí estás obteniendo el correo del cliente correctamente
-            const defaultEmail = "justificaciones@hawkins.es"; // Asegúrate de que aquí estás obteniendo el correo del cliente correctamente
+            const defaultEmail = "justificaciones@hawkins.es"; // Asegúrate de que aquí estás obteniendo el correo del cliente correctamentes
 
-            // Salta la alerta para pedir el correo
+            // Salta la alerta para pedir el correo Nuevo
 
             Swal.fire({
                 title: "Enviar correo",
