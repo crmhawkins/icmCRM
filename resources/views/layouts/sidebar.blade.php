@@ -54,7 +54,7 @@
 
                 <li class="sidebar-item {{ request()->routeIs('calendar.index') ? 'active' : '' }}">
                     <a href="{{route('calendar.index')}}" class='sidebar-link'>
-                        <i class="fa-solid fa-file-invoice-dollar fs-5"></i>
+                        <i class="fa-solid fa-calendar fs-5"></i>
                         <span>Calendario</span>
                     </a>
                 </li>
