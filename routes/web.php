@@ -341,6 +341,7 @@ Route::get('/task/calendar/{id}', [TasksController::class, 'calendar'])->name('t
 
 //Calendar
 Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
+Route::post('/calendar-feeds', [CalendarController::class, 'store'])->name('calendar.store');
 
 //backups
 Route::get('/backup', [BackupController::class, 'index'])->name('backup.index');
