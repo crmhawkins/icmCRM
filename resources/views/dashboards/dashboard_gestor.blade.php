@@ -617,50 +617,19 @@
 
     function endJornada() {
     // Obtener el tiempo actualizado
-    getTime();
+        getTime();
 
-    let now = new Date();
-    let currentHour = now.getHours();
-    let currentMinute = now.getMinutes();
+        let now = new Date();
+        let currentHour = now.getHours();
+        let currentMinute = now.getMinutes();
 
-    // Convertir los segundos trabajados a horas
-    let workedHours = timerTime / 3600;
+        // Convertir los segundos trabajados a horas
+        let workedHours = timerTime / 3600;
 
-    // Verificar si es antes de las 18:00 o si ha trabajado menos de 8 horas
-    if (currentHour < 18 || workedHours < 8) {
-        let title = '';
-        let text = '';
 
-        if (currentHour < 18) {
-            title = 'Horario de Salida Prematuro';
-            text = 'Es menos de las 18:00.  ';
-        }else{
-            if(workedHours < 8) {
-            title = ('Jornada Incompleta');
-            text = 'Has trabajado menos de 8 horas. Si no compensas el tiempo faltante,';
-            }
-        }
-
-        text += 'Se te descontará de tus vacaciones al final del mes.';
-
-        Swal.fire({
-            title: title,
-            text: text,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Finalizar Jornada',
-            cancelButtonText: 'Continuar Jornada'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                finalizarJornada();
-            }
-            // Si elige continuar, no hacemos nada, simplemente mantiene la jornada activa
-        });
-    } else {
         // Si el tiempo es mayor o igual a 8 horas y es después de las 18:00, finalizamos directamente la jornada
         finalizarJornada();
     }
-}
 
     function finalizarJornada() {
         fetch('/end-jornada', {
