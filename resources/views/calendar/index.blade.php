@@ -124,14 +124,14 @@
     @include('partials.toast')
     <script>
         var feed = @json($feed);
-        var api = @json($api->api_key);
+        var api = @json($api);
 
         console.log(feed);
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
             var tooltip = document.getElementById('tooltip');
             var calendar = new FullCalendar.Calendar(calendarEl, {
-                googleCalendarApiKey: api,
+                googleCalendarApiKey: api.api_key,
                 initialView: 'dayGridMonth',
                 locale: 'es',
                 navLinks: true,
