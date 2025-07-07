@@ -16,7 +16,7 @@ class TablasController extends Controller
         $project = Project::findOrFail($project_id);
         $client = Client::where('id', $project->client_id)->first();
         $produccion = Produccion::where('cliente_id', $client->id)->where('project_id', $project->id)->latest()->first();
-        $data = Produccion::where('cliente_id',$client->id)->latest()->first();
+        $data = Produccion::where('project_id',$project_id)->latest()->first();
 
         return view('tablas.index', compact('project', 'client', 'data'));
     }

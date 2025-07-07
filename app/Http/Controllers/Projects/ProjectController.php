@@ -50,10 +50,55 @@ class ProjectController extends Controller
         $proyectoCreado = Project::create($request->all());
 
         if ($proyectoCreado != null) {
-            session()->flash('toast', [
-                'icon' => 'success',
-                'mensaje' => 'La campaña se creo correctamente'
-            ]);
+            $project_id = Project::max('id');
+
+            $produccion = [
+                'cliente_id' => $request->client_id,
+                'project_id' => $project_id,
+                'comerciales' => [
+                    0 => [
+                        'nombre' => 'MIGUEL ANGEL CABALLERO',
+                        'codigo' => 'MAC'
+                    ],
+                    1 => [
+                        'nombre' => 'JOSE ANTONIO CASTILLO',
+                        'codigo' => 'JAC'
+                    ],
+                    2 => [
+                        'nombre' => 'NICOLAS TAPIA',
+                        'codigo' => 'NT'
+                    ],
+                    3 => [
+                        'nombre' => 'MOISES SANTIAGO',
+                        'codigo' => 'MS'
+                    ],
+                    4 => [
+                        'nombre' => 'ELAYN POU',
+                        'codigo' => 'EP'
+                    ],
+                    5 => [
+                        'nombre' => 'JUANO',
+                        'codigo' => 'JFE'
+                    ],
+                    6 => [
+                        'nombre' => 'ANZONI',
+                        'codigo' => 'AM'
+                    ],
+                    7=> [
+                        'nombre' => 'OTRO',
+                        'codigo' => 'OT'
+                    ]
+                ]
+            ];
+            
+            Produccion::create($produccion);
+
+            if ($produccion != null) {
+                session()->flash('toast', [
+                    'icon' => 'success',
+                    'mensaje' => 'La campaña se creo correctamente'
+                ]);
+            }
         } else {
             session()->flash('toast', [
                 'icon' => 'error',
