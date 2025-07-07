@@ -3,6 +3,19 @@
     font-size: 1rem;
     // color: black;
 }
+.breadcrumb-item a {
+    color: #EA761C;
+    text-decoration: none;
+}
+
+.breadcrumb-item a:hover {
+    color: #9e4d0f;
+}
+.title-accion {
+    color: #EA761C !important;
+    font-weight: bold;
+}
+
 
 .page-item.active .page-link {
     z-index: 3;
@@ -33,8 +46,8 @@
     top: 0px;
     left: 0px;
     opacity: 1;
-    background: $black;
-    color: rgb(52, 71, 103);
+    background: #5B5B5B;
+    color: white;
 }
 .card {
     border-radius: 7px;

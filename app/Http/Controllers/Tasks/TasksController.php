@@ -37,125 +37,236 @@ class TasksController extends Controller
         return view('tasks.asignar', compact('tareas'));
     }
 
+    // public function edit(string $id)
+    // {
+    //     $task = Task::find($id);
+    //     $employees = User::where('inactive', 0)->get();
+    //     $prioritys = Priority::all();
+    //     $status = TaskStatus::all();
+    //     $data = [];
+
+
+
+    //     // Obtener los departamentos a través de los servicios de los conceptos del presupuesto relacionado con la tarea
+    //     $departamentos = collect(); // Inicializar colección vacía
+
+    //     if ($task->presupuestoConcepto && $task->presupuestoConcepto->servicio) {
+    //         $servicio = $task->presupuestoConcepto->servicio;
+
+    //         // Verificar si el servicio tiene departamentos asociados
+    //         if ($servicio->servicoNombre()->exists()) {
+    //             $departamentos = $servicio->departamentos()->get();
+    //         }
+    //     }
+
+    //     if ($task->duplicated == 0) {
+    //         $trabajador = User::find($task->admin_user_id);
+    //         if ($trabajador) {
+    //             $data = [
+    //                 '0' => [
+    //                     'num' => 1,
+    //                     'id' => $trabajador->id,
+    //                     'trabajador' => $trabajador->name,
+    //                     'horas_estimadas' => $task->estimated_time,
+    //                     'horas_reales' => $task->real_time,
+    //                     'status' => $task->task_status_id,
+    //                     'task_id' => $task->id,
+    //                 ],
+    //             ];
+    //         }
+    //     } else {
+    //         $count = 1;
+    //         $tareasDuplicadas = Task::where('split_master_task_id', $task->id)->get();
+    //         $trabajador = User::find($task->admin_user_id);
+
+    //         if ($trabajador) {
+    //             $data = [
+    //                 '0' => [
+    //                     'num' => 1,
+    //                     'id' => $trabajador->id,
+    //                     'trabajador' => $trabajador->name,
+    //                     'horas_estimadas' => $task->estimated_time,
+    //                     'horas_reales' => $task->real_time,
+    //                     'status' => $task->task_status_id,
+    //                     'task_id' => $task->id,
+    //                 ],
+    //             ];
+    //         } else {
+    //             $count = 0;
+    //         }
+
+    //         foreach ($tareasDuplicadas as $tarea) {
+    //             if ($tarea->admin_user_id) {
+    //                 $trabajador = User::find($tarea->admin_user_id);
+    //                 $data[$count] = [
+    //                     'num' => $count + 1,
+    //                     'id' => $trabajador->id ?? 1,
+    //                     'trabajador' => $trabajador->name ?? 'No existe',
+    //                     'horas_estimadas' => $tarea->estimated_time,
+    //                     'horas_reales' => $tarea->real_time,
+    //                     'status' => $tarea->task_status_id,
+    //                     'task_id' => $tarea->id,
+    //                 ];
+    //                 $count++;
+    //             }
+    //         }
+    //     }
+
+    //     return view('tasks.edit', compact('task', 'prioritys', 'employees', 'data', 'status', 'departamentos'));
+    // }
+
+
+
     public function edit(string $id)
-    {
-        $task = Task::find($id);
-        $employees = User::where('inactive', 0)->get();
-        $prioritys = Priority::all();
-        $status = TaskStatus::all();
-        $data = [];
-        if ($task->duplicated == 0) {
-            $trabajador = User::find($task->admin_user_id);
-            if ($trabajador) {
-                $data = [
-                    '0' => [
-                        'num' => 1,
-                        'id' => $trabajador->id,
-                        'trabajador' => $trabajador->name,
-                        'horas_estimadas' => $task->estimated_time,
-                        'horas_reales' => $task->real_time,
-                        'status' => $task->task_status_id,
-                        'task_id' => $task->id,
-                    ],
+{
+    $task = Task::findOrFail($id);
+
+    // Para saber si la tarea es maestra: split_master_task_id es null
+    $isMaster = is_null($task->split_master_task_id);
+
+    // La tarea maestra es la misma si es master, o la que tenga en split_master_task_id si no lo es
+    $masterTask = $isMaster ? $task : Task::find($task->split_master_task_id);
+
+    // Catálogos
+    $employees = User::where('inactive', 0)->get();
+    $prioritys = Priority::all();
+    $status = TaskStatus::all();
+
+    // Recopilamos departamentos desde el servicio de la tarea (si existe)
+    $departamentos = collect();
+    if ($task->presupuestoConcepto && $task->presupuestoConcepto->servicio) {
+        $servicio = $task->presupuestoConcepto->servicio;
+        // Verificamos si el servicio está relacionado para obtener sus departamentos
+        if ($servicio->servicoNombre()->exists()) {
+            $departamentos = $servicio->departamentos()->get();
+        }
+    }
+
+    // Preparar data: la tarea misma + posibles tareas asociadas (si es maestra)
+    $data = [];
+
+    if ($isMaster) {
+        // Si es maestra, traemos todas las tareas duplicadas (asociadas)
+        $tareasDuplicadas = Task::where('split_master_task_id', $task->id)->get();
+
+        // Agregamos primero la propia (maestra) a data
+        $trabajador = User::find($task->admin_user_id);
+        $count = 0;
+
+        if ($trabajador) {
+            $data[$count] = [
+                'num'             => $count + 1,
+                'id'              => $trabajador->id,
+                'trabajador'      => $trabajador->name,
+                'horas_estimadas' => $task->estimated_time,
+                'horas_reales'    => $task->real_time,
+                'status'          => $task->task_status_id,
+                'task_id'         => $task->id,
+                'department_id'   => optional($task->presupuestoConcepto->servicio->departamentos->first())->id ?? null, // Asigna el departamento si existe
+            ];
+            $count++;
+        }
+
+        // Agregar cada tarea duplicada (hija)
+        foreach ($tareasDuplicadas as $tareaHija) {
+            if ($tareaHija->admin_user_id) {
+                $trabajadorHija = User::find($tareaHija->admin_user_id);
+                $data[$count] = [
+                    'num'             => $count + 1,
+                    'id'              => $trabajadorHija->id ?? null,
+                    'trabajador'      => $trabajadorHija->name ?? 'No existe',
+                    'horas_estimadas' => $tareaHija->estimated_time,
+                    'horas_reales'    => $tareaHija->real_time,
+                    'status'          => $tareaHija->task_status_id,
+                    'task_id'         => $tareaHija->id,
+                    'department_id'   => optional($tareaHija->presupuestoConcepto->servicio->departamentos->first())->id ?? null, // Asigna el departamento si existe
                 ];
+                $count++;
             }
-        } else {
-            $count = 1;
-            $tareasDuplicadas = Task::where(
-                'split_master_task_id',
-                $task->id
-            )->get();
-            $trabajador = User::find($task->admin_user_id);
+        }
+    } else {
+        // Si NO es maestra, solo agregamos la propia tarea
+        $trabajador = User::find($task->admin_user_id);
+        if ($trabajador) {
+            $data[] = [
+                'num'             => 1,
+                'id'              => $trabajador->id,
+                'trabajador'      => $trabajador->name,
+                'horas_estimadas' => $task->estimated_time,
+                'horas_reales'    => $task->real_time,
+                'status'          => $task->task_status_id,
+                'task_id'         => $task->id,
+                'department_id'   => optional($task->presupuestoConcepto->servicio->departamentos->first())->id ?? null, // Asigna el departamento si existe
+            ];
+        }
+    }
 
-            if ($trabajador) {
-                $data = [
-                    '0' => [
-                        'num' => 1,
-                        'id' => $trabajador->id,
-                        'trabajador' => $trabajador->name,
-                        'horas_estimadas' => $task->estimated_time,
-                        'horas_reales' => $task->real_time,
-                        'status' => $task->task_status_id,
-                        'task_id' => $task->id,
-                    ],
-                ];
-            } else {
-                $count = 0;
-            }
+    // Devolvemos todo a la vista edit
+    return view('tasks.edit', compact(
+        'task',
+        'isMaster',
+        'masterTask',
+        'employees',
+        'prioritys',
+        'status',
+        'departamentos',
+        'data'
+    ));
+}
 
-            foreach ($tareasDuplicadas as $tarea) {
-                if ($tarea->admin_user_id) {
 
-                    $trabajador = User::find($tarea->admin_user_id);
-                    if ($trabajador == null ) {
-                        $data[$count]['num'] = $count + 1;
-                        $data[$count]['id'] = 1 ;
-                        $data[$count]['trabajador'] = 'No existe';
-                        $data[$count]['horas_estimadas'] = $tarea->estimated_time;
-                        $data[$count]['horas_reales'] = $tarea->real_time;
-                        $data[$count]['status'] = $tarea->task_status_id;
-                        $data[$count]['task_id'] = $tarea->id;
-                        $count++;
-                    } else {
-                        $data[$count]['num'] = $count + 1;
-                        $data[$count]['id'] = $trabajador->id ;
-                        $data[$count]['trabajador'] = $trabajador->name;
-                        $data[$count]['horas_estimadas'] = $tarea->estimated_time;
-                        $data[$count]['horas_reales'] = $tarea->real_time;
-                        $data[$count]['status'] = $tarea->task_status_id;
-                        $data[$count]['task_id'] = $tarea->id;
-                        $count++;
-                    }
+public function update(Request $request)
+{
+
+    //dd($request->all()); // 🔴 PRIMERO, VERIFICA QUE AHORA SE RECIBEN LOS DATOS
+
+    $loadTask = Task::find($request->taskId);
+
+    if ($request->has('employeeId')) {
+        foreach ($request->employeeId as $index => $employeeId) {
+            if ($employeeId) { // Verificar que el campo no esté vacío
+                $exist = Task::where('admin_user_id', $employeeId)->where('split_master_task_id', $loadTask->id)->first();
+
+                if ($exist) {
+                    // Actualizar tarea existente
+                    $exist->estimated_time = $request->estimatedTime[$index];
+                    $exist->real_time = $request->realTime[$index] ?? '00:00:00';
+                    $exist->task_status_id = $request->status[$index];
+                    $exist->save();
+                } else {
+                    // Crear nueva subtarea
+                    Task::create([
+                        'admin_user_id' => $employeeId,
+                        'gestor_id' => $loadTask->gestor_id,
+                        'priority_id' => $request->priority,
+                        'project_id' => $loadTask->project_id,
+                        'budget_id' => $loadTask->budget_id,
+                        'budget_concept_id' => $loadTask->budget_concept_id,
+                        'task_status_id' => $request->status[$index] ?? 2,
+                        'split_master_task_id' => $loadTask->id,
+                        'duplicated' => 0,
+                        'description' => $request->description,
+                        'title' => $request->title,
+                        'estimated_time' => $request->estimatedTime[$index],
+                        'real_time' => $request->realTime[$index] ?? '00:00:00',
+                    ]);
                 }
             }
         }
-        return view('tasks.edit', compact('task', 'prioritys', 'employees', 'data', 'status'));
     }
 
-    public function update(Request $request)
-    {
-        $loadTask = Task::find($request->taskId);
-        for ($i = 1; $i <= $request['numEmployee']; $i++) {
-            $exist = Task::find($request['taskId' . $i]);
-            if ($exist) {
-                $exist->admin_user_id = $request['employeeId' . $i];
-                $exist->estimated_time = $request['estimatedTime' . $i];
-                $exist->real_time = $request['realTime' . $i];
-                $exist->priority_id = $request['priority'];
-                $exist->task_status_id = $request['status' . $i];
+    // Actualizar la tarea maestra
+    $loadTask->title = $request->title;
+    $loadTask->description = $request->description;
+    $loadTask->duplicated = 1;
+    $loadTask->save();
 
-                $exist->save();
-            } else {
-                if ($request['employeeId' . $i]) {
-                    $data['admin_user_id'] = $request['employeeId' . $i];
-                    $data['gestor_id'] = $loadTask->gestor_id;
-                    $data['priority_id'] = $request['priority'];
-                    $data['project_id'] = $loadTask->project_id;
-                    $data['budget_id'] = $loadTask->budget_id;
-                    $data['budget_concept_id'] = $loadTask->budget_concept_id;
-                    $data['task_status_id'] = $request['status' . $i] ?? 2;
-                    $data['split_master_task_id'] = $loadTask->id;
-                    $data['duplicated'] = 0;
-                    $data['description'] = $request['description'];
-                    $data['title'] = $request['title'];
-                    $data['estimated_time'] = $request['estimatedTime' . $i];
-                    $data['real_time'] = $request['realTime' . $i] ?? '00:00:00';
+    return redirect()->route('tarea.edit', $loadTask->id)->with('toast', [
+        'icon' => 'success',
+        'mensaje' => 'Tarea actualizada correctamente'
+    ]);
+}
 
-                    $newtask = Task::create($data);
-                    $taskSaved = $newtask->save();
-                }
-            }
-        }
-        $loadTask->title = $request['title'];
-        $loadTask->description = $request['description'];
-        $loadTask->duplicated = 1;
-        $loadTask->save();
-
-        return redirect()->route('tarea.edit',$loadTask->id)->with('toast',[
-            'icon' => 'success',
-            'mensaje' => 'Tarea actualizada'
-        ]);
-    }
 
     public function calendar($id)
     {

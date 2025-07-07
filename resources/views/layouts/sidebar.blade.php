@@ -19,6 +19,10 @@
                         <i class="bi bi-grid-fill fs-5"></i>
                         <span>Dashboard</span>
                     </a>
+                    <a href="{{route('mostrarDiagramaGantt')}}" class='sidebar-link'>
+                        <i class="bi bi-grid-fill fs-5"></i>
+                        <span>Diagrama Gantt</span>
+                    </a>
                 </li>
                 <li class="sidebar-title">Empresa</li>
 

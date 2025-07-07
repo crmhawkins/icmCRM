@@ -1,0 +1,8 @@
+@use "sass:math";
+
+@function abs-percent($value) {
+    @if unit($value) == "%" {
+        @return math.abs($value); // Mantiene la compatibilidad con Sass
+    }
+    @return abs($value);
+}

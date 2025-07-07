@@ -3,7 +3,7 @@
 @section('titulo', 'Editar Tarea')
 
 @section('css')
-<link rel="stylesheet" href="{{asset('assets/vendors/choices.js/choices.min.css')}}" />
+<link rel="stylesheet" href="{{ asset('assets/vendors/choices.js/choices.min.css') }}" />
 @endsection
 
 @section('content')
@@ -17,121 +17,167 @@
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="{{route('tareas.index')}}">Tareas</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('tareas.index') }}">Tareas</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Editar tarea</li>
                     </ol>
                 </nav>
             </div>
         </div>
     </div>
+
     <section class="section mt-4">
         <div class="row">
             <div class="col-lg-9 col-12">
                 <div class="card">
                     <div class="card-body">
-                        <form action="{{route('tarea.update', $task->id)}}" method="POST">
+                        <form action="{{ route('tarea.update', $task->id) }}" method="POST">
                             @csrf
                             <div class="row">
                                 <div class="col-12 mb-3">
                                     <label for="title">Título:</label>
-                                    <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" value="{{ old('title', $task->title) }}" @if($task->split_master_task_id == null) readonly @endif>
-                                    @error('title')
-                                    <span class="invalid-feedback">{{ $message }}</span>
-                                    @enderror
+                                    <input type="text" class="form-control" id="title" name="title" value="{{ old('title', $task->title) }}" readonly>
                                 </div>
+
                                 <div class="col-12 mb-3">
                                     <label for="description">Descripción:</label>
-                                    <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" @if($task->split_master_task_id == null) readonly @endif>{{ old('description', $task->description) }}</textarea>
-                                    @error('description')
-                                    <span class="invalid-feedback">{{ $message }}</span>
-                                    @enderror
+                                    <textarea class="form-control" id="description" name="description" readonly>{{ old('description', $task->description) }}</textarea>
                                 </div>
-                                <div class="col-12 mb-3">
-                                    <label for="extra_employee">Asignar Empleado</label>
-                                    <button type="button" id="addExtraEmployee" class="btn btn-info btn-sm ml-2"><i class="fas fa-plus"></i></button>
-                                    <div id="dynamic_field_employee" class="mt-3">
-                                        <table class="table-employees table table-striped table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th>Nombre</th>
-                                                    <th>H.Estimadas</th>
-                                                    <th>H.Reales</th>
-                                                    <th>Estado</th>
-                                                    <th>Borrar</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @if($data)
-                                                @foreach ($data as $item)
-                                                <tr id="rowEmployee{{$item['num']}}" class="dynamic-added">
-                                                    <td style="width: 250px !important">
-                                                        <select class="choices form-select" name="employeeId{{$item['num']}}" class="form-control">
-                                                            <option value="">Empleado</option>
-                                                            @foreach($employees as $empleado)
-                                                            <option value="{{$empleado->id}}" @if( $item['id'] == $empleado->id ) selected @endif>{{$empleado->name}}</option>
+
+                                @if($isMaster && count($departamentos) > 0)
+                                    @foreach ($departamentos as $departamento)
+                                        <div class="col-12 mb-3">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h5 class="mb-0">Departamento: {{ $departamento->name }}</h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <button type="button" class="btn btn-info text-black btn-sm addEmployeeBtn" data-depto="{{ $departamento->id }}">
+                                                        <i class="fas fa-plus"></i> Agregar Empleado
+                                                    </button>
+                                                    <table class="table-employees table table-striped table-bordered mt-3">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Trabajador</th>
+                                                                <th>H. Estimadas</th>
+                                                                <th>H. Reales</th>
+                                                                <th>Estado</th>
+                                                                <th>Borrar</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="employeeTable_{{ $departamento->id }}">
+                                                            @foreach ($data as $row)
+                                                                @if (isset($row['department_id']) && $row['department_id'] == $departamento->id)
+                                                                    <tr>
+                                                                        <td>{{ $row['trabajador'] }}</td>
+                                                                        <td>{{ $row['horas_estimadas'] }}</td>
+                                                                        <td>{{ $row['horas_reales'] }}</td>
+                                                                        <td>{{ $status->where('id', $row['status'])->first()->name ?? 'Desconocido' }}</td>
+                                                                        <td>
+                                                                            <a class="btn btn-warning" href="{{ route('tarea.edit', $row['task_id']) }}" target="_blank"><i class="fa-solid fa-eye"></i></a>
+                                                                            <button type="button" class="btn btn-danger removeEmployeeBtn"><i class="fa-solid fa-trash-can"></i></button>
+                                                                        </td>
+                                                                    </tr>
+                                                                @endif
                                                             @endforeach
-                                                        </select>
-                                                    </td>
-                                                    <td ><input type="text" class="form-control" name="estimatedTime{{$item['num']}}" value="{{$item['horas_estimadas']}}"></td>
-                                                    <td ><input type="text" class="form-control" name="realTime{{$item['num']}}" value="{{$item['horas_reales']}}"></td>
-                                                    <td  style="width: 200px !important">
-                                                        <select class="choices form-select" name="status{{$item['num']}}" class="form-control">
-                                                            <option  value="">-- Seleccione --</option>
-                                                            @foreach($status as $s)
-                                                            <option value="{{$s->id}}" @if($s->id == $item['status']) selected @endif>{{$s->name}}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </td>
-                                                    <td >
-                                                        <button type="button" name="remove" id="{{$item['num']}}" class="btn btn-danger btn_remove_mail">X</button>
-                                                        <input type="hidden" name="taskId{{$item['num']}}" value="{{$item['task_id']}}">
-                                                    </td>
-                                                </tr>
-                                                @endforeach
-                                                @endif
-                                            </tbody>
-                                        </table>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <!-- SI NO ES MAESTRA, MOSTRAR INFORMACIÓN BÁSICA -->
+                                    <div class="col-12 mb-3">
+                                        <div class="alert alert-info" role="alert">
+                                            Esta tarea no es maestra.
+                                            <br>
+                                            <strong>Tarea Maestra:</strong>
+                                            <a href="{{ route('tarea.edit', $masterTask->id) }}">Ir a la Tarea Maestra</a>
+                                        </div>
                                     </div>
-                                </div>
+
+                                    <div class="col-12">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 class="mb-0">Información de la Tarea - <strong>{{ $task->presupuestoConcepto->servicio->departamentos->first()->name ?? 'Sin Departamento' }}</strong> </h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Trabajador</th>
+                                                            <th>H. Estimadas</th>
+                                                            <th>H. Reales</th>
+                                                            <th>Estado</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($data as $row)
+                                                            <tr>
+                                                                <td>{{ $row['trabajador'] }}</td>
+                                                                <td>{{ $row['horas_estimadas'] }}</td>
+                                                                <td>{{ $row['horas_reales'] }}</td>
+                                                                <td>{{ $status->where('id', $row['status'])->first()->name ?? 'Desconocido' }}</td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+
+
                                 <div class="col-6 mb-3">
                                     <label for="priority">Prioridad:</label>
-                                    <select name="priority" class="form-control">
+                                    <select name="priority" class="form-control" @if(!$isMaster) disabled @endif>
                                         @foreach($prioritys as $p)
-                                        <option value="{{$p->id}}" @if($p->id == $task->priority_id) selected @endif>{{$p->name}}</option>
+                                        <option value="{{ $p->id }}" @if($p->id == $task->priority_id) selected @endif>{{ $p->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
+
                                 <div class="col-6 mb-3">
-                                    <label for="estimatedTime">Tiempo Estimado:</label>
-                                    <input type="text" name="estimatedTime" class="form-control" value="{{($task->split_master_task_id == null) ? $task->total_time_budget : $task->estimated_time }}">
+                                    <label for="estimatedTimeFinal">Tiempo Estimado:</label>
+                                    <input type="text" name="estimatedTimeFinal" class="form-control" value="{{ $task->estimated_time }}" @if(!$isMaster) readonly @endif>
                                 </div>
+
                                 <div class="col-6 mb-3">
                                     <label for="status">Estado:</label>
-                                    <select  name="status" class="form-control">
+                                    <select name="status" class="form-control" @if(!$isMaster) disabled @endif>
                                         @foreach($status as $s)
-                                        <option value="{{$s->id}}" @if($s->id == $task->task_status_id) selected @endif>{{$s->name}}</option>
+                                        <option value="{{ $s->id }}" @if($s->id == $task->task_status_id) selected @endif>{{ $s->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                                <input type="hidden" name="numEmployee" id="numEmployee" value="{{count($data)}}">
-                                <input type="hidden" name="budgetId" value="{{$task->budget_id}}">
-                                <input type="hidden" name="taskId" value="{{$task->id}}">
+
+                                <input type="hidden" name="taskId" value="{{ $task->id }}">
+                            </div>
+
+                            <div class="form-group mt-5">
+                                @if($isMaster)
+
+                                @else
+                                    <button type="button" class="btn btn-secondary w-100 text-uppercase" disabled>
+                                        {{ __('Actualizar (Sólo Tarea Maestra)') }}
+                                    </button>
+                                @endif
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-12 mt-lg-0 mt-4">
-                <div class="card-body p-3">
-                    <div class="card-title">
-                        Acciones
-                        <hr>
-                    </div>
-                    <div class="card-body">
-                        <button id="actualizarTarea" class="btn btn-success btn-block mb-2">Actualizar</button>
-                        <button id="rectificar" class="btn btn-danger btn-block mb-2">Eliminar</button>
-                    </div>
+            <div class="col-lg-3">
+                <div class="card-body">
+                    <h4 class="title-accion">Acciones<strong></strong></h4>
+                    <hr>
+                    <button type="submit" class="btn btn-secondary w-100 text-uppercase">
+                        {{ __('Actualizar') }}
+                    </button>
+                    <a href="" class="btn btn-primary w-100 mt-3 text-uppercase">Ver Presupuesto</a>
+                    <a href="" class="btn btn-success w-100 mt-3 text-uppercase">Finalizar Tareas</a>
+                    <a href="" class="btn btn-warning w-100 mt-3 text-uppercase">Cambiar prioridad de todas las tareas</a>
                 </div>
             </div>
         </div>
@@ -139,96 +185,63 @@
 </div>
 @endsection
 
+
 @section('scripts')
 @include('partials.toast')
 <script src="{{asset('assets/vendors/choices.js/choices.min.js')}}"></script>
 <script>
     $(document).ready(function() {
-        var totalTimeBudget = parseFloat('{{ $task->total_time_budget }}'); // Tiempo total estimado de la tarea
-        var i = {{ count($data) }};
-
-        // Función para convertir un número decimal de horas a formato 00:00:00
-        function convertToTimeFormat(hours) {
-            var totalSeconds = Math.floor(hours * 3600); // Convertir horas a segundos
-            var hoursPart = Math.floor(totalSeconds / 3600); // Obtener horas
-            var minutesPart = Math.floor((totalSeconds % 3600) / 60); // Obtener minutos
-            var secondsPart = totalSeconds % 60; // Obtener segundos
-
-            // Formatear a 2 dígitos
-            var formattedTime =
-                String(hoursPart).padStart(2, '0') + ':' +
-                String(minutesPart).padStart(2, '0') + ':' +
-                String(secondsPart).padStart(2, '0');
-
-            return formattedTime;
-        }
-
-        // Función para calcular el tiempo restante
-        function calculateRemainingTime() {
-            var totalAssignedTime = 0;
-
-            // Sumar las horas estimadas ya asignadas a otros empleados
-            $('.table-employees tbody tr').each(function() {
-                var estimatedTime = $(this).find('input[name^="realTime"]').val();
-                if (estimatedTime) {
-                    // Convertir el valor de horas en formato 00:00:00 a decimal para la suma
-                    var timeParts = estimatedTime.split(':');
-                    var timeInHours = parseInt(timeParts[0]) + (parseInt(timeParts[1]) / 60) + (parseInt(timeParts[2]) / 3600);
-                    totalAssignedTime += timeInHours || 0;
-                }
-            });
-
-            // Restar el tiempo asignado del tiempo total disponible
-            var remainingTime = totalTimeBudget - totalAssignedTime;
-            return remainingTime > 0 ? remainingTime : 0;
-        }
-
+        // Al hacer clic en Actualizar
         $('#actualizarTarea').click(function(e) {
             e.preventDefault();
             $('form').submit();
         });
 
-        $('#addExtraEmployee').click(function() {
-            var remainingTime = calculateRemainingTime(); // Calcula el tiempo restante en decimal
+        // Botón para agregar empleado en un departamento (solo si es maestra)
+        $('.addEmployeeBtn').click(function() {
+            var deptoId = $(this).data('depto');
+            var empleados = @json($employees);
+            var employeeOptions = '';
 
-            if (i == 0 || $("#estimatedTime" + i).val() != '') {
-                i++;
-                var formattedTime = convertToTimeFormat(remainingTime); // Convertir el tiempo restante a formato 00:00:00
-                $('.table-employees tbody').append(`
-                    <tr id="rowEmployee${i}" class="dynamic-added">
-                        <td style="width: 250px !important">
-                            <select class="choices form-select" name="employeeId${i}" class="form-control">
-                                <option value="">Empleado</option>
-                                @foreach($employees as $empleado)
-                                    <option value="{{$empleado->id}}">{{$empleado->name}}</option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td ><input type="text" class="form-control" name="estimatedTime${i}" value="${formattedTime}" placeholder="Horas estimadas"></td>
-                        <td ><input type="text" class="form-control" name="realTime${i}" value="00:00:00" placeholder="Horas reales"></td>
-                        <td style="width: 200px !important">
-                            <select class="choices form-select" name="status${i}" class="form-control">
-                                <option value="">-- Seleccione --</option>
-                                @foreach($status as $s)
-                                <option {{2 == $s->id ? 'selected' : '' }} value="{{$s->id}}">{{$s->name}}</option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td >
-                            <button type="button" name="remove" id="${i}" class="btn btn-danger btn_remove_mail">X</button>
-                            <input type="hidden" name="taskId${i}" value="temp">
-                        </td>
-                    </tr>
-                `);
-                $('#numEmployee').val(i);
-            }
+            // Filtrar empleados del departamento actual
+            empleados.map(function(empleado) {
+                if (empleado.admin_user_department_id == deptoId) {
+                    employeeOptions += '<option value="' + empleado.id + '">' + empleado.name + '</option>';
+                }
+            });
+
+            var employeeRow = `
+                <tr>
+                    <td>
+                        <select class="choices form-select" name="employeeId[]" class="form-control">
+                            <option value="">Seleccione un empleado</option>
+                            ${employeeOptions}
+                        </select>
+                    </td>
+                    <td><input type="text" class="form-control" name="estimatedTime[]" value="00:00:00"></td>
+                    <td><input type="text" class="form-control" name="realTime[]" value="00:00:00"></td>
+                    <td>
+                        <select class="choices form-select" name="status[]" class="form-control">
+                            @foreach($status as $s)
+                            <option value="{{ $s->id }}">{{ $s->name }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td><button type="button" class="btn btn-danger removeEmployeeBtn">X</button></td>
+                </tr>
+            `;
+
+
+            $('#employeeTable_' + deptoId).append(employeeRow);
         });
+        console.log("Employee IDs:", $('select[name="employeeId[]"]').map(function(){ return $(this).val(); }).get());
+console.log("Estimated Time:", $('input[name="estimatedTime[]"]').map(function(){ return $(this).val(); }).get());
+console.log("Real Time:", $('input[name="realTime[]"]').map(function(){ return $(this).val(); }).get());
+console.log("Status:", $('select[name="status[]"]').map(function(){ return $(this).val(); }).get());
 
-        $(document).on('click', '.btn_remove_mail', function() {
-            var button_id = $(this).attr("id");
-            $('#rowEmployee' + button_id).remove();
-            i--;
-            $('#numEmployee').val(i);
+        // Eliminar fila de empleado
+        $(document).on('click', '.removeEmployeeBtn', function() {
+            $(this).closest('tr').remove();
         });
     });
 </script>

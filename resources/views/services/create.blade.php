@@ -98,7 +98,16 @@
                                 </div>
                             </div>
 
-
+                            <div class="col-sm-12 col-md-12">
+                                <div class="form-group mb-3">
+                                    <label class="mb-2 text-left" for="departamentos">Departamentos:</label>
+                                    <select id="departamentos" class="choices w-100 form-select @error('departamentos') is-invalid @enderror" name="departamentos[]" multiple>
+                                        @foreach ($departamentos as $departamento)
+                                            <option value="{{ $departamento->id }}">{{ $departamento->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group mt-5">

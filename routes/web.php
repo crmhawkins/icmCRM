@@ -58,8 +58,14 @@ use App\Http\Controllers\Tesoreria\CategoriaGastosController;
 use App\Http\Controllers\Tesoreria\IvaController;
 use App\Http\Controllers\Users\DepartamentController;
 use App\Http\Controllers\Users\PositionController;
+use App\Http\Controllers\DiagramaGanttController;
+use App\Http\Controllers\OperacionesController;
 use App\Http\Controllers\Whatsapp\WhatsappController;
-
+use App\Http\Controllers\Tablas\TablasController;
+use App\Http\Controllers\Tablas\ProduccionController;
+use App\Http\Controllers\Tablas\MaterialesController;
+use App\Http\Controllers\Tablas\OtrosController;
+use App\Http\Controllers\Tablas\CortesController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -110,6 +116,10 @@ Route::post('/start-jornada', [DashboardController::class, 'startJornada'])->nam
 Route::post('/end-jornada', [DashboardController::class, 'endJornada'])->name('dashboard.endJornada');
 Route::post('/start-pause', [DashboardController::class, 'startPause'])->name('dashboard.startPause');
 Route::post('/end-pause', [DashboardController::class, 'endPause'])->name('dashboard.endPause');
+
+// Diagrama de Grantt
+Route::get('/diagrama', [DiagramaGanttController::class, 'mostrarDiagramaGantt'])->name('mostrarDiagramaGantt');
+
 
 //Logs
 Route::get('/logs',[LogActionsController::class, 'index'])->name('logs.index');
@@ -285,12 +295,19 @@ Route::get('/projects/edit/{id}', [ProjectController::class, 'edit'])->name('cam
 Route::get('/projects/{cliente}/create-from-budget', [ProjectController::class, 'createFromBudget'])->name('campania.createFromBudget');
 Route::get('/projects/{cliente}/create-from-budget/{petitionid}', [ProjectController::class, 'createFromBudgetAndPetition'])->name('campania.createFromBudgetAndPetition');
 Route::post('/projects/store', [ProjectController::class, 'store'])->name('campania.store');
-Route::post('/projects/update/{id}', [ProjectController::class, 'update'])->name('campania.update');
+Route::post('/projects/update/{id}/{name}', [ProjectController::class, 'update'])->name('campania.update');
 Route::post('/projects/destroy', [ProjectController::class, 'destroy'])->name('campania.delete');
 Route::post('/projects/store-from-budget', [ProjectController::class, 'storeFromBudget'])->name('campania.storeFromBudget');
 Route::post('/projects/update-from-window', [ProjectController::class, 'updateFromWindow'])->name('campania.updateFromWindow');
 Route::post('/projects-from-client', [ProjectController::class, 'postProjectsFromClient'])->name('campania.postProjectsFromClient');
 Route::post('/project-by-id', [ProjectController::class, 'getProjectById']);
+
+// Tablas de costes
+Route::get('/projects/gastos/{project_id}', [TablasController::class, 'index'])->name('tablas.index');
+
+Route::post('/projects/gastos/tablas/crear/{project_id}/', [ProduccionController::class, 'guardarTablaProduccion'])->name('tablas.guardar');
+
+Route::post('/projects/gastos/tablas/update/produccion/{project_id}/{id}/{pagina}', [ProduccionController::class, 'updateTablaProduccion'])->name('tablas.update.produccion');
 
 // Services (SERVICIOS)
 Route::get('/services', [ServicesController::class, 'index'])->name('servicios.index');
@@ -414,6 +431,14 @@ Route::post('/incidencias/destroy', [IncidenceController::class, 'destroyAssocia
 // web.php
 Route::post('/save-theme-preference', [UserController::class, 'saveThemePreference'])->name('saveThemePreference');
 
+// Operaciones
+Route::get('/operaciones', [OperacionesController::class, 'index'])->name('operaciones.index');
+Route::get('/operaciones/create', [OperacionesController::class, 'create'])->name('operaciones.create');
+Route::get('/operaciones/edit/{operacion}', [OperacionesController::class, 'edit'])->name('operaciones.edit');
+Route::get('/operaciones/show/{operacion}', [OperacionesController::class, 'show'])->name('operaciones.show');
+Route::post('/operaciones/store', [OperacionesController::class, 'store'])->name('operaciones.store');
+Route::post('/operaciones/update/{operacion}', [OperacionesController::class, 'update'])->name('operaciones.update');
+Route::post('/operaciones/destroy', [OperacionesController::class, 'destroy'])->name('operaciones.destroy');
 
 
 // Ingresos (TESORERIA)
@@ -578,6 +603,8 @@ Route::get('/diario-caja/{id}/edit', [DiarioCajaController::class, 'edit'])->nam
 Route::post('/diario-caja/{id}/update', [DiarioCajaController::class, 'update'])->name('diarioCaja.update');
 Route::post('/diario-caja/{id}/destroy', [DiarioCajaController::class, 'destroy'])->name('diarioCaja.destroy');
 Route::post('/diario-caja/{id}/destroy-linea', [DiarioCajaController::class, 'destroyDiarioCaja'])->name('diarioCaja.destroyDiarioCaja');
+
+
 
 
 Route::post('/save-order', [BudgetController::class, 'saveOrder'])->name('save.order');

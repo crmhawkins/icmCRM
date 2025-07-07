@@ -32,7 +32,7 @@
         <section class="section mt-4">
             <div class="card">
                 <div class="card-body">
-                    <form action="{{route('campania.update',$project->id)}}" method="POST">
+                    <form action="{{ route('campania.update', ['id' => $project->id, 'name' => $project->name]) }}" method="POST">
                         @csrf
 
                         <h3 class="mb-2 text-left uppercase">Cliente Asociado</h3>
@@ -86,8 +86,13 @@
                                     </span>
                             @enderror
                         </div>
-                        {{-- Boton --}}
+
                         <div class="form-group mt-5">
+                            <a href="{{ route('tablas.index', ['project_id' => $project->id, 'pagina' => 1]) }}" class="btn btn-primary w-100">Editar gastos</a>
+                        </div>
+
+                        {{-- Boton --}}
+                        <div class="form-group mt-5 w">
                             <button type="submit" class="btn btn-primary w-100">
                                 {{ __('Actualizar') }}
                             </button>

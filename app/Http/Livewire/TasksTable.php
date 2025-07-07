@@ -57,17 +57,38 @@ class TasksTable extends Component
     }
 
 
-    protected function actualizartareas(){
-        $query = Task::when($this->buscar, function ($query) {
+    protected function actualizartareas()
+{
+    $query = Task::leftJoin('budget_concepts', 'tasks.budget_concept_id', '=', 'budget_concepts.id')
+                ->leftJoin('priority', 'tasks.priority_id', '=', 'priority.id')
+                ->leftJoin('budgets', 'tasks.budget_id', '=', 'budgets.id')
+                ->leftJoin('clients', 'budgets.client_id', '=', 'clients.id')
+                ->leftJoin('admin_user as gestor', 'tasks.gestor_id', '=', 'gestor.id')
+                ->leftJoin('admin_user as empleado', 'tasks.admin_user_id', '=', 'empleado.id')
+                ->leftJoin('admin_user_department', 'empleado.admin_user_department_id', '=', 'admin_user_department.id')
+                ->leftJoin('task_status', 'tasks.task_status_id', '=', 'task_status.id')
+                ->leftJoin('tasks as tareas_maestras', 'tasks.split_master_task_id', '=', 'tareas_maestras.id')
+                ->select(
+                    'tasks.*',
+                    'priority.name as prioridad',
+                    'admin_user_department.name as departamento',
+                    'budget_concepts.title as concept',
+                    'clients.name as cliente',
+                    'gestor.name as gestor',
+                    'empleado.name as empleado',
+                    'task_status.name as estado',
+                    'tareas_maestras.title as tarea_maestra' // Título de la tarea maestra si aplica
+                )
+                ->orderByRaw("COALESCE(tasks.split_master_task_id, tasks.id), tasks.split_master_task_id IS NOT NULL, tasks.id") // Agrupar por tarea maestra y ordenar subtareas
+                ->when($this->buscar, function ($query) {
                     $query->where('tasks.title', 'like', '%' . $this->buscar . '%')
                           ->orWhere('tasks.description', 'like', '%' . $this->buscar . '%')
                           ->orWhereHas('presupuesto', function($q) {
-                            $q->where('budgets.reference', 'like', '%' . $this->buscar . '%');
-                        })
+                              $q->where('budgets.reference', 'like', '%' . $this->buscar . '%');
+                          })
                           ->orWhereHas('presupuesto.cliente', function($q) {
-                            $q->where('clients.name', 'like', '%' . $this->buscar . '%');
-                        })
-                        ;
+                              $q->where('clients.name', 'like', '%' . $this->buscar . '%');
+                          });
                 })
                 ->when($this->selectedCategoria, function ($query) {
                     $query->whereHas('presupuestoConcepto', function ($query) {
@@ -95,22 +116,68 @@ class TasksTable extends Component
                 })
                 ->when($this->selectedGestor, function ($query) {
                     $query->where('tasks.gestor_id', $this->selectedGestor);
-                })
-                ->leftJoin('budget_concepts', 'tasks.budget_concept_id', '=', 'budget_concepts.id')
-                ->leftJoin('priority', 'tasks.priority_id', '=', 'priority.id')
-                ->leftJoin('budgets', 'tasks.budget_id', '=', 'budgets.id')
-                ->leftJoin('clients', 'budgets.client_id', '=', 'clients.id')
-                ->leftJoin('admin_user as gestor', 'tasks.gestor_id', '=', 'gestor.id')
-                ->leftJoin('admin_user as empleado', 'tasks.admin_user_id', '=', 'empleado.id')
-                ->leftJoin('admin_user_department', 'empleado.admin_user_department_id', '=', 'admin_user_department.id')
-                ->select('tasks.*', 'priority.name as prioridad', 'admin_user_department.name as departamento','budget_concepts.title as concept', 'clients.name as cliente', 'gestor.name as gestor','empleado.name as empleado');
+                });
+
+    $this->tasks = $this->perPage === 'all' ? $query->get() : $query->paginate(is_numeric($this->perPage) ? $this->perPage : 10);
+}
 
 
-        $query->orderBy($this->sortColumn, $this->sortDirection);
 
-        // Verifica si se seleccionó 'all' para mostrar todos los registros
-        $this->tasks = $this->perPage === 'all' ? $query->get() : $query->paginate(is_numeric($this->perPage) ? $this->perPage : 10);
-    }
+
+    // protected function actualizartareas(){
+    //     $query = Task::when($this->buscar, function ($query) {
+    //                 $query->where('tasks.title', 'like', '%' . $this->buscar . '%')
+    //                       ->orWhere('tasks.description', 'like', '%' . $this->buscar . '%')
+    //                       ->orWhereHas('presupuesto', function($q) {
+    //                         $q->where('budgets.reference', 'like', '%' . $this->buscar . '%');
+    //                     })
+    //                       ->orWhereHas('presupuesto.cliente', function($q) {
+    //                         $q->where('clients.name', 'like', '%' . $this->buscar . '%');
+    //                     })
+    //                     ;
+    //             })
+    //             ->when($this->selectedCategoria, function ($query) {
+    //                 $query->whereHas('presupuestoConcepto', function ($query) {
+    //                     $query->where('budget_concepts.services_category_id', $this->selectedCategoria);
+    //                 });
+    //             })
+    //             ->when($this->selectedCliente, function ($query) {
+    //                 $query->whereHas('presupuesto', function ($query) {
+    //                     $query->where('budgets.client_id', $this->selectedCliente);
+    //                 });
+    //             })
+    //             ->when($this->selectedDepartamento, function ($query) {
+    //                 $query->whereHas('usuario', function ($query) {
+    //                     $query->where('admin_user_department_id', $this->selectedDepartamento);
+    //                 });
+    //             })
+    //             ->when($this->selectedEstado, function ($query) {
+    //                 $query->where('tasks.task_status_id', $this->selectedEstado);
+    //             })
+    //             ->when($this->selectedYear, function ($query) {
+    //                 $query->whereYear('tasks.created_at', $this->selectedYear);
+    //             })
+    //             ->when($this->selectedEmpleado, function ($query) {
+    //                 $query->where('tasks.admin_user_id', $this->selectedEmpleado);
+    //             })
+    //             ->when($this->selectedGestor, function ($query) {
+    //                 $query->where('tasks.gestor_id', $this->selectedGestor);
+    //             })
+    //             ->leftJoin('budget_concepts', 'tasks.budget_concept_id', '=', 'budget_concepts.id')
+    //             ->leftJoin('priority', 'tasks.priority_id', '=', 'priority.id')
+    //             ->leftJoin('budgets', 'tasks.budget_id', '=', 'budgets.id')
+    //             ->leftJoin('clients', 'budgets.client_id', '=', 'clients.id')
+    //             ->leftJoin('admin_user as gestor', 'tasks.gestor_id', '=', 'gestor.id')
+    //             ->leftJoin('admin_user as empleado', 'tasks.admin_user_id', '=', 'empleado.id')
+    //             ->leftJoin('admin_user_department', 'empleado.admin_user_department_id', '=', 'admin_user_department.id')
+    //             ->select('tasks.*', 'priority.name as prioridad', 'admin_user_department.name as departamento','budget_concepts.title as concept', 'clients.name as cliente', 'gestor.name as gestor','empleado.name as empleado');
+
+
+    //     $query->orderBy($this->sortColumn, $this->sortDirection);
+
+    //     // Verifica si se seleccionó 'all' para mostrar todos los registros
+    //     $this->tasks = $this->perPage === 'all' ? $query->get() : $query->paginate(is_numeric($this->perPage) ? $this->perPage : 10);
+    // }
 
     public function sortBy($column)
     {

@@ -39,6 +39,12 @@ class Service extends Model
         return $this->hasMany(\App\Models\Budgets\BudgetConcept::class, 'service_id');
     }
 
+    public function departamentos()
+    {
+        return $this->belongsToMany(\App\Models\Users\UserDepartament::class, 'service_user_department', 'service_id', 'user_department_id');
+    }
+
+
 
     public function servicoNombre() {
         return $this->belongsTo(\App\Models\Services\ServiceCategories::class,'services_categories_id');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Projects;
 use App\Http\Controllers\Controller;
 use App\Models\Clients\Client;
 use App\Models\Projects\Project;
+use App\Models\Tablas\Produccion;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
@@ -92,7 +93,7 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id){
+    public function update(Request $request, string $id, string $name){
         $project = Project::find($id);
         // Validar los datos del formulario
         $validated = $this->validate($request, [
@@ -105,8 +106,12 @@ class ProjectController extends Controller
             'name.required' => 'El nombre de la campaña es requerido para continuar',
             'description.required' => 'La descripción de la campaña es requerido para continuar',
         ]);
+
         // Actualizar el gasto con los datos validados
         $project->update($validated);
+        Produccion::where('cliente_id', $request->client_id)->where('pedido_cliente', $name)
+            ->update(['pedido_cliente' => $request->name]);
+
         // Redireccionar con mensaje de éxito
         return redirect()->route('campania.index')->with('toast',[
             'icon' => 'success',

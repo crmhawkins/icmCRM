@@ -102,4 +102,4 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 // Scroll into active sidebar
-document.querySelector('.sidebar-item.active').scrollIntoView(false)
+// document.querySelector('.sidebar-item.active').scrollIntoView(false)

@@ -50,6 +50,24 @@ class Task extends Model
         return $this->belongsTo(\App\Models\Users\User::class,'admin_user_id');
     }
 
+    public function departamentos()
+    {
+        return $this->hasManyThrough(
+            \App\Models\Users\UserDepartament::class,  // Modelo final (Departamentos)
+            \App\Models\Services\Service::class,       // Modelo intermedio (Servicios)
+            'id',                                      // Clave primaria en `services`
+            'id',                                      // Clave primaria en `admin_user_department`
+            'budget_concept_id',                       // Clave en `tasks` que referencia `budget_concepts`
+            'services_categories_id'                   // Clave en `services` que referencia `user_departament`
+        );
+    }
+
+
+    public function subtareas()
+    {
+        return $this->hasMany(Task::class, 'split_master_task_id');
+    }
+
     public function gestor() {
         return $this->belongsTo(\App\Models\Users\User::class,'gestor_id');
     }

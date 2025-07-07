@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Services;
 use App\Http\Controllers\Controller;
 use App\Models\Services\Service;
 use App\Models\Services\ServiceCategories;
+use App\Models\Users\UserDepartament;
 use Illuminate\Http\Request;
 
 class ServicesController extends Controller
@@ -16,26 +17,19 @@ class ServicesController extends Controller
     }
 
     public function create() {
-        $categorias = ServiceCategories::where('inactive',0)->get();
-        return view('services.create', compact('categorias'));
+        $categorias = ServiceCategories::where('inactive', 0)->get();
+        $departamentos = UserDepartament::all();
+        return view('services.create', compact('categorias', 'departamentos'));
     }
 
 
     public function store(Request $request) {
-
-        // Validamos los campos
         $data = $this->validate($request, [
             'title' => 'required|max:255',
             'services_categories_id' => 'required|integer',
             'concept' => 'required',
             'price' => 'required',
-        ], [
-            'title.required' => 'El titulo es requerido para continuar',
-            'title.max' => 'El titulo no pueder tener mas de 255 caracteres',
-            'services_categories_id.required' => 'La categoria es requerida para continuar',
-            'concept.required' => 'El concepto es requerido para continuar',
-            'concept.max' => 'El concepto no pueder tener mas de 255 caracteres',
-            'price.required' => 'El precio es requerido para continuar',
+            'departamentos' => 'array|exists:admin_user_department,id'
         ]);
 
         $data['estado'] = 1;
@@ -43,48 +37,50 @@ class ServicesController extends Controller
 
         $servicioCreado = Service::create($data);
 
+        if ($request->has('departamentos')) {
+            $servicioCreado->departamentos()->sync($request->departamentos);
+        }
 
         return redirect()->route('servicios.edit', $servicioCreado->id)->with('toast', [
-                'icon' => 'success',
-                'mensaje' => 'El servicio creado con exito'
+            'icon' => 'success',
+            'mensaje' => 'El servicio fue creado con éxito'
         ]);
-
     }
 
     public function edit(string $id){
         $servicio = Service::find($id);
-        $categorias = ServiceCategories::where('inactive',0)->get();
+        $categorias = ServiceCategories::where('inactive', 0)->get();
+        $departamentos = \App\Models\Users\UserDepartament::all();
+        $departamentosSeleccionados = $servicio->departamentos->pluck('id')->toArray();
+
         if (!$servicio) {
-            session()->flash('toast', [
-                'icon' => 'error',
-                'mensaje' => 'El servicio no existe'
-            ]);
+            session()->flash('toast', ['icon' => 'error', 'mensaje' => 'El servicio no existe']);
             return redirect()->route('servicios.index');
         }
-        return view('services.edit', compact('servicio','categorias'));
+
+        return view('services.edit', compact('servicio', 'categorias', 'departamentos', 'departamentosSeleccionados'));
     }
 
-    public function update(string $id ,Request $request) {
+    public function update(string $id, Request $request) {
         $servicio = Service::find($id);
         $data = $this->validate($request, [
             'title' => 'required|max:255',
             'services_categories_id' => 'required|integer',
             'concept' => 'required',
             'price' => 'required',
-            'inactive' => 'nullable'
-        ], [
-            'title.required' => 'El titulo es requerido para continuar',
-            'title.max' => 'El titulo no pueder tener mas de 255 caracteres',
-            'services_categories_id.required' => 'La categoria es requerida para continuar',
-            'concept.required' => 'El concepto es requerido para continuar',
-            'concept.max' => 'El concepto no pueder tener mas de 255 caracteres',
-            'price.required' => 'El precio es requerido para continuar',
+            'inactive' => 'nullable',
+            'departamentos' => 'array|exists:admin_user_department,id'
         ]);
 
-        $petitionCreado = $servicio->update($data);
+        $servicio->update($data);
+
+        if ($request->has('departamentos')) {
+            $servicio->departamentos()->sync($request->departamentos);
+        }
+
         return redirect()->route('servicios.index')->with('toast', [
-                'icon' => 'success',
-                'mensaje' => 'El servicio actualizado con exito'
+            'icon' => 'success',
+            'mensaje' => 'El servicio fue actualizado con éxito'
         ]);
     }
 

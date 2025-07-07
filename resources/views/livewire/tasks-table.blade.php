@@ -121,32 +121,49 @@
                         <th class="text-center" style="font-size:0.75rem">ACCIONES</th>
                 </thead>
                 <tbody>
-                    {{-- Recorremos los servicios --}}
+                    @php $currentMasterId = null; @endphp
                     @foreach ( $tareas as $tarea )
-                        <tr class="clickable-row" data-href="{{route('tarea.edit', $tarea->id)}}" >
-                            <td class="px-3">{{$tarea->title}}</td>
-                            <td class="">{{$tarea->prioridad ? $tarea->prioridad : 'Prioridad no asignada'}}</td>
-                            <td class="">{{$tarea->estado ? $tarea->estado->name  : 'Estado no asignado'}}</td>
-                            <td class="">{{$tarea->presupuesto->cliente->name ?? 'No definido'}}</td>
-                            <td class="">{{$tarea->split_master_task_id ? ($tarea->usuario ? ($tarea->departamento ?? 'Usuario sin departamento'  ) : 'Usuario no asignado') : ''}}</td>
-                            <td class="">{{$tarea->split_master_task_id ? ($tarea->empleado ?? 'No definido') : 'Tarea Maestra'}}</td>
-                            <td class="">{{$tarea->gestor ?? 'No definido'}}</td>
-                            <td class="">{{$tarea->split_master_task_id ? $tarea->estimated_time : $tarea->total_time_budget}}</td>
-                            <td class="">{{$tarea->split_master_task_id ? $tarea->real_time : $tarea->real_time_maestra()}}</td>
-                            <td class="">{{Carbon\Carbon::parse($tarea->created_at)->format('d/m/Y')}}</td>
+                        {{-- Si la tarea no tiene split_master_task_id, es maestra --}}
+                        @if (is_null($tarea->split_master_task_id))
+                            @php $currentMasterId = $tarea->id; @endphp
+                            {{-- <tr class="bg-light font-weight-bold">
+                                <td colspan="12">TAREA MAESTRA: {{ $tarea->title }}</td>
+                            </tr> --}}
+                        @endif
+                        <tr class="{{ is_null($tarea->split_master_task_id) ? 'table-warning' : 'table-secondary' }}">
+                            <td class="px-3">
+                                @if (!is_null($tarea->split_master_task_id))
+                                <span class="ml-3"></span>
+                                    └
+                                    <span>{{ $tarea->title }}</span>
+                                @else
+                                    {{ $tarea->title }}
+                                @endif
+                            </td>
+                            <td class="">{{ $tarea->prioridad ?? 'Prioridad no asignada' }}</td>
+                            <td class="">{{ $tarea->estado ?? 'Estado no asignado' }}</td>
+                            <td class="">{{ $tarea->cliente ?? 'No definido' }}</td>
+                            <td class="">{{ $tarea->departamento ?? 'Usuario sin departamento' }}</td>
+                            <td class="">{{ $tarea->empleado ?? 'No definido' }}</td>
+                            <td class="">{{ $tarea->gestor ?? 'No definido' }}</td>
+                            <td class="">{{ $tarea->estimated_time }}</td>
+                            <td class="">{{ $tarea->real_time }}</td>
+                            <td class="">{{ Carbon\Carbon::parse($tarea->created_at)->format('d/m/Y') }}</td>
                             <td>
                                 @if (isset($fechasEstimadas[$tarea->id]))
                                     {{ $fechasEstimadas[$tarea->id]['fecha_estimada'] }}
                                 @else
                                     No calculada
                                 @endif
-                            </td>                            <td class="flex flex-row justify-evenly align-middle" style="min-width: 120px">
-                                <a class="" href="{{route('tarea.edit', $tarea->id)}}"><img src="{{asset('assets/icons/edit.svg')}}" alt="Editar servicio"></a>
-                                <a class="delete" data-id="{{$tarea->id}}" href=""><img src="{{asset('assets/icons/trash.svg')}}" alt="Eliminar servicio"></a>
+                            </td>
+                            <td class="text-center">
+                                <a href="{{route('tarea.edit', $tarea->id)}}"><img src="{{asset('assets/icons/edit.svg')}}" alt="Editar"></a>
+                                <a class="delete" data-id="{{$tarea->id}}" href="#"><img src="{{asset('assets/icons/trash.svg')}}" alt="Eliminar"></a>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
+
             </table>
             @if( count($tareas) == 0 )
                 <div class="text-center py-4">
@@ -165,11 +182,10 @@
     {{-- {{$users}} --}}
 </div>
 @section('scripts')
+
 <!-- Choices.js CSS -->
 <link rel="stylesheet" href="{{asset('assets/vendors/choices.js/choices.min.css')}}" />
 <script src="{{asset('assets/vendors/choices.js/choices.min.js')}}"></script>
-
-
 
     @include('partials.toast')
 
@@ -218,6 +234,7 @@
                 }
             });
         }
+
         function getDelete(id) {
             // Ruta de la peticion
             const url = '{{route("servicios.delete")}}'
@@ -234,6 +251,7 @@
                 dataType: "json"
             });
         }
+
     </script>
 
 

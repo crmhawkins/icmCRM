@@ -39,6 +39,12 @@
         <script src="{{ asset('build/assets/app-bf7e6802.js') }}"></script>
         @laravelViewsStyles
         @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+
+        <style>
+            .css-96uzu9 {
+                z-index: -1;
+            }
+        </style>
 </head>
 <body class="" style="overflow-x: hidden">
     <div id="app">
@@ -56,7 +62,7 @@
     <main id="main" class="pt-5" style="min-height: 100vh;">
         @include('layouts.topBar')
 
-        <div class="container mt-5">
+        <div class="container mt-5 pt-5">
             @yield('content')
         </div>
     </main>
