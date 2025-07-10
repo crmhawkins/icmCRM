@@ -23,6 +23,10 @@
                         <i class="bi bi-grid-fill fs-5"></i>
                         <span>Diagrama Gantt</span>
                     </a>
+                    <a href="{{route('cola-de-trabajo.index')}}" class='sidebar-link'>
+                        <i class="bi bi-grid-fill fs-5"></i>
+                        <span>Cola de trabajo</span>
+                    </a>
                 </li>
                 <li class="sidebar-title">Empresa</li>
 

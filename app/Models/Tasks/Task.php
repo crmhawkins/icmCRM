@@ -35,6 +35,7 @@ class Task extends Model
         'estimated_time',
         'real_time',
         'total_time_budget',
+        'fila',
     ];
 
      /**

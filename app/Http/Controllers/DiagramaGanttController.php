@@ -8,85 +8,100 @@ use Illuminate\Http\Request;
 
 class DiagramaGanttController extends Controller
 {
+    private function hmsToSeconds($hms) {
+        list($h, $m, $s) = explode(':', $hms);
+        return ($h * 3600) + ($m * 60) + $s;
+    }
 
     public function getDataGrantt()
-{
-    $proyectos = Budget::with('tasks')->get();
-    $datos = [];
-    $maxFechaFin = null;
-    $minFechaInicio = null;
-    $tareaMaestra = null;
+    {
+        $proyectos = Budget::with('tasks')->get();
+        $datos = [];
+        $maxFechaFin = null;
+        $minFechaInicio = null;
+        $tareaMaestra = null;
+        $taskProgress = []; // Track accumulated progress per task
 
-    foreach ($proyectos as $proyecto) {
-        foreach ($proyecto->tasks as $tarea) {
-            $logInicio = LogTasks::where('task_id', $tarea->id)->orderBy('date_start', 'asc')->first();
-            $logFin = LogTasks::where('task_id', $tarea->id)->orderBy('date_end', 'desc')->first();
+        foreach($proyectos as $proyect) {
+            foreach($proyect->tasks as $task) {
+                $logs = LogTasks::where('task_id', $task->id)->get();
+                $taskId = $task->id;
+                
+                if ($logs->count() > 0) {
+                    $totalProgress = 0;
+                    $duracionEstimada = $this->hmsToSeconds($task->estimated_time);
+                    $firstLog = true;
+                    $taskData = null;
 
-            if ($logInicio && $logFin) {
-                // Convertir estimated_time a milisegundos
-                list($horas, $minutos, $segundos) = explode(':', $tarea->estimated_time);
-                $duracionEnMilisegundos = ($horas * 60 * 60 * 1000) + ($minutos * 60 * 1000);
-
-                // Convertir real_time (progreso) a milisegundos
-                list($horasReal, $minutosReal, $segundosReal) = explode(':', $tarea->real_time);
-                $progresoEnMilisegundos = ($horasReal * 60 * 60 * 1000) + ($minutosReal * 60 * 1000);
-
-                // Buscar la tarea maestra
-                if ($tarea->split_master_task_id === null) {
-                    $tareaMaestra = $tarea;
+                    foreach($logs as $log) {
+                        $inicio = $log->date_start;
+                        $fin = $log->date_end;
+                        
+                        $tiempoReal = strtotime($fin) - strtotime($inicio);
+                        $currentProgress = ($duracionEstimada > 0) ? min(100, round(($tiempoReal / $duracionEstimada) * 100)) : 0;
+                        $totalProgress += $currentProgress;
+                        
+                        if ($firstLog) {
+                            $taskData = [
+                                'id_tarea' => $taskId,
+                                'tarea' => $task->title,
+                                'estado' => $task->task_status_id,
+                                'proyecto' => $proyect->concept,
+                                'id_proyecto' => $proyect->id,
+                                'duracion' => $task->estimated_time,
+                                'progreso' => min(100, $totalProgress), // Cap at 100%
+                                'fecha_creacion' => $task->created_at,
+                                'fecha_inicio' => $inicio,
+                                'fecha_fin' => $fin
+                            ];
+                            $firstLog = false;
+                        } else {
+                            // Update only the progress and dates if needed
+                            $taskData['progreso'] = min(100, $totalProgress);
+                            // Update fecha_fin to the latest
+                            if (strtotime($fin) > strtotime($taskData['fecha_fin'])) {
+                                $taskData['fecha_fin'] = $fin;
+                            }
+                            // Update fecha_inicio to the earliest
+                            if (strtotime($inicio) < strtotime($taskData['fecha_inicio'])) {
+                                $taskData['fecha_inicio'] = $inicio;
+                            }
+                        }
+                    }
+                    
+                    $datos[] = $taskData;
+                    
+                } else {
+                    $datos[] = [
+                        'id_tarea' => $taskId,
+                        'tarea' => $task->title,
+                        'estado' => $task->task_status_id,
+                        'proyecto' => $proyect->concept,
+                        'id_proyecto' => $proyect->id,
+                        'duracion' => $task->estimated_time,
+                        'progreso' => 0,
+                        'fecha_creacion' => $task->created_at,
+                        'fecha_inicio' => null,
+                        'fecha_fin' => null
+                    ];
                 }
-
-                // Definir los límites del gráfico
-                if (!$minFechaInicio || strtotime($logInicio->date_start) < strtotime($minFechaInicio)) {
-                    $minFechaInicio = $logInicio->date_start;
-                }
-                if (!$maxFechaFin || strtotime($logFin->date_end) > strtotime($maxFechaFin)) {
-                    $maxFechaFin = $logFin->date_end;
-                }
-
-                $datos[] = [
-                    'Proyecto' => $proyecto->name,
-                    'Tarea' => $tarea->title,
-                    'Inicio' => $logInicio->date_start,
-                    'Fin' => $logFin->date_end,
-                    'Duración' => $duracionEnMilisegundos,
-                    'Progreso' => $progresoEnMilisegundos,
-                ];
             }
         }
+
+        return $datos;
     }
-
-    // Si hay una tarea maestra, establecer su duración total y progreso total
-    if ($tareaMaestra) {
-        list($horas, $minutos, $segundos) = explode(':', $tareaMaestra->estimated_time);
-        $duracionTotalProyecto = ($horas * 60 * 60 * 1000) + ($minutos * 60 * 1000);
-
-        list($horasReal, $minutosReal, $segundosReal) = explode(':', $tareaMaestra->real_time);
-        $progresoTotalProyecto = ($horasReal * 60 * 60 * 1000) + ($minutosReal * 60 * 1000);
-
-        $datos[] = [
-            'Proyecto' => 'Tarea Maestra',
-            'Tarea' => $tareaMaestra->title,
-            'Inicio' => $minFechaInicio,
-            'Fin' => date('Y-m-d H:i:s', strtotime($minFechaInicio) + $duracionTotalProyecto),
-            'Duración' => $duracionTotalProyecto,
-            'Progreso' => $progresoTotalProyecto,
-        ];
-    }
-
-    return [
-        'datos' => $datos,
-        'minFechaInicio' => $minFechaInicio,
-        'maxFechaFin' => $maxFechaFin
-    ];
-}
-
-
 
     public function mostrarDiagramaGantt()
     {
         $datos = $this->getDataGrantt();
-        // dd($datos);
+        
+        // Debug: Ensure we have data
+        if (empty($datos)) {
+            \Log::info('No hay datos en el diagrama Gantt');
+        } else {
+            \Log::info('Datos del diagrama Gantt: ' . count($datos) . ' tareas encontradas');
+        }
+        
         return view('diagrama.index', compact('datos'));
     }
 }

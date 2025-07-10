@@ -59,6 +59,7 @@ use App\Http\Controllers\Tesoreria\IvaController;
 use App\Http\Controllers\Users\DepartamentController;
 use App\Http\Controllers\Users\PositionController;
 use App\Http\Controllers\DiagramaGanttController;
+use App\Http\Controllers\ColaDeTrabajo\ColaDeTrabajoController;
 use App\Http\Controllers\OperacionesController;
 use App\Http\Controllers\Whatsapp\WhatsappController;
 use App\Http\Controllers\Tablas\TablasController;
@@ -120,6 +121,8 @@ Route::post('/end-pause', [DashboardController::class, 'endPause'])->name('dashb
 // Diagrama de Grantt
 Route::get('/diagrama', [DiagramaGanttController::class, 'mostrarDiagramaGantt'])->name('mostrarDiagramaGantt');
 
+// Cola de trabajo
+Route::get('/cola-de-trabajo', [ColaDeTrabajoController::class, 'index'])->name('cola-de-trabajo.index');
 
 //Logs
 Route::get('/logs',[LogActionsController::class, 'index'])->name('logs.index');
@@ -639,6 +642,10 @@ Route::group(['prefix' => 'laravel-filemanager'], function () {
 // Route::post('/acciones/enviar-segmento-3', [AccionesController::class, 'enviarMensajesSegmentos'])->name('acciones.enviarMensajesSegmentos');
 
 // Route::post('/actualizar', [AccionesController::class, 'actualizar'])->name('acciones.actualizar');
+
+Route::post('/actualizar-fila-tarea', [ColaDeTrabajoController::class, 'actualizarFilaTarea'])
+    ->name('cola-de-trabajo.actualizar-fila')
+    ->middleware('auth');
 
 });
 // Portal Clientes

@@ -13,7 +13,7 @@ class ProduccionController extends Controller
 {
     public function guardarTablaProduccion(Request $request, $project_id)
     {
-        //dd($request->all);
+        //dd($request);
         $data = $request->validate([
             'referencia' => 'required|string|max:255',
             'pedido_cliente' => 'required|string|max:255',
@@ -156,8 +156,7 @@ class ProduccionController extends Controller
 
         $client = Client::where('name', $data['cliente'])->first();
 
-        $produccion = Produccion::where('referencia', $data['referencia'])
-            ->where('cliente_id', $client->id)
+        $produccion = Produccion::where('project_id', $project_id)
             ->first();
         
         if (!$produccion) {

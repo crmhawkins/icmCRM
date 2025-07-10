@@ -466,24 +466,24 @@
                                 'SUMATORIO DE TIEMPOS (SI NO HAY DESGLOSE)',
                             ];
 
-                            // Costes y precios por defecto (índice coincidente con $trabajos)
                             $valores = [
-                                ['coste' => 32.05, 'venta' => 39.60],
-                                ['coste' => 32.05, 'venta' => 37.80],
-                                ['coste' => 32.05, 'venta' => 39.60],
-                                ['coste' => 32.80, 'venta' => 43.00],
-                                ['coste' => 32.80, 'venta' => 39.60],
-                                ['coste' => 33.80, 'venta' => 39.60],
-                                ['coste' => 33.80, 'venta' => 39.60],
-                                ['coste' => 32.05, 'venta' => 39.60],
-                                ['coste' => 27.30, 'venta' => 39.60],
-                                ['coste' => 27.30, 'venta' => 35.00],
-                                ['coste' => 32.05, 'venta' => 39.60],
-                                ['coste' => 33.80, 'venta' => 39.60],
-                                ['coste' => 32.80, 'venta' => 39.60],
-                                ['coste' => 32.80, 'venta' => 39.60],
-                                ['coste' => 31.90, 'venta' => 37.50],
+                                ['coste' => 32.05, 'venta' => 39.60], // CIZALLA Y/O PLEGADORA
+                                ['coste' => 32.05, 'venta' => 37.80], // CORTE DE SIERRA
+                                ['coste' => 32.05, 'venta' => 39.60], // MONTAJE DE PIEZAS PUNT.
+                                ['coste' => 32.80, 'venta' => 43.00], // TORNO Y FRESA
+                                ['coste' => 32.80, 'venta' => 39.60], // SOLDADURA A/C
+                                ['coste' => 33.80, 'venta' => 39.60], // SOLDADURA ALUMINIO
+                                ['coste' => 33.80, 'venta' => 39.60], // SOLDADURA INOX
+                                ['coste' => 32.05, 'venta' => 39.60], // CHORREADO Y LIMPIEZA
+                                ['coste' => 32.05, 'venta' => 39.60], // TERMINACIÓN Y PINTURA
+                                ['coste' => 27.30, 'venta' => 35.00], // VERIFICACIÓN
+                                ['coste' => 27.30, 'venta' => 35.00], // EMBALAJE
+                                ['coste' => 32.05, 'venta' => 39.60], // TECNICOS
+                                ['coste' => 33.80, 'venta' => 39.60], // MONTAJE EN OBRA
+                                ['coste' => 32.80, 'venta' => 39.60], // MONTAJE ELÉCTRICO E HIDRÁULICO
+                                ['coste' => 31.90, 'venta' => 37.50], // SUMATORIO DE TIEMPOS
                             ];
+
                         @endphp
 
                         @foreach ($trabajos as $i => $nombre)
@@ -574,6 +574,20 @@
                                 'AGUA DOBLE CABEZAL',
                             ];
 
+                            $valores = [
+                                ['coste' => 1.75, 'venta' => 3.00], // LASER INOX 0 - 3 MM
+                                ['coste' => 1.95, 'venta' => 3.20], // LASER INOX 4 - 6 MM
+                                ['coste' => 2.45, 'venta' => 3.50], // LASER INOX 8 - 10 MM
+                                ['coste' => 2.86, 'venta' => 3.85], // LASER INOX 12 MM
+                                ['coste' => 1.65, 'venta' => 2.20], // LASER A/C 0 - 15 MM
+                                ['coste' => 1.65, 'venta' => 2.20], // LASER ALUM 0 - 3 MM
+                                ['coste' => 2.65, 'venta' => 3.30], // LASER ALUM 4 - 6 MM
+                                ['coste' => 3.37, 'venta' => 4.30], // LASER-TUBO INOXIDABLE
+                                ['coste' => 2.14, 'venta' => 3.10], // LASER-TUBO ACERO AL CARBONO
+                                ['coste' => 3.16, 'venta' => 3.80], // LASER-TUBO ALUMINIO
+                                ['coste' => 1.73, 'venta' => 2.10], // AGUA SIMPLE CABEZAL
+                                ['coste' => 2.14, 'venta' => 2.40], // AGUA DOBLE CABEZAL
+                            ];
                         @endphp
 
                         @foreach ($cortes as $i => $nombre)
@@ -589,13 +603,13 @@
                                     <input type="number" id="cortes_minutos_{{ $i }}" name="cortes[{{ $i }}][minutos]" class="form-control form-control-sm text-end" min="0" value="{{ $corte['minutos'] ?? 0 }}">
                                 </td>
                                 <td>
-                                    <input type="text" id="cortes_coste_unitario_{{ $i }}" step="0.01" name="cortes[{{ $i }}][coste_unitario]" class="form-control form-control-sm text-end" min="0" value="{{ sprintf('%.2f', $corte['coste_unitario'] ?? 0.00) }}">
+                                    <input type="text" id="cortes_coste_unitario_{{ $i }}" step="0.01" name="cortes[{{ $i }}][coste_unitario]" class="form-control form-control-sm text-end" min="0" value="{{ sprintf('%.2f', $corte['coste_unitario'] ?? $valores[$i]['coste']) }}">
                                 </td>
                                 <td>
                                     <input type="number" readonly class="total-coste rdonly" id="cortes_total_coste_{{ $i }}" name="cortes[{{ $i }}][total_coste]" value="{{ sprintf('%.2f', $corte['total_coste'] ?? 0.00) }}">
                                 </td>
                                 <td>
-                                    <input type="numeric" id="cortes_precio_venta_unitario_{{ $i }}" step="0.01" name="cortes[{{ $i }}][precio_venta_unitario]" class="form-control form-control-sm text-end" min="0" value="{{ sprintf('%.2f', $corte['precio_venta_unitario'] ?? 0.00) }}">
+                                    <input type="numeric" id="cortes_precio_venta_unitario_{{ $i }}" step="0.01" name="cortes[{{ $i }}][precio_venta_unitario]" class="form-control form-control-sm text-end" min="0" value="{{ sprintf('%.2f', $corte['precio_venta_unitario'] ?? $valores[$i]['venta']) }}">
                                 </td>
                                 <td>
                                     <input type="numeric" readonly class="beneficio rdonly" id="cortes_beneficio_{{ $i }}" name="cortes[{{ $i }}][beneficio]" value="{{ sprintf('%.1f', $corte['beneficio'] ?? 0) }}">
@@ -675,10 +689,10 @@
                                     <input type="number" readonly class="total-coste rdonly" id="otros_total_coste_{{ $i }}" name="otros[{{ $i }}][total_coste]" value="{{ sprintf('%.2f', $otro['total_coste'] ?? 0.00) }}">
                                 </td>
                                 <td>
-                                    <input type="numeric" id="otros_precio_venta_unitario_{{ $i }}" step="0.01" name="otros[{{ $i }}][precio_venta_unitario]" class="form-control form-control-sm text-end" min="0" value="{{ sprintf('%.2f', $otro['precio_venta_unitario'] ?? 0.00) }}">
+                                    <input type="numeric" readonly id="otros_precio_venta_unitario_{{ $i }}" step="0.01" name="otros[{{ $i }}][precio_venta_unitario]" class="rdonly text-right" min="0" value="{{ sprintf('%.2f', $otro['precio_venta_unitario'] ?? 0.00) }}">
                                 </td>
                                 <td>
-                                    <input type="numeric" readonly class="beneficio rdonly" id="otros_beneficio_{{ $i }}" name="otros[{{ $i }}][beneficio]" value="{{ sprintf('%.1f', $otro['beneficio'] ?? 0) }}">
+                                    <input type="numeric" class="text-left" id="otros_beneficio_{{ $i }}" name="otros[{{ $i }}][beneficio]" value="{{ sprintf('%.1f', $otro['beneficio'] ?? 5) }}">
                                 </td>
                                 <td>
                                     <input type="text" readonly class="total-venta rdonly" id="otros_total_venta_{{ $i }}" name="otros[{{ $i }}][total_venta]" value="{{ sprintf('%.2f', $otro['total_venta'] ?? 0.00) }}">
@@ -756,10 +770,14 @@
                                     <input type="number" readonly class="total-coste rdonly" id="materiales_total_coste_{{ $i }}" name="materiales[{{ $i }}][total_coste]" value="{{ sprintf('%.2f', $material['total_coste'] ?? 0.00) }}">
                                 </td>
                                 <td>
-                                    <input type="number" id="materiales_precio_venta_unitario_{{ $i }}" step="0.01" name="materiales[{{ $i }}][precio_venta_unitario]" class="form-control form-control-sm text-end" min="0" value="{{ sprintf('%.2f', $material['precio_venta_unitario'] ?? 0.00) }}">
+                                    <input type="number" readonly id="materiales_precio_venta_unitario_{{ $i }}" step="0.01" name="materiales[{{ $i }}][precio_venta_unitario]" class="rdonly text-right" min="0" value="{{ sprintf('%.2f', $material['precio_venta_unitario'] ?? 0.00) }}">
                                 </td>
-                                <td>
-                                    <input type="number" readonly class="beneficio rdonly" id="materiales_beneficio_{{ $i }}" name="materiales[{{ $i }}][beneficio]" value="{{ sprintf('%.1f', $material['beneficio'] ?? 0) }}">
+                                <td class="text-left">
+                                    @if ($nombre === 'CHAPAS (TABLA CHAPAS)' || $nombre === 'RESTO DE MATERIA PRIMA Y TUBOS')
+                                        <input type="number" class="text-left" id="materiales_beneficio_{{ $i }}" name="materiales[{{ $i }}][beneficio]" value="{{ sprintf('%.1f', $material['beneficio'] ?? 15) }}">
+                                    @else
+                                        <input type="number" class="text-left" id="materiales_beneficio_{{ $i }}" name="materiales[{{ $i }}][beneficio]" value="{{ sprintf('%.1f', $material['beneficio'] ?? 5) }}">
+                                    @endif
                                 </td>
                                 <td>
                                     <input type="text" readonly class="total-venta rdonly" id="materiales_total_venta_{{ $i }}" name="materiales[{{ $i }}][total_venta]" value="{{ sprintf('%.2f', $material['total_venta'] ?? 0.00) }}">
@@ -1197,7 +1215,7 @@
                                 <tr>
                                     <td colspan="8" class="text-end"><strong>TOTAL DE CHAPAS EMPLEADAS:</strong></td>
                                     <td>
-                                        <input type="text" id="calculo_precios_chapas_total_coste" name="calculo_precios_chapas_total_coste" value="{{ $data->calculo_precios_chapas_total_coste ?? '0,00 €' }}" class="text-primary fw-bold rdonly text-right" readonly>
+                                        <input type="text" id="calculo_precios_chapas_total_coste" name="calculo_precios_chapas_total_coste" value="{{ $data->calculo_precios_chapas_total_coste ?? '0.00' }}" class="text-primary fw-bold rdonly text-right" readonly>
                                     </td>
                                     <td>
                                         <input type="text" id="calculo_precios_chapas_total_kg" name="calculo_precios_chapas_total_kg" value="{{ $data->calculo_precios_chapas_total_kg ?? '0' }}" class="text-primary fw-bold rdonly text-right" readonly>
@@ -1255,7 +1273,7 @@
                     </div>
                 </div>
 
-                <div class="column2">
+                <div class="column">
                     <h3 class="text-left w-100">MATERIALES / PRECIO COSTE</h3>
                     <table class="table table-bordered table-sm text-center align-middle" style="min-width:250px;">
                         <thead>
@@ -1352,6 +1370,10 @@
         }
 
         function actualizarBeneficio(i, tableId) {
+            if (tableId === 'materiales' || tableId === 'otros') {
+                return
+            }
+
             const costeUnit = parseFloat(document.getElementById(`${tableId}_coste_unitario_${i}`)?.value) || 0;
             const ventaUnit = parseFloat(document.getElementById(`${tableId}_precio_venta_unitario_${i}`)?.value) || 0;
             const beneficio = costeUnit > 0 ? redondear(((ventaUnit - costeUnit) / costeUnit) * 100) : 0;
@@ -1395,7 +1417,7 @@
 
         function recalcularTotalCosteGlobal(tableId) {
             let total = 0;
-            const maxRows = tableId === 'produccion' ? 14 : (tableId === 'cortes' ? 11 : 5); // 15 rows for production, 12 for cuts, 6 for otros
+            const maxRows = tableId === 'produccion' ? 14 : (tableId === 'cortes' ? 11 : (tableId === 'cortes' ? 5 : 7)); // 15 rows for production, 12 for cuts, 6 for otros
             for (let i = 0; i <= maxRows; i++) {
                 const input = document.getElementById(`${tableId}_total_coste_${i}`);
                 if (input) {
@@ -1422,7 +1444,7 @@
 
         function recalcularTotalVentaGlobal(tableId) {
             let total = 0;
-            const maxRows = tableId === 'produccion' ? 14 : (tableId === 'cortes' ? 11 : 5); // 15 rows for production, 12 for cuts, 6 for otros
+            const maxRows = tableId === 'produccion' ? 14 : (tableId === 'cortes' ? 11 : (tableId === 'cortes' ? 5 : 7)); // 15 rows for production, 12 for cuts, 6 for otros
             for (let i = 0; i <= maxRows; i++) {
                 const input = document.getElementById(`${tableId}_total_venta_${i}`);
                 if (input) {
@@ -1450,7 +1472,7 @@
 
         function recalcularTotalHoras(tableId) {
             let total = 0;
-            const maxRows = tableId === 'produccion' ? 14 : (tableId === 'cortes' ? 11 : 5); // 15 rows for production, 12 for cuts, 6 for otros
+            const maxRows = tableId === 'produccion' ? 14 : (tableId === 'cortes' ? 11 : (tableId === 'cortes' ? 5 : 7)); // 15 rows for production, 12 for cuts, 6 for otros
             for (let i = 0; i <= maxRows; i++) {
                 const input = document.getElementById(`${tableId}_minutos_${i}`);
                 if (input) {
@@ -1875,6 +1897,27 @@
             siglasInput.value = siglas;
         }
 
+        function calcularPrecioVentaOtros(i) {
+            let coste = document.getElementById(`otros_coste_unitario_${i}`);
+            let beneficio = document.getElementById(`otros_beneficio_${i}`);
+            let venta = document.getElementById(`otros_precio_venta_unitario_${i}`);
+
+            let op = coste.value * (1 + beneficio.value / 100);
+            
+            venta.value = parseFloat(op.toFixed(2));
+            
+        }
+
+        function calcularPrecioVentaMateriales(i) {
+            let coste = document.getElementById(`materiales_coste_unitario_${i}`);
+            let beneficio = document.getElementById(`materiales_beneficio_${i}`);
+            let venta = document.getElementById(`materiales_precio_venta_unitario_${i}`);
+
+            let op = coste.value * (1 + beneficio.value / 100);
+            
+            venta.value = parseFloat(op.toFixed(2));
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const tables = ['produccion', 'cortes', 'otros', 'materiales'];
 
@@ -1889,8 +1932,10 @@
                     actualizarFilaVenta(i, tableId);
                     actualizarBeneficio(i, tableId);
                 }
+
                 recalcularTotalCosteGlobal(tableId);
                 recalcularTotalVentaGlobal(tableId);
+
                 if (tableId === 'produccion') {
                     recalcularTotalHoras(tableId);
                 }
@@ -1929,6 +1974,14 @@
                     const inputBeneficioMateriales = document.getElementById('beneficio_materiales-euro');
                     const gastosFinancierosInput = document.getElementById('gastos-financieros');
                     const porcentajeDeseadoInput = document.getElementById('porcentaje_deseado');
+                    const beneficioMaterialesInput = document.getElementById(`materiales_beneficio_${i}`);
+                    const costeMaterialesInput = document.getElementById(`materiales_coste_unitario_${i}`);
+                    const costeOtrosInput = document.getElementById(`materiales_coste_unitario_${i}`);
+                    const beneficioOtrosInput = document.getElementById(`materiales_beneficio_${i}`);
+
+                    recalcularTotalCosteGlobal(tableId);
+                    recalcularTotalVentaGlobal(tableId);
+
 
                     if (inputMinutos) {
                         inputMinutos.addEventListener('input', function () {
@@ -1955,6 +2008,10 @@
                             totalUnitariaTeorico();
                             recalcularPrecioFinal()
                             totalLongitudUnitariaMetros();
+                            calcularPrecioVentaMateriales(i);
+                            calcularPrecioVentaOtros(i);
+                            actualizarFilaVenta(i, tableId);
+                            recalcularTotalVentaGlobal(tableId);
                         });
                     }
 
@@ -2024,6 +2081,42 @@
                         porcentajeDeseadoInput.addEventListener('input', () => {
                             calcularPrecioFacturar();
                         });
+                    }
+
+                    if (beneficioMaterialesInput) {
+                        beneficioMaterialesInput.addEventListener('input', () => {
+                            calcularPrecioVentaMateriales(i);
+                            actualizarFilaVenta(i, tableId);
+                            recalcularTotalVentaGlobal(tableId);
+                            recalcularTotalCosteGlobal(tableId);
+                        })
+                    }
+
+                    if (costeMaterialesInput) {
+                        costeMaterialesInput.addEventListener('input', () => {
+                            calcularPrecioVentaMateriales(i);
+                            actualizarFilaVenta(i, tableId);
+                            recalcularTotalVentaGlobal(tableId);
+                            recalcularTotalCosteGlobal(tableId);
+                        })
+                    }
+
+                    if (costeOtrosInput) {
+                        costeOtrosInput.addEventListener('input', () => {
+                            calcularPrecioVentaOtros(i);
+                            actualizarFilaVenta(i, tableId);
+                            recalcularTotalVentaGlobal(tableId);
+                            recalcularTotalCosteGlobal(tableId);
+                        })
+                    }
+
+                    if (beneficioOtrosInput) {
+                        beneficioOtrosInput.addEventListener('input', () => {
+                            calcularPrecioVentaOtros(i);
+                            actualizarFilaVenta(i, tableId);
+                            recalcularTotalVentaGlobal(tableId);
+                            recalcularTotalCosteGlobal(tableId);
+                        })
                     }
                 }
             });
@@ -2126,30 +2219,55 @@
                 if (materialCalculoPreciosInput) {
                     materialCalculoPreciosInput.addEventListener('change', function () {
                         calcularCosteChapa(j);
+                        calcularPrecioVentaMateriales(0);
+                        actualizarFilaVenta(0, 'materiales');
+                        actualizarFilaCoste(0, 'materiales');
+                        recalcularTotalVentaGlobal('materiales');
+                        recalcularTotalCosteGlobal('materiales');
                     });
                 }
 
                 if (unidadInput) {
                     unidadInput.addEventListener('input', function () {
                         calcularCosteChapa(j);
+                        calcularPrecioVentaMateriales(0);
+                        actualizarFilaVenta(0, 'materiales');
+                        actualizarFilaCoste(0, 'materiales');
+                        recalcularTotalVentaGlobal('materiales');
+                        recalcularTotalCosteGlobal('materiales');
                     });
                 }
 
                 if (largoInput) {
                     largoInput.addEventListener('input', function () {
                         calcularCosteChapa(j);
+                        calcularPrecioVentaMateriales(0);
+                        actualizarFilaVenta(0, 'materiales');
+                        actualizarFilaCoste(0, 'materiales');
+                        recalcularTotalVentaGlobal('materiales');
+                        recalcularTotalCosteGlobal('materiales');
                     });
                 }
 
                 if (anchoInput) {
                     anchoInput.addEventListener('input', function () {
                         calcularCosteChapa(j);
+                        calcularPrecioVentaMateriales(0);
+                        actualizarFilaVenta(0, 'materiales');
+                        actualizarFilaCoste(0, 'materiales');
+                        recalcularTotalVentaGlobal('materiales');
+                        recalcularTotalCosteGlobal('materiales');
                     });
                 }
 
                 if (espesorInput) {
                     espesorInput.addEventListener('input', function () {
                         calcularCosteChapa(j);
+                        calcularPrecioVentaMateriales(0);
+                        actualizarFilaVenta(0, 'materiales');
+                        actualizarFilaCoste(0, 'materiales');
+                        recalcularTotalVentaGlobal('materiales');
+                        recalcularTotalCosteGlobal('materiales');
                     });
                 }
 
