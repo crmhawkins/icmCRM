@@ -445,5 +445,3 @@ $defaultDepartment = $departments->first();
     </div>
 </div>
 @endsection
-
-
