@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Models\Produccion\Maquinaria;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Models\Produccion\Maquinaria;
 
 class MaquinariaSeeder extends Seeder
 {
@@ -15,146 +14,94 @@ class MaquinariaSeeder extends Seeder
     {
         $maquinaria = [
             [
-                'nombre' => 'Cizalla Hidráulica 1',
-                'codigo' => 'CIZ-001',
-                'modelo' => 'CH-3000',
-                'fabricante' => 'LVD',
-                'ano_fabricacion' => 2020,
-                'numero_serie' => 'LVD2020CH3000-001',
-                'descripcion' => 'Cizalla hidráulica para corte de chapa hasta 6mm',
+                'nombre' => 'Cortadora Láser CNC',
+                'codigo' => 'LASER_CNC_001',
+                'modelo' => 'Fiber Laser 2000W',
+                'fabricante' => 'Bystronic',
+                'ano_fabricacion' => 2023,
+                'numero_serie' => 'LC001-2023',
+                'descripcion' => 'Cortadora láser de fibra de alta potencia para metales',
                 'ubicacion' => 'Taller Principal',
                 'estado' => 'operativa',
-                'capacidad_maxima' => 6.0,
-                'unidad_capacidad' => 'mm',
-                'velocidad_operacion' => 25.0,
-                'unidad_velocidad' => 'golpes/min'
+                'capacidad_maxima' => 2000.00,
+                'unidad_capacidad' => 'W',
+                'velocidad_operacion' => 120.00,
+                'unidad_velocidad' => 'm/min',
+                'activo' => true
             ],
             [
-                'nombre' => 'Plegadora Hidráulica 1',
-                'codigo' => 'PLE-001',
-                'modelo' => 'PH-4000',
-                'fabricante' => 'LVD',
-                'ano_fabricacion' => 2019,
-                'numero_serie' => 'LVD2019PH4000-001',
-                'descripcion' => 'Plegadora hidráulica para doblado de chapa',
-                'ubicacion' => 'Taller Principal',
-                'estado' => 'operativa',
-                'capacidad_maxima' => 8.0,
-                'unidad_capacidad' => 'mm',
-                'velocidad_operacion' => 15.0,
-                'unidad_velocidad' => 'golpes/min'
-            ],
-            [
-                'nombre' => 'Sierra de Cinta 1',
-                'codigo' => 'SIE-001',
-                'modelo' => 'SC-500',
-                'fabricante' => 'Kasto',
-                'ano_fabricacion' => 2021,
-                'numero_serie' => 'KAS2021SC500-001',
-                'descripcion' => 'Sierra de cinta automática para corte de perfiles',
-                'ubicacion' => 'Taller de Corte',
-                'estado' => 'operativa',
-                'capacidad_maxima' => 500.0,
-                'unidad_capacidad' => 'mm',
-                'velocidad_operacion' => 120.0,
-                'unidad_velocidad' => 'm/min'
-            ],
-            [
-                'nombre' => 'Torno CNC 1',
-                'codigo' => 'TOR-001',
-                'modelo' => 'TC-800',
+                'nombre' => 'Torno CNC',
+                'codigo' => 'TORNO_CNC_001',
+                'modelo' => 'TL-250',
                 'fabricante' => 'Haas',
                 'ano_fabricacion' => 2022,
-                'numero_serie' => 'HAA2022TC800-001',
-                'descripcion' => 'Torno CNC para mecanizado de piezas cilíndricas',
-                'ubicacion' => 'Taller de Mecanizado',
+                'numero_serie' => 'TC001-2022',
+                'descripcion' => 'Torno CNC de precisión para piezas metálicas',
+                'ubicacion' => 'Taller Mecánico',
                 'estado' => 'operativa',
-                'capacidad_maxima' => 800.0,
+                'capacidad_maxima' => 500.00,
                 'unidad_capacidad' => 'mm',
-                'velocidad_operacion' => 4000.0,
-                'unidad_velocidad' => 'rpm'
+                'velocidad_operacion' => 3000.00,
+                'unidad_velocidad' => 'rpm',
+                'activo' => true
             ],
             [
-                'nombre' => 'Fresadora CNC 1',
-                'codigo' => 'FRE-001',
-                'modelo' => 'FC-1000',
+                'nombre' => 'Fresadora CNC',
+                'codigo' => 'FRESADORA_CNC_001',
+                'modelo' => 'VF-2',
                 'fabricante' => 'Haas',
-                'ano_fabricacion' => 2021,
-                'numero_serie' => 'HAA2021FC1000-001',
-                'descripcion' => 'Fresadora CNC para mecanizado de superficies',
-                'ubicacion' => 'Taller de Mecanizado',
+                'ano_fabricacion' => 2022,
+                'numero_serie' => 'FC001-2022',
+                'descripcion' => 'Fresadora CNC de 3 ejes para mecanizado',
+                'ubicacion' => 'Taller Mecánico',
                 'estado' => 'operativa',
-                'capacidad_maxima' => 1000.0,
+                'capacidad_maxima' => 400.00,
                 'unidad_capacidad' => 'mm',
-                'velocidad_operacion' => 8000.0,
-                'unidad_velocidad' => 'rpm'
+                'velocidad_operacion' => 8100.00,
+                'unidad_velocidad' => 'rpm',
+                'activo' => true
             ],
             [
-                'nombre' => 'Soldadora MIG 1',
-                'codigo' => 'SOL-MIG-001',
-                'modelo' => 'SM-350',
-                'fabricante' => 'Lincoln Electric',
-                'ano_fabricacion' => 2020,
-                'numero_serie' => 'LIN2020SM350-001',
-                'descripcion' => 'Soldadora MIG para acero al carbono',
-                'ubicacion' => 'Taller de Soldadura',
-                'estado' => 'operativa',
-                'capacidad_maxima' => 350.0,
-                'unidad_capacidad' => 'A',
-                'velocidad_operacion' => 15.0,
-                'unidad_velocidad' => 'm/min'
-            ],
-            [
-                'nombre' => 'Soldadora TIG 1',
-                'codigo' => 'SOL-TIG-001',
-                'modelo' => 'ST-200',
+                'nombre' => 'Soldadora MIG',
+                'codigo' => 'SOLDADORA_MIG_001',
+                'modelo' => 'PowerMig 350MP',
                 'fabricante' => 'Miller',
                 'ano_fabricacion' => 2021,
-                'numero_serie' => 'MIL2021ST200-001',
-                'descripcion' => 'Soldadora TIG para aluminio e inoxidable',
-                'ubicacion' => 'Taller de Soldadura',
+                'numero_serie' => 'SM001-2021',
+                'descripcion' => 'Soldadora MIG multiproceso',
+                'ubicacion' => 'Área de Soldadura',
                 'estado' => 'operativa',
-                'capacidad_maxima' => 200.0,
+                'capacidad_maxima' => 350.00,
                 'unidad_capacidad' => 'A',
-                'velocidad_operacion' => 8.0,
-                'unidad_velocidad' => 'm/min'
+                'velocidad_operacion' => 0.00,
+                'unidad_velocidad' => 'A',
+                'activo' => true
             ],
             [
-                'nombre' => 'Cabina de Chorreado 1',
-                'codigo' => 'CHO-001',
-                'modelo' => 'CC-5000',
-                'fabricante' => 'Clemco',
-                'ano_fabricacion' => 2019,
-                'numero_serie' => 'CLE2019CC5000-001',
-                'descripcion' => 'Cabina de chorreado para limpieza de superficies',
-                'ubicacion' => 'Taller de Acabados',
-                'estado' => 'operativa',
-                'capacidad_maxima' => 5000.0,
-                'unidad_capacidad' => 'mm',
-                'velocidad_operacion' => 20.0,
-                'unidad_velocidad' => 'm²/h'
-            ],
-            [
-                'nombre' => 'Cabina de Pintura 1',
-                'codigo' => 'PIN-001',
-                'modelo' => 'CP-3000',
-                'fabricante' => 'Gema',
+                'nombre' => 'Prensa Hidráulica',
+                'codigo' => 'PRENSA_HID_001',
+                'modelo' => 'PH-100',
+                'fabricante' => 'Dake',
                 'ano_fabricacion' => 2020,
-                'numero_serie' => 'GEM2020CP3000-001',
-                'descripcion' => 'Cabina de pintura con sistema de aspiración',
-                'ubicacion' => 'Taller de Acabados',
+                'numero_serie' => 'PH001-2020',
+                'descripcion' => 'Prensa hidráulica de 100 toneladas',
+                'ubicacion' => 'Taller de Formado',
                 'estado' => 'operativa',
-                'capacidad_maxima' => 3000.0,
-                'unidad_capacidad' => 'mm',
-                'velocidad_operacion' => 15.0,
-                'unidad_velocidad' => 'm²/h'
+                'capacidad_maxima' => 100.00,
+                'unidad_capacidad' => 'ton',
+                'velocidad_operacion' => 0.00,
+                'unidad_velocidad' => 'mm/s',
+                'activo' => true
             ]
         ];
 
         foreach ($maquinaria as $maq) {
-            Maquinaria::create($maq);
+            Maquinaria::updateOrCreate(
+                ['codigo' => $maq['codigo']],
+                $maq
+            );
         }
 
-        $this->command->info('Maquinaria creada exitosamente: ' . count($maquinaria) . ' máquinas');
+        $this->command->info('Maquinaria creada exitosamente.');
     }
 }
