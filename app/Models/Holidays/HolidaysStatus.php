@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class HolidaysStatus extends Model
 {
     use HasFactory;
+    
+    protected $table = 'holidays_status';
+    
     /**
      * USER HOLIDAYS - ESTADO DE VACACIONES
      * ESTADO: Aceptadas

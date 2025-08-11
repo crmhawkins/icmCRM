@@ -162,4 +162,10 @@ class User extends Authenticatable
         ->get();  // Asegúrate de seleccionar los campos de las órdenes de compra
     }
 
+    // Scopes
+    public function scopeActivo($query)
+    {
+        return $query->where('inactive', false);
+    }
+
 }

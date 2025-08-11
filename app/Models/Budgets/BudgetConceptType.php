@@ -10,6 +10,9 @@ class BudgetConceptType extends Model
     use HasFactory;
 
     protected $table = 'budget_concept_type';
+    
+    // Deshabilitar timestamps automáticos
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.

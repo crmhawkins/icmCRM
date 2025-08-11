@@ -12,8 +12,10 @@ class UserAccessLevel extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-
     protected $table = 'admin_user_access_level';
+    
+    // Deshabilitar timestamps automáticos
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.

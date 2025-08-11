@@ -79,6 +79,9 @@ use App\Http\Controllers\Tablas\CortesController;
 */
 
 Route::name('inicio')->get('/', function () {
+    if (Auth::check()) {
+        return redirect()->route('produccion.dashboard');
+    }
     return view('auth.login');
 });
 Route::get('/budget/cliente/{budget}', [BudgetController::class, 'getBudget'])->name('presupuestos.cliente');
@@ -646,6 +649,117 @@ Route::group(['prefix' => 'laravel-filemanager'], function () {
 Route::post('/actualizar-fila-tarea', [ColaDeTrabajoController::class, 'actualizarFilaTarea'])
     ->name('cola-de-trabajo.actualizar-fila')
     ->middleware('auth');
+
+// Rutas del Sistema de Maquinaria y Cola de Trabajo
+Route::group(['prefix' => 'produccion', 'middleware' => 'auth'], function () {
+
+    // Maquinaria
+    Route::get('maquinaria', [\App\Http\Controllers\Produccion\MaquinariaController::class, 'index'])->name('maquinaria.index');
+    Route::get('maquinaria/create', [\App\Http\Controllers\Produccion\MaquinariaController::class, 'create'])->name('maquinaria.create');
+    Route::post('maquinaria', [\App\Http\Controllers\Produccion\MaquinariaController::class, 'store'])->name('maquinaria.store');
+    Route::get('maquinaria/{maquinaria}', [\App\Http\Controllers\Produccion\MaquinariaController::class, 'show'])->name('maquinaria.show');
+    Route::get('maquinaria/{maquinaria}/edit', [\App\Http\Controllers\Produccion\MaquinariaController::class, 'edit'])->name('maquinaria.edit');
+    Route::put('maquinaria/{maquinaria}', [\App\Http\Controllers\Produccion\MaquinariaController::class, 'update'])->name('maquinaria.update');
+    Route::delete('maquinaria/{maquinaria}', [\App\Http\Controllers\Produccion\MaquinariaController::class, 'destroy'])->name('maquinaria.destroy');
+    Route::post('maquinaria/{maquinaria}/cambiar-estado', [\App\Http\Controllers\Produccion\MaquinariaController::class, 'cambiarEstado'])
+        ->name('maquinaria.cambiar-estado');
+
+    // Tipos de Trabajo
+    Route::resource('tipos-trabajo', \App\Http\Controllers\Produccion\TipoTrabajoController::class);
+    Route::post('tipos-trabajo/{tiposTrabajo}/cambiar-estado', [\App\Http\Controllers\Produccion\TipoTrabajoController::class, 'cambiarEstado'])
+        ->name('tipos-trabajo.cambiar-estado');
+
+    // Cola de Trabajo
+    Route::resource('cola-trabajo', \App\Http\Controllers\Produccion\ColaTrabajoController::class);
+    Route::get('cola-trabajo/{colaTrabajo}/download-pdf', [\App\Http\Controllers\Produccion\ColaTrabajoController::class, 'downloadPdf'])
+        ->name('cola-trabajo.download-pdf');
+    Route::post('cola-trabajo/{colaTrabajo}/cambiar-estado', [\App\Http\Controllers\Produccion\ColaTrabajoController::class, 'cambiarEstado'])
+        ->name('cola-trabajo.cambiar-estado');
+    Route::post('cola-trabajo/{colaTrabajo}/asignar-maquinaria', [\App\Http\Controllers\Produccion\ColaTrabajoController::class, 'asignarMaquinaria'])
+        ->name('cola-trabajo.asignar-maquinaria');
+    Route::post('cola-trabajo/{colaTrabajo}/asignar-usuario', [\App\Http\Controllers\Produccion\ColaTrabajoController::class, 'asignarUsuario'])
+        ->name('cola-trabajo.asignar-usuario');
+
+                // Dashboard de Producción
+            Route::get('dashboard', [\App\Http\Controllers\Produccion\ProduccionController::class, 'dashboard'])
+                ->name('produccion.dashboard');
+
+            // Análisis de PDF
+            Route::get('analisis-pdf', [\App\Http\Controllers\Produccion\AnalisisPDFController::class, 'create'])
+                ->name('analisis-pdf.create');
+            Route::post('analisis-pdf/analizar', [\App\Http\Controllers\Produccion\AnalisisPDFController::class, 'analizar'])
+                ->name('analisis-pdf.analizar');
+            Route::get('analisis-pdf/resultado', [\App\Http\Controllers\Produccion\AnalisisPDFController::class, 'resultado'])
+                ->name('analisis-pdf.resultado');
+            Route::get('analisis-pdf/previsualizar', [\App\Http\Controllers\Produccion\AnalisisPDFController::class, 'previsualizarPDF'])
+                ->name('analisis-pdf.previsualizar');
+            Route::post('analisis-pdf/crear-pedido', [\App\Http\Controllers\Produccion\AnalisisPDFController::class, 'crearPedido'])
+                ->name('analisis-pdf.crear-pedido');
+            Route::post('analisis-pdf/reprocesar', [\App\Http\Controllers\Produccion\AnalisisPDFController::class, 'reprocesar'])
+                ->name('analisis-pdf.reprocesar');
+
+            // Pedidos
+            Route::resource('pedidos', \App\Http\Controllers\Produccion\PedidoController::class);
+            Route::post('pedidos/{pedido}/procesar-ia', [\App\Http\Controllers\Produccion\PedidoController::class, 'procesarIA'])
+                ->name('pedidos.procesar-ia');
+            Route::post('pedidos/{pedido}/confirmar-procesamiento-ia', [\App\Http\Controllers\Produccion\PedidoController::class, 'confirmarProcesamientoIA'])
+                ->name('pedidos.confirmar-procesamiento-ia');
+            Route::post('pedidos/{pedido}/en-proceso', [\App\Http\Controllers\Produccion\PedidoController::class, 'cambiarAEnProceso'])
+                ->name('pedidos.en-proceso');
+            Route::post('pedidos/{pedido}/completado', [\App\Http\Controllers\Produccion\PedidoController::class, 'cambiarACompletado'])
+    ->name('pedidos.completado');
+Route::post('pedidos/{pedido}/pasar-a-produccion', [\App\Http\Controllers\Produccion\PedidoController::class, 'pasarAProduccion'])
+    ->name('pedidos.pasar-a-produccion');
+Route::get('pedidos/{pedido}/download-pdf-produccion', [\App\Http\Controllers\Produccion\PedidoController::class, 'downloadPdfProduccion'])
+    ->name('pedidos.download-pdf-produccion');
+
+// Control de tiempo para tareas
+Route::prefix('control-tiempo')->name('control-tiempo.')->group(function () {
+    Route::post('tarea/{tarea}/iniciar', [\App\Http\Controllers\Produccion\ControlTiempoController::class, 'iniciarTrabajo'])
+        ->name('iniciar');
+    Route::post('tarea/{tarea}/pausar', [\App\Http\Controllers\Produccion\ControlTiempoController::class, 'pausarTrabajo'])
+        ->name('pausar');
+    Route::post('tarea/{tarea}/reanudar', [\App\Http\Controllers\Produccion\ControlTiempoController::class, 'reanudarTrabajo'])
+        ->name('reanudar');
+    Route::post('tarea/{tarea}/finalizar', [\App\Http\Controllers\Produccion\ControlTiempoController::class, 'finalizarTrabajo'])
+        ->name('finalizar');
+    Route::get('tarea/{tarea}/info', [\App\Http\Controllers\Produccion\ControlTiempoController::class, 'obtenerInfoTiempo'])
+        ->name('info');
+    Route::post('tarea/{tarea}/notas', [\App\Http\Controllers\Produccion\ControlTiempoController::class, 'actualizarNotasTiempo'])
+        ->name('notas');
+});
+
+            // Piezas
+            Route::resource('piezas', \App\Http\Controllers\Produccion\PiezaController::class);
+            Route::post('piezas/{pieza}/cambiar-estado', [\App\Http\Controllers\Produccion\PiezaController::class, 'cambiarEstado'])
+                ->name('piezas.cambiar-estado');
+            Route::post('piezas/{pieza}/asignar-maquinaria', [\App\Http\Controllers\Produccion\PiezaController::class, 'asignarMaquinaria'])
+                ->name('piezas.asignar-maquinaria');
+            Route::post('piezas/{pieza}/asignar-usuario', [\App\Http\Controllers\Produccion\PiezaController::class, 'asignarUsuario'])
+                ->name('piezas.asignar-usuario');
+
+            // Archivos de Piezas
+            Route::post('piezas/{pieza}/archivos', [\App\Http\Controllers\Produccion\ArchivoPiezaController::class, 'store'])
+                ->name('archivos-piezas.store');
+            Route::delete('archivos-piezas/{archivo}', [\App\Http\Controllers\Produccion\ArchivoPiezaController::class, 'destroy'])
+                ->name('archivos-piezas.destroy');
+            Route::get('archivos-piezas/{archivo}/download', [\App\Http\Controllers\Produccion\ArchivoPiezaController::class, 'download'])
+                ->name('archivos-piezas.download');
+            Route::get('archivos-piezas/{archivo}/view', [\App\Http\Controllers\Produccion\ArchivoPiezaController::class, 'view'])
+                ->name('archivos-piezas.view');
+            Route::post('archivos-piezas/{archivo}/marcar-principal', [\App\Http\Controllers\Produccion\ArchivoPiezaController::class, 'marcarPrincipal'])
+                ->name('archivos-piezas.marcar-principal');
+
+            // Seguimiento de Piezas
+            Route::get('seguimiento-pieza/{piezaId}', [\App\Http\Controllers\Produccion\SeguimientoPiezaController::class, 'show'])
+                ->name('seguimiento-pieza.show');
+            Route::post('seguimiento-pieza/{piezaId}', [\App\Http\Controllers\Produccion\SeguimientoPiezaController::class, 'store'])
+                ->name('seguimiento-pieza.store');
+            Route::post('seguimiento-pieza/calcular-totales', [\App\Http\Controllers\Produccion\SeguimientoPiezaController::class, 'calcularTotales'])
+                ->name('seguimiento-pieza.calcular-totales');
+            Route::post('seguimiento-pieza/buscar-similares', [\App\Http\Controllers\Produccion\SeguimientoPiezaController::class, 'buscarSimilares'])
+                ->name('seguimiento-pieza.buscar-similares');
+        });
 
 });
 // Portal Clientes

@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Laravel\Sanctum\Sanctum;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,8 +22,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-         // Helper para activar elementos de menú basados en la ruta actual
-        view()->share('isActive', function ($routePattern) {
+        Route::macro('isActive', function ($routePattern) {
             return Route::currentRouteNamed($routePattern) ? 'active' : '';
         });
     }

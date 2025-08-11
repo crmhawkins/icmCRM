@@ -42,6 +42,32 @@ class DashboardController extends Controller
         $timeWorkedToday = $this->calculateTimeWorkedToday($user);
         $jornadaActiva = $user->activeJornada();
         $llamadaActiva = $user->activeLlamada();
+
+        // Obtener tareas de producción asignadas al usuario
+        $tareasProduccion = \App\Models\Models\Produccion\ColaTrabajo::where('usuario_asignado_id', $id)
+            ->with(['pieza', 'tipoTrabajo', 'maquinaria'])
+            ->orderBy('prioridad', 'desc')
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        // Estadísticas de tareas de producción
+        $tareasPendientes = $tareasProduccion->where('estado', 'pendiente')->count();
+        $tareasEnProceso = $tareasProduccion->where('estado_tiempo', 'en_progreso')->count();
+        $tareasCompletadas = $tareasProduccion->where('estado', 'completado')->count();
+        $tareasUrgentes = $tareasProduccion->where('prioridad', '>=', 8)->count();
+
+        // Estadísticas para el dashboard de producción
+        $stats = [
+            'total_pedidos' => \App\Models\Models\Produccion\Pedido::count(),
+            'total_piezas' => \App\Models\Models\Produccion\Pieza::count(),
+            'total_ordenes' => \App\Models\Models\Produccion\ColaTrabajo::count(),
+            'ordenes_completadas' => \App\Models\Models\Produccion\ColaTrabajo::where('estado', 'completado')->count(),
+            'pedidos_este_mes' => \App\Models\Models\Produccion\Pedido::whereMonth('created_at', now()->month)->count(),
+            'piezas_completadas' => \App\Models\Models\Produccion\Pieza::where('estado', 'completado')->count(),
+            'eficiencia_promedio' => \App\Models\Models\Produccion\ColaTrabajo::where('estado', 'completado')
+                ->whereNotNull('eficiencia_porcentaje')
+                ->avg('eficiencia_porcentaje') ?? 0
+        ];
         $events = $user->eventos->map(function ($event) {
             return $event->nonNullAttributes(); // Usa el método que definimos antes
         });
@@ -98,6 +124,11 @@ class DashboardController extends Controller
                     'user',
                     'tareas',
                     'to_dos',
+                    'tareasProduccion',
+                    'tareasPendientes',
+                    'tareasEnProceso',
+                    'tareasCompletadas',
+                    'tareasUrgentes',
                     'budgets',
                     'projects',
                     'clientes',
@@ -122,6 +153,11 @@ class DashboardController extends Controller
                     'user',
                     'tareas',
                     'to_dos',
+                    'tareasProduccion',
+                    'tareasPendientes',
+                    'tareasEnProceso',
+                    'tareasCompletadas',
+                    'tareasUrgentes',
                     'budgets',
                     'projects',
                     'clientes',
@@ -142,6 +178,11 @@ class DashboardController extends Controller
                     'user',
                     'tareas',
                     'to_dos',
+                    'tareasProduccion',
+                    'tareasPendientes',
+                    'tareasEnProceso',
+                    'tareasCompletadas',
+                    'tareasUrgentes',
                     'budgets',
                     'projects',
                     'clientes',
@@ -164,6 +205,11 @@ class DashboardController extends Controller
                     'user',
                     'tareas',
                     'to_dos',
+                    'tareasProduccion',
+                    'tareasPendientes',
+                    'tareasEnProceso',
+                    'tareasCompletadas',
+                    'tareasUrgentes',
                     'budgets',
                     'projects',
                     'clientes',
@@ -243,6 +289,11 @@ class DashboardController extends Controller
                     'tasks',
                     'tareas',
                     'to_dos',
+                    'tareasProduccion',
+                    'tareasPendientes',
+                    'tareasEnProceso',
+                    'tareasCompletadas',
+                    'tareasUrgentes',
                     'users',
                     'events',
                     'timeWorkedToday',
@@ -279,7 +330,7 @@ class DashboardController extends Controller
                         $comisionRestante += ($this->convertToNumber($ayuda->importe)* 0.05);
                     }
                 }
-                return view('dashboards.dashboard_comercial', compact('user','diasDiferencia','estadosKit','comisionRestante','ayudas','comisionTramitadas','comisionPendiente', 'comisionCurso', 'pedienteCierre','timeWorkedToday', 'jornadaActiva', 'pausaActiva'));
+                return view('dashboards.dashboard_comercial', compact('user','diasDiferencia','estadosKit','comisionRestante','ayudas','comisionTramitadas','comisionPendiente', 'comisionCurso', 'pedienteCierre','timeWorkedToday', 'jornadaActiva', 'pausaActiva', 'tareasProduccion', 'tareasPendientes', 'tareasEnProceso', 'tareasCompletadas', 'tareasUrgentes'));
         }
     }
     public function parseFlexibleTime($time) {

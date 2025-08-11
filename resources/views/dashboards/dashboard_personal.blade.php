@@ -4,6 +4,10 @@
 
 @section('css')
 <link rel="stylesheet" href="{{asset('assets/vendors/choices.js/choices.min.css')}}" />
+<!-- Bootstrap CSS CDN -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
 <style>
     /* Estilos básicos */
@@ -538,6 +542,126 @@
             </div>
         </div>
     </div>
+
+    <!-- SECCIÓN DE TAREAS DE PRODUCCIÓN -->
+    @if(count($tareasProduccion) > 0)
+    <div class="page-heading card" style="box-shadow: none !important; margin-top: 2rem;">
+        <div class="page-title card-body">
+            <div class="row">
+                <div class="col-12">
+                    <h3><i class="fas fa-industry me-2"></i>Mis Tareas de Producción</h3>
+                    <p class="text-muted">Tareas asignadas y en progreso</p>
+                </div>
+            </div>
+        </div>
+        <div class="card mt-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Prioridad</th>
+                                        <th>Pieza</th>
+                                        <th>Tipo de Trabajo</th>
+                                        <th>Estado</th>
+                                        <th>Tiempo</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($tareasProduccion->take(5) as $tarea)
+                                    <tr data-tarea-id="{{ $tarea->id }}">
+                                        <td>
+                                            <span class="badge bg-{{ $tarea->prioridad >= 8 ? 'danger' : ($tarea->prioridad >= 6 ? 'warning' : 'success') }}">
+                                                {{ $tarea->prioridad }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            @if($tarea->pieza)
+                                                <strong>{{ $tarea->pieza->codigo_pieza }}</strong><br>
+                                                <small class="text-muted">{{ $tarea->pieza->nombre_pieza }}</small>
+                                            @else
+                                                <span class="text-muted">Sin pieza asignada</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($tarea->tipoTrabajo)
+                                                <span class="badge bg-info">{{ $tarea->tipoTrabajo->nombre }}</span>
+                                            @else
+                                                <span class="text-muted">-</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{{ $tarea->estado_tiempo_color ?? 'secondary' }}">
+                                                {{ $tarea->estado_tiempo_texto ?? 'No Iniciado' }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex flex-column">
+                                                <small class="text-muted">
+                                                    <i class="fas fa-clock"></i>
+                                                    <span class="tiempo-transcurrido">{{ $tarea->tiempo_transcurrido_formateado ?? '00:00' }}</span>
+                                                </small>
+                                                @if($tarea->tiempo_estimado_horas)
+                                                    <small class="text-info">
+                                                        Estimado: {{ number_format($tarea->tiempo_estimado_horas, 1) }}h
+                                                    </small>
+                                                @endif
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                @if($tarea->estado_tiempo === 'no_iniciado')
+                                                    <button type="button" class="btn btn-success btn-sm" onclick="iniciarTrabajo({{ $tarea->id }})" title="Iniciar Trabajo">
+                                                        <i class="fas fa-play"></i>
+                                                    </button>
+                                                @elseif($tarea->estado_tiempo === 'en_progreso')
+                                                    <button type="button" class="btn btn-warning btn-sm" onclick="pausarTrabajo({{ $tarea->id }})" title="Pausar">
+                                                        <i class="fas fa-pause"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger btn-sm" onclick="finalizarTrabajo({{ $tarea->id }})" title="Finalizar">
+                                                        <i class="fas fa-stop"></i>
+                                                    </button>
+                                                @elseif($tarea->estado_tiempo === 'pausado')
+                                                    <button type="button" class="btn btn-success btn-sm" onclick="reanudarTrabajo({{ $tarea->id }})" title="Reanudar">
+                                                        <i class="fas fa-play"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger btn-sm" onclick="finalizarTrabajo({{ $tarea->id }})" title="Finalizar">
+                                                        <i class="fas fa-stop"></i>
+                                                    </button>
+                                                @elseif($tarea->estado_tiempo === 'completado')
+                                                    <div class="text-success">
+                                                        <i class="fas fa-check"></i>
+                                                        <small>{{ number_format($tarea->tiempo_real_horas, 2) }}h</small>
+                                                    </div>
+                                                    @if($tarea->eficiencia_porcentaje)
+                                                        <div class="text-info">
+                                                            <small>{{ $tarea->eficiencia_porcentaje }}%</small>
+                                                        </div>
+                                                    @endif
+                                                @endif
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        @if(count($tareasProduccion) > 5)
+                            <div class="text-center mt-3">
+                                <a href="{{ route('cola-trabajo.index') }}" class="btn btn-outline-primary">
+                                    Ver todas las tareas ({{ count($tareasProduccion) }})
+                                </a>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
 @endsection
 
 @section('scripts')
@@ -1418,5 +1542,153 @@
                 });
             }
 
+            // Funciones para control de tiempo de producción
+            function iniciarTrabajo(tareaId) {
+                if (confirm('¿Estás seguro de que quieres iniciar el trabajo en esta tarea?')) {
+                    fetch(`/control-tiempo/tarea/${tareaId}/iniciar`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            mostrarNotificacion('Trabajo iniciado correctamente', 'success');
+                            setTimeout(() => location.reload(), 1000);
+                        } else {
+                            mostrarNotificacion(data.message, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        mostrarNotificacion('Error al iniciar el trabajo', 'error');
+                    });
+                }
+            }
+
+            function pausarTrabajo(tareaId) {
+                fetch(`/control-tiempo/tarea/${tareaId}/pausar`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        mostrarNotificacion('Trabajo pausado correctamente', 'success');
+                        setTimeout(() => location.reload(), 1000);
+                    } else {
+                        mostrarNotificacion(data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    mostrarNotificacion('Error al pausar el trabajo', 'error');
+                });
+            }
+
+            function reanudarTrabajo(tareaId) {
+                fetch(`/control-tiempo/tarea/${tareaId}/reanudar`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        mostrarNotificacion('Trabajo reanudado correctamente', 'success');
+                        setTimeout(() => location.reload(), 1000);
+                    } else {
+                        mostrarNotificacion(data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    mostrarNotificacion('Error al reanudar el trabajo', 'error');
+                });
+            }
+
+            function finalizarTrabajo(tareaId) {
+                if (confirm('¿Estás seguro de que quieres finalizar el trabajo en esta tarea?')) {
+                    fetch(`/control-tiempo/tarea/${tareaId}/finalizar`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            mostrarNotificacion('Trabajo finalizado correctamente', 'success');
+                            setTimeout(() => location.reload(), 1000);
+                        } else {
+                            mostrarNotificacion(data.message, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        mostrarNotificacion('Error al finalizar el trabajo', 'error');
+                    });
+                }
+            }
+
+            function mostrarNotificacion(mensaje, tipo) {
+                const alertClass = tipo === 'success' ? 'alert-success' : 'alert-danger';
+                const alertHtml = `
+                    <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+                        ${mensaje}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                `;
+
+                // Insertar al inicio del contenedor principal
+                const container = document.querySelector('.container-fluid');
+                container.insertAdjacentHTML('afterbegin', alertHtml);
+
+                // Auto-ocultar después de 5 segundos
+                setTimeout(() => {
+                    const alert = container.querySelector('.alert');
+                    if (alert) {
+                        alert.remove();
+                    }
+                }, 5000);
+            }
+
+            // Actualizar tiempos en tiempo real
+            function iniciarActualizacionTiempos() {
+                setInterval(() => {
+                    document.querySelectorAll('.tiempo-transcurrido').forEach(element => {
+                        const tareaId = element.closest('tr').dataset.tareaId;
+                        if (tareaId) {
+                            fetch(`/control-tiempo/tarea/${tareaId}/info`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success && data.data.tiempo_transcurrido) {
+                                        element.textContent = data.data.tiempo_transcurrido;
+                                    }
+                                })
+                                .catch(error => console.error('Error actualizando tiempo:', error));
+                        }
+                    });
+                }, 30000); // 30 segundos
+            }
+
+            // Inicializar actualización de tiempos si hay tareas
+            @if(count($tareasProduccion) > 0)
+                iniciarActualizacionTiempos();
+            @endif
+
     </script>
+
+    @push('scripts')
+    <!-- Bootstrap JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    @endpush
 @endsection

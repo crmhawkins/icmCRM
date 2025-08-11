@@ -12,6 +12,7 @@ use App\Models\Email\CategoryEmail;
 use App\Models\Email\UserEmailConfig;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\Mime\Part\Multipart\AlternativePart;
 use Symfony\Component\Mime\Part\TextPart;
 
@@ -479,8 +480,13 @@ class EmailController extends Controller
     }
 
     public function countUnread() {
-        $count = Email::where('admin_user_id', Auth::user()->id)->where('status_id', 1)->count();
-        return response($count);
+        try {
+            $count = Email::where('admin_user_id', Auth::user()->id)->where('status_id', 1)->count();
+            return response()->json($count);
+        } catch (\Exception $e) {
+            Log::error('Error en countUnread: ' . $e->getMessage());
+            return response()->json(0, 500);
+        }
     }
 
     public function destroy(Request $request) {

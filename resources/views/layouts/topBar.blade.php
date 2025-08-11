@@ -309,19 +309,32 @@
 
         // Función para obtener las alertas usando fetch
         function obtenerCorreos() {
-            fetch("{{ route('admin.emails.unread') }}", {  // Cambia esto con la ruta de tu backend
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                }
-            })
-            .then(response => response.json())
-            .then(count => {
+            // COMENTADO TEMPORALMENTE - CAUSA ERROR 500
+            // fetch("{{ route('admin.emails.unread') }}", {
+            //     method: 'POST',
+            //     headers: {
+            //         'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            //     }
+            // })
+            // .then(response => {
+            //     if (!response.ok) {
+            //         throw new Error(`HTTP error! status: ${response.status}`);
+            //     }
+            //     return response.json();
+            // })
+            // .then(count => {
+            //     console.log('Correos sin leer:', count);
+            //     actualizarContadorCorreos(count);
+            // })
+            // .catch(error => {
+            //     console.error('Error al obtener los correos:', error);
+            //     // En caso de error, mostrar 0 correos
+            //     actualizarContadorCorreos(0);
+            // });
 
-                console.log('Correos sin leer:', count);
-                actualizarContadorCorreos(count);
-            })
-            .catch(error => console.error('Error al obtener los correos:', error));
+            // TEMPORAL: Mostrar 0 correos hasta que se corrija el backend
+            console.log('Función obtenerCorreos comentada temporalmente - Error 500 en backend');
+            actualizarContadorCorreos(0);
         }
         function obtenerAlertas() {
             fetch("{{ route('user.alerts') }}", {  // Cambia esto con la ruta de tu backend
