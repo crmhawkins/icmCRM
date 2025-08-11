@@ -465,33 +465,31 @@
                 @php
                     $tasksByProject = collect($datos)->groupBy('id_proyecto');
                     
-                    // Encontrar la fecha más temprana y más tardía para calcular el rango total
-                    $minDate = collect($datos)->min('fecha_creacion');
-                    $maxDate = collect($datos)->max('fecha_creacion');
-                    
-                    // Calcular el rango total en segundos
-                    $totalTimeRange = strtotime($maxDate) - strtotime($minDate);
-                    
-                    // Factor de escala para el ancho de las barras
-                    $scaleFactor = 40;
-                @endphp
-
-                @php
-                    $tasksByProject = collect($datos)->groupBy('id_proyecto');
-                    $firstProject = $tasksByProject->first();
-                    $firstProjectId = key($tasksByProject->all());
+                    // Verificar que hay datos antes de usar first()
+                    if ($tasksByProject->count() > 0) {
+                        $firstProject = $tasksByProject->first();
+                        $firstProjectId = key($tasksByProject->all());
+                    } else {
+                        $firstProject = collect();
+                        $firstProjectId = null;
+                    }
 
                     // Obtener todas las tareas retrasadas
                     $delayedTasks = collect($datos)->filter(function($task) {
+                        if (!$task['fecha_fin']) return false;
                         $taskEnd = \Carbon\Carbon::parse($task['fecha_fin']);
-                        return $task['progreso'] < 100 && $taskEnd->isPast() && $task['estado'] != 4;
+                        return $task['progreso'] < 100 && $taskEnd->isPast() && $task['estado'] != 'completado';
                     });
                 @endphp
 
                 <div class="project-selector-wrapper">
                     <div class="project-selector">
                         <h3 class="project-title active" onclick="toggleProjectDropdown()" id="currentProject">
-                            {{ $firstProject->first()['proyecto'] }}
+                            @if($firstProject->count() > 0)
+                                {{ $firstProject->first()['proyecto'] }}
+                            @else
+                                Sin pedidos en producción
+                            @endif
                             <svg class="inline-block w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
@@ -502,9 +500,10 @@
                                      onclick="selectProject('{{ $projectId }}', '{{ $tasks->first()['proyecto'] }}')"
                                      data-project-id="{{ $projectId }}"
                                      data-total-tasks="{{ $tasks->count() }}"
-                                     data-in-production="{{ $tasks->where('estado', 1)->count() }}"
+                                     data-in-production="{{ $tasks->where('estado', 'en_proceso')->count() }}"
                                      data-total-time="@php
                                          $tiempoTotal = $tasks->sum(function($task) {
+                                             if (!$task['duracion']) return 0;
                                              list($h, $m, $s) = array_pad(explode(':', $task['duracion']), 3, 0);
                                              $totalHoras = $h + ($m / 60) + ($s / 3600);
                                              return ceil($totalHoras / 8); // Convertir a días laborales de 8h
@@ -531,130 +530,67 @@
                     @endif
                 </div>
 
-                @foreach($tasksByProject as $projectId => $tasks)
-                    <div class="project-section" data-project-id="{{ $projectId }}" style="{{ $projectId != $firstProjectId ? 'display: none;' : '' }}">
-            
-                        @php
-                            // Ordenar tareas por fecha de creación
-                            $sortedTasks = $tasks->sortBy('fecha_creacion');
-                            
-                            // Obtener el rango de fechas para este proyecto
-                            $projectStartDate = $sortedTasks->min('fecha_creacion');
-                            $projectEndDate = $sortedTasks->max('fecha_creacion');
-                            
-                            // Crear array de meses entre las fechas
-                            $startMonth = \Carbon\Carbon::parse($projectStartDate)->startOfMonth();
-                            $endMonth = \Carbon\Carbon::parse($projectEndDate)->endOfMonth();
-                            $months = [];
-                            $currentMonth = $startMonth->copy();
-                            
-                            while ($currentMonth->lte($endMonth)) {
-                                $months[] = [
-                                    'date' => $currentMonth->copy(),
-                                    'position' => $currentMonth->diffInDays($startMonth) / $endMonth->diffInDays($startMonth) * 100
-                                ];
-                                $currentMonth->addMonth();
-                            }
-                        @endphp
-
-                        <!-- Timeline Header con Meses -->
-                        <div class="timeline-header">
-                            <div class="w-1/5"></div>
-                            <div class="w-2/3 relative mb-4">
-                                @foreach($months as $month)
-                                    <div class="month-marker" style="position: absolute; left: {{ $month['position'] }}%">
-                                        {{ $month['date']->format('M Y') }}
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-
-                        @foreach($sortedTasks as $task)
+                @if($tasksByProject->count() > 0)
+                    @foreach($tasksByProject as $projectId => $tasks)
+                        <div class="project-section" data-project-id="{{ $projectId }}" style="{{ $projectId != $firstProjectId ? 'display: none;' : '' }}">
+                
                             @php
-                                // Solo mostrar tareas que no estén finalizadas o que tengan estado
-                                if ($task['progreso'] >= 100 && !isset($task['estado'])) {
-                                    continue;
-                                }
-
-                                // Determinar el estado de la tarea
-                                $statusClass = match($task['estado'] ?? 0) {
-                                    1 => 'task-resumed',
-                                    2 => 'task-paused',
-                                    3 => 'task-completed',
-                                    4 => 'task-cancelled',
-                                    5 => 'task-review',
-                                    default => 'task-resumed'
-                                };
-
-                                // Verificar si la tarea está retrasada
-                                $isDelayed = false;
-                                $currentDate = new \Carbon\Carbon();
-                                $taskEnd = \Carbon\Carbon::parse($task['fecha_fin']);
+                                // Ordenar tareas por fecha de creación
+                                $sortedTasks = $tasks->sortBy('fecha_creacion');
                                 
-                                if ($task['progreso'] < 100 && $taskEnd->isPast() && $task['estado'] != 4) {
-                                    $isDelayed = true;
+                                // Obtener el rango de fechas para este proyecto
+                                $projectStartDate = $sortedTasks->min('fecha_creacion');
+                                $projectEndDate = $sortedTasks->max('fecha_creacion');
+                                
+                                // Crear array de meses entre las fechas
+                                $startMonth = \Carbon\Carbon::parse($projectStartDate)->startOfMonth();
+                                $endMonth = \Carbon\Carbon::parse($projectEndDate)->endOfMonth();
+                                $months = [];
+                                $currentMonth = $startMonth->copy();
+                                
+                                while ($currentMonth->lte($endMonth)) {
+                                    $months[] = [
+                                        'date' => $currentMonth->copy(),
+                                        'position' => $currentMonth->diffInDays($startMonth) / $endMonth->diffInDays($startMonth) * 100
+                                    ];
+                                    $currentMonth->addMonth();
                                 }
                             @endphp
-                            <div class="task-row mb-6 mt-15" data-project-id="{{ $task['id_proyecto'] }}">
-                                <div class="flex items-start">
-                                    <div class="w-1/5">
-                                        <div class="flex items-center">
-                                            <div class="task-dot bg-orange-500"></div>
-                                            <div>
-                                                <div class="font-medium text-sm task-name" 
-                                                     onmouseover="showTaskInfo(event, '{{ $task['tarea'] }}', '{{ $task['progreso'] }}', '{{ $task['duracion'] }}')"
-                                                     onmouseout="hideTaskInfo()">
-                                                    {{ $task['tarea'] }}
-                                                    @if($isDelayed)
-                                                        <span class="warning-indicator" title="Tarea retrasada">⚠️</span>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="w-2/3 relative pt-2">
-                                        <div class="gantt-timeline">
-                                            @php
-                                                // Calcular posición basada en la fecha de creación
-                                                $taskStart = \Carbon\Carbon::parse($task['fecha_creacion']);
-                                                $daysFromStart = $taskStart->diffInDays($startMonth);
-                                                $totalDays = $endMonth->diffInDays($startMonth);
-                                                $marginLeft = ($daysFromStart / $totalDays) * 100;
 
-                                                // Calcular ancho basado en la duración de la tarea
-                                                list($hours, $minutes, $seconds) = array_pad(explode(':', $task['duracion']), 3, 0);
-                                                $totalHours = $hours + ($minutes / 60) + ($seconds / 3600);
-                                                
-                                                // Convertir horas a días laborales (8 horas = 1 día laboral)
-                                                $workingDays = ceil($totalHours / 8);
-                                                
-                                                // Ajustar el ancho para que sea más visible
-                                                // Multiplicamos por 3 para representar que cada 8 horas son realmente 3 días en la escala
-                                                $scaledDays = $workingDays * 3;
-                                                
-                                                // Calculamos el ancho con un factor de escala para hacer las barras más visibles
-                                                $scaleFactor = 2; // Factor de escala para hacer las barras más anchas
-                                                $width = ($scaledDays / $totalDays) * 100 * $scaleFactor;
-                                                
-                                                // Asegurar un ancho mínimo para tareas muy cortas
-                                                $width = max($width, 5);
-                                            @endphp
-                                            
-                                            <div class="gantt-task-bar {{ $statusClass }}" 
-                                                 onmouseover="showTaskInfo(event, '{{ $task['tarea'] }}', '{{ $task['progreso'] }}', '{{ $task['duracion'] }}')"
-                                                 onmouseout="hideTaskInfo()"
-                                                 style="left: {{ $marginLeft }}%; width: {{ $width }}%">
-                                                @if($task['progreso'] > 0)
-                                                    <div class="task-progress" style="width: {{ $task['progreso'] }}%"></div>
-                                                @endif
-                                            </div>
+                            <!-- Timeline Header con Meses -->
+                            <div class="timeline-header">
+                                <div class="w-1/5"></div>
+                                <div class="w-2/3 relative mb-4">
+                                    @foreach($months as $month)
+                                        <div class="month-marker" style="position: absolute; left: {{ $month['position'] }}%">
+                                            {{ $month['date']->format('M Y') }}
                                         </div>
-                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
-                        @endforeach
+                        </div>
+                    @endforeach
+                @else
+                    <div class="no-data-message" style="text-align: center; padding: 50px; color: #666;">
+                        <h3>📊 Diagrama de Gantt de Producción</h3>
+                        <p>No hay pedidos en producción actualmente.</p>
+                        <p>Para ver el diagrama de Gantt, necesitas:</p>
+                        <ul style="text-align: left; display: inline-block; margin: 20px 0;">
+                            <li>✅ Crear pedidos en el sistema</li>
+                            <li>✅ Procesarlos con IA</li>
+                            <li>✅ Pasar los pedidos a producción</li>
+                            <li>✅ Generar órdenes de trabajo</li>
+                        </ul>
+                        <p><strong>El diagrama mostrará:</strong></p>
+                        <ul style="text-align: left; display: inline-block; margin: 20px 0;">
+                            <li>📅 Fechas de inicio y fin de cada tarea</li>
+                            <li>⏱️ Tiempos estimados vs. reales</li>
+                            <li>📈 Progreso de cada pieza</li>
+                            <li>🏭 Estado de cada orden de trabajo</li>
+                            <li>⚠️ Tareas retrasadas</li>
+                        </ul>
                     </div>
-                @endforeach
+                @endif
             </div>
         </div>
     </div>

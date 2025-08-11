@@ -4,88 +4,89 @@ namespace App\Http\Controllers;
 
 use App\Models\Budgets\Budget;
 use App\Models\Tasks\LogTasks;
+use App\Models\Models\Produccion\Pedido;
+use App\Models\Produccion\ColaTrabajo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class DiagramaGanttController extends Controller
 {
     private function hmsToSeconds($hms) {
-        list($h, $m, $s) = explode(':', $hms);
+        if (!$hms) return 0;
+        list($h, $m, $s) = array_pad(explode(':', $hms), 3, 0);
         return ($h * 3600) + ($m * 60) + $s;
     }
 
     public function getDataGrantt()
     {
-        $proyectos = Budget::with('tasks')->get();
+        // Obtener pedidos de producción con sus piezas y cola de trabajo
+        $pedidos = Pedido::with(['piezas.colaTrabajo.tipoTrabajo', 'piezas.colaTrabajo.maquinaria'])
+            ->where('estado', 'en_produccion')
+            ->orWhere('estado', 'completado')
+            ->get();
+        
         $datos = [];
         $maxFechaFin = null;
         $minFechaInicio = null;
-        $tareaMaestra = null;
-        $taskProgress = []; // Track accumulated progress per task
 
-        foreach($proyectos as $proyect) {
-            foreach($proyect->tasks as $task) {
-                $logs = LogTasks::where('task_id', $task->id)->get();
-                $taskId = $task->id;
-                
-                if ($logs->count() > 0) {
-                    $totalProgress = 0;
-                    $duracionEstimada = $this->hmsToSeconds($task->estimated_time);
-                    $firstLog = true;
-                    $taskData = null;
+        foreach($pedidos as $pedido) {
+            foreach($pedido->piezas as $pieza) {
+                if ($pieza->colaTrabajo && $pieza->colaTrabajo->count() > 0) {
+                    foreach($pieza->colaTrabajo as $colaTrabajo) {
+                        $fechaInicio = $colaTrabajo->fecha_inicio_estimada;
+                        $fechaFin = $colaTrabajo->fecha_fin_estimada;
+                        $tiempoEstimado = $colaTrabajo->tiempo_estimado_horas ?? 0;
+                        
+                        // Calcular progreso basado en el estado
+                        $progreso = 0;
+                        switch($colaTrabajo->estado) {
+                            case 'pendiente':
+                                $progreso = 0;
+                                break;
+                            case 'en_proceso':
+                                $progreso = 50;
+                                break;
+                            case 'completado':
+                                $progreso = 100;
+                                break;
+                            default:
+                                $progreso = 0;
+                        }
 
-                    foreach($logs as $log) {
-                        $inicio = $log->date_start;
-                        $fin = $log->date_end;
-                        
-                        $tiempoReal = strtotime($fin) - strtotime($inicio);
-                        $currentProgress = ($duracionEstimada > 0) ? min(100, round(($tiempoReal / $duracionEstimada) * 100)) : 0;
-                        $totalProgress += $currentProgress;
-                        
-                        if ($firstLog) {
-                            $taskData = [
-                                'id_tarea' => $taskId,
-                                'tarea' => $task->title,
-                                'estado' => $task->task_status_id,
-                                'proyecto' => $proyect->concept,
-                                'id_proyecto' => $proyect->id,
-                                'duracion' => $task->estimated_time,
-                                'progreso' => min(100, $totalProgress), // Cap at 100%
-                                'fecha_creacion' => $task->created_at,
-                                'fecha_inicio' => $inicio,
-                                'fecha_fin' => $fin
-                            ];
-                            $firstLog = false;
-                        } else {
-                            // Update only the progress and dates if needed
-                            $taskData['progreso'] = min(100, $totalProgress);
-                            // Update fecha_fin to the latest
-                            if (strtotime($fin) > strtotime($taskData['fecha_fin'])) {
-                                $taskData['fecha_fin'] = $fin;
-                            }
-                            // Update fecha_inicio to the earliest
-                            if (strtotime($inicio) < strtotime($taskData['fecha_inicio'])) {
-                                $taskData['fecha_inicio'] = $inicio;
-                            }
+                        $datos[] = [
+                            'id_tarea' => $colaTrabajo->id,
+                            'tarea' => $pieza->nombre_pieza . ' - ' . ($colaTrabajo->tipoTrabajo->nombre ?? 'Sin tipo'),
+                            'estado' => $colaTrabajo->estado,
+                            'proyecto' => 'Pedido: ' . $pedido->numero_pedido,
+                            'id_proyecto' => $pedido->id,
+                            'duracion' => $tiempoEstimado . ':00:00',
+                            'progreso' => $progreso,
+                            'fecha_creacion' => $pedido->created_at,
+                            'fecha_inicio' => $fechaInicio,
+                            'fecha_fin' => $fechaFin,
+                            'cliente' => $pedido->nombre_cliente,
+                            'prioridad' => $pieza->prioridad ?? 'normal',
+                            'maquinaria' => $colaTrabajo->maquinaria->nombre ?? 'Sin asignar'
+                        ];
+
+                        // Actualizar fechas máximas y mínimas
+                        if ($fechaInicio && (!$minFechaInicio || strtotime($fechaInicio) < strtotime($minFechaInicio))) {
+                            $minFechaInicio = $fechaInicio;
+                        }
+                        if ($fechaFin && (!$maxFechaFin || strtotime($fechaFin) > strtotime($maxFechaFin))) {
+                            $maxFechaFin = $fechaFin;
                         }
                     }
-                    
-                    $datos[] = $taskData;
-                    
-                } else {
-                    $datos[] = [
-                        'id_tarea' => $taskId,
-                        'tarea' => $task->title,
-                        'estado' => $task->task_status_id,
-                        'proyecto' => $proyect->concept,
-                        'id_proyecto' => $proyect->id,
-                        'duracion' => $task->estimated_time,
-                        'progreso' => 0,
-                        'fecha_creacion' => $task->created_at,
-                        'fecha_inicio' => null,
-                        'fecha_fin' => null
-                    ];
                 }
             }
+        }
+
+        // Si no hay fechas, usar fechas por defecto
+        if (!$minFechaInicio) {
+            $minFechaInicio = now()->subDays(30)->format('Y-m-d');
+        }
+        if (!$maxFechaFin) {
+            $maxFechaFin = now()->addDays(30)->format('Y-m-d');
         }
 
         return $datos;
@@ -97,9 +98,9 @@ class DiagramaGanttController extends Controller
         
         // Debug: Ensure we have data
         if (empty($datos)) {
-            \Log::info('No hay datos en el diagrama Gantt');
+            Log::info('No hay datos en el diagrama Gantt de producción');
         } else {
-            \Log::info('Datos del diagrama Gantt: ' . count($datos) . ' tareas encontradas');
+            Log::info('Datos del diagrama Gantt de producción: ' . count($datos) . ' tareas encontradas');
         }
         
         return view('diagrama.index', compact('datos'));
