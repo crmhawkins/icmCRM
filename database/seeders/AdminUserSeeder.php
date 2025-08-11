@@ -16,7 +16,7 @@ class AdminUserSeeder extends Seeder
     {
         // Crear usuario administrador principal
         User::create([
-            'access_level_id' => 1, // Super Administrador
+            'access_level_id' => 1, // Full Administrator
             'admin_user_department_id' => 1, // Dirección General
             'admin_user_position_id' => 1, // Director General
             'commercial_id' => null,
@@ -38,7 +38,7 @@ class AdminUserSeeder extends Seeder
 
         // Crear usuario técnico para pruebas
         User::create([
-            'access_level_id' => 2, // Administrador del Sistema
+            'access_level_id' => 2, // Gerente
             'admin_user_department_id' => 4, // Ingeniería y Diseño
             'admin_user_position_id' => 13, // Ingeniero Jefe
             'commercial_id' => null,
@@ -46,7 +46,7 @@ class AdminUserSeeder extends Seeder
             'surname' => 'Sistema',
             'username' => 'tecnico',
             'password' => Hash::make('tecnico123'),
-            'role' => 'Administrador del Sistema',
+            'role' => 'Gerente Técnico',
             'image' => null,
             'email' => 'tecnico.icm@icmtalleres.com',
             'email_verified_at' => now(),
@@ -60,7 +60,7 @@ class AdminUserSeeder extends Seeder
 
         // Crear usuario comercial para pruebas
         User::create([
-            'access_level_id' => 12, // Comercial Senior (ajustado al número correcto)
+            'access_level_id' => 6, // Comercial (ajustado al número correcto)
             'admin_user_department_id' => 3, // Comercial y Ventas
             'admin_user_position_id' => 9, // Comercial Senior
             'commercial_id' => 1,
@@ -80,9 +80,6 @@ class AdminUserSeeder extends Seeder
             'is_dark' => 0, // Modo claro por defecto
         ]);
 
-        $this->command->info('Usuarios administradores creados exitosamente:');
-        $this->command->info('- admin/admin123 (Super Administrador)');
-        $this->command->info('- tecnico/tecnico123 (Administrador del Sistema)');
-        $this->command->info('- comercial/comercial123 (Comercial Senior)');
+        $this->command->info('Usuarios administradores creados exitosamente.');
     }
 } 
