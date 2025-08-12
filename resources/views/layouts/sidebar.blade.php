@@ -27,6 +27,74 @@
                         <i class="bi bi-grid-fill fs-5"></i>
                         <span>Cola de trabajo</span>
                     </a> --}}
+                         {{-- Menú de Producción --}}
+                @php
+                $produccionActive = request()->routeIs('produccion.*') || request()->routeIs('maquinaria.*') || request()->routeIs('tipos-trabajo.*') || request()->routeIs('cola-trabajo.*') || request()->routeIs('pedidos.*') || request()->routeIs('piezas.*') || request()->routeIs('analisis-pdf.*');
+            @endphp
+            <li class="sidebar-item has-sub {{ $produccionActive ? 'active' : '' }}">
+                <a href="#" class='sidebar-link'>
+                    <i class="fa-solid fa-industry fs-5"></i>
+                    <span>Producción</span>
+                </a>
+                <ul class="submenu" style="{{ $produccionActive ? 'display:block;' : 'display:none;' }}">
+                    <li class="submenu-item {{ request()->routeIs('produccion.dashboard') ? 'active' : '' }}">
+                        <a href="{{route('produccion.dashboard')}}">
+                            <i class="fa-solid fa-chart-line"></i>
+                            <span>
+                                Dashboard
+                            </span>
+                        </a>
+                    </li>
+                    <li class="submenu-item {{ request()->routeIs('maquinaria.*') ? 'active' : '' }}">
+                        <a href="{{route('maquinaria.index')}}">
+                            <i class="fa-solid fa-cog"></i>
+                            <span>
+                                Maquinaria
+                            </span>
+                        </a>
+                    </li>
+                    <li class="submenu-item {{ request()->routeIs('tipos-trabajo.*') ? 'active' : '' }}">
+                        <a href="{{route('tipos-trabajo.index')}}">
+                            <i class="fa-solid fa-tools"></i>
+                            <span>
+                                Tipos de Trabajo
+                            </span>
+                        </a>
+                    </li>
+                    <li class="submenu-item {{ request()->routeIs('cola-trabajo.*') ? 'active' : '' }}">
+                        <a href="{{route('cola-trabajo.index')}}">
+                            <i class="fa-solid fa-list-ol"></i>
+                            <span>
+                                Cola de Trabajo
+                            </span>
+                        </a>
+                    </li>
+                    <li class="submenu-item {{ request()->routeIs('pedidos.*') ? 'active' : '' }}">
+                        <a href="{{route('pedidos.index')}}">
+                            <i class="fa-solid fa-file-invoice"></i>
+                            <span>
+                                Pedidos
+                            </span>
+                        </a>
+                    </li>
+                    <li class="submenu-item {{ request()->routeIs('piezas.*') ? 'active' : '' }}">
+                        <a href="{{route('piezas.index')}}">
+                            <i class="fa-solid fa-cube"></i>
+                            <span>
+                                Piezas
+                            </span>
+                        </a>
+                    </li>
+                    <li class="submenu-item {{ request()->routeIs('analisis-pdf.create') ? 'active' : '' }}">
+                        <a href="{{route('analisis-pdf.create')}}">
+                            <i class="fa-solid fa-file-pdf"></i>
+                            <span>
+                                Análisis PDF con IA
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
                 </li>
                 <li class="sidebar-title">Empresa</li>
 

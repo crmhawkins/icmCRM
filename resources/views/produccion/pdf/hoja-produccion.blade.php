@@ -261,7 +261,7 @@
                 <td>1</td>
                 <td>{{ $colaTrabajo->tipoTrabajo->nombre }}</td>
                 <td></td>
-                <td>{{ $colaTrabajo->tiempo_estimado_horas ?? '0' }},00</td>
+                <td>{{ number_format($colaTrabajo->tiempo_estimado_horas ?? 0, 2, ',', '.') }}</td>
                 <td></td>
             </tr>
             @endif

@@ -84,8 +84,8 @@ class ProduccionService
 
             // Crear la tarea en la cola de trabajo
             $tarea = ColaTrabajo::create([
-                'proyecto_id' => $pieza->pedido->proyecto_id,
-                'presupuesto_id' => $pieza->pedido->presupuesto_id,
+                'proyecto_id' => $pieza->pedido->proyecto_id ?? null,
+                'presupuesto_id' => $pieza->pedido->presupuesto_id ?? null,
                 'pieza_id' => $pieza->id,
                 'maquinaria_id' => $maquinariaAsignada ? $maquinariaAsignada->id : null,
                 'tipo_trabajo_id' => $tipoTrabajoModel->id,

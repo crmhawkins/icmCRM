@@ -537,7 +537,7 @@ REGLAS OBLIGATORIAS:
 
         // Crear orden de trabajo
         ColaTrabajo::create([
-            'proyecto_id' => $pieza->pedido->proyecto_id,
+            'proyecto_id' => $pieza->pedido->proyecto_id ?? null,
             'pieza_id' => $pieza->id,
             'tipo_trabajo_id' => $tipoTrabajo ? $tipoTrabajo->id : null,
             'maquinaria_id' => $maquinaria ? $maquinaria->id : null,
