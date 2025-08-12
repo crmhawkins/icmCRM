@@ -175,31 +175,6 @@ th { background:#f2f2f2; }
                 </tr>
             </table>
 
-            <!-- RESUMEN PUNTOS -->
-            <table class="resumen">
-                <tr>
-                    <td class="ttl">Puntos asignados:</td>
-                    <td class="val">{{ $fmt($colaTrabajo->tiempo_estimado_horas ?? 0) }}</td>
-                    <td class="ttl">Puntos invertidos:</td>
-                    <td class="val">{{ $fmt(0) }}</td>
-                    <td class="ttl">Dif. Puntos:</td>
-                    <td class="val">{{ $fmt(($colaTrabajo->tiempo_estimado_horas ?? 0) - 0) }}</td>
-                </tr>
-            </table>
-
-            <!-- OBS CABECERA -->
-            <div class="section">OBSERVACIONES</div>
-            <table class="obs-top">
-                <tr>
-                    <th>COMERCIAL</th>
-                    <th>JEFE TALLER</th>
-                    <th class="t-center">PESO (KG)</th>
-                </tr>
-                <tr>
-                    <td></td><td></td><td class="t-center"></td>
-                </tr>
-            </table>
-
             <!-- MÉTODO DE TRABAJO -->
             <div class="section">MÉTODO DE TRABAJO</div>
             <table class="mt">
@@ -217,6 +192,7 @@ th { background:#f2f2f2; }
                     $trabajosMostrados = [];
                     $trabajosOrdenados = [];
                     $numeroActual = 1;
+                    $totalPuntosAsignados = 0;
                 @endphp
 
                 {{-- PRODUCCIÓN --}}
@@ -230,11 +206,13 @@ th { background:#f2f2f2; }
                         @foreach($datosProduccion as $i => $trabajo)
                             @if(!empty($trabajo['trabajo']) && !in_array($trabajo['trabajo'], $trabajosMostrados))
                                 @php
+                                    $puntos = isset($trabajo['minutos']) ? $trabajo['minutos'] : 0;
+                                    $totalPuntosAsignados += $puntos;
                                     $trabajosOrdenados[] = [
                                         'numero' => $numeroActual++,
                                         'trabajo' => $trabajo['trabajo'],
                                         'terminacion' => '',
-                                        'puntos' => isset($trabajo['minutos']) ? $trabajo['minutos'] / 60 : 0,
+                                        'puntos' => $puntos,
                                         'tipo' => 'produccion'
                                     ];
                                     $trabajosMostrados[] = $trabajo['trabajo'];
@@ -255,11 +233,13 @@ th { background:#f2f2f2; }
                         @foreach($datosLaser as $i => $trabajo)
                             @if(!empty($trabajo['material']) && !in_array($trabajo['material'], $trabajosMostrados))
                                 @php
+                                    $puntos = isset($trabajo['minutos']) ? $trabajo['minutos'] : 0;
+                                    $totalPuntosAsignados += $puntos;
                                     $trabajosOrdenados[] = [
                                         'numero' => $numeroActual++,
                                         'trabajo' => 'Corte Láser ' . $trabajo['material'],
                                         'terminacion' => '',
-                                        'puntos' => isset($trabajo['minutos']) ? $trabajo['minutos'] / 60 : 0,
+                                        'puntos' => $puntos,
                                         'tipo' => 'laser'
                                     ];
                                     $trabajosMostrados[] = $trabajo['material'];
@@ -273,11 +253,13 @@ th { background:#f2f2f2; }
                 @if($pieza->seguimiento && $pieza->seguimiento->cantidad_otros_servicios > 0)
                     @if(!in_array('OTROS SERVICIOS', $trabajosMostrados))
                         @php
+                            $puntos = $pieza->seguimiento->cantidad_otros_servicios;
+                            $totalPuntosAsignados += $puntos;
                             $trabajosOrdenados[] = [
                                 'numero' => $numeroActual++,
                                 'trabajo' => $pieza->seguimiento->tipo_otros_servicios ?? 'OTROS SERVICIOS',
                                 'terminacion' => '',
-                                'puntos' => $pieza->seguimiento->cantidad_otros_servicios,
+                                'puntos' => $puntos,
                                 'tipo' => 'otros_servicios'
                             ];
                             $trabajosMostrados[] = 'OTROS SERVICIOS';
@@ -287,11 +269,13 @@ th { background:#f2f2f2; }
                 @if($pieza->seguimiento && $pieza->seguimiento->coste_materiales_total > 0)
                     @if(!in_array('MATERIALES', $trabajosMostrados))
                         @php
+                            $puntos = $pieza->seguimiento->coste_materiales_total;
+                            $totalPuntosAsignados += $puntos;
                             $trabajosOrdenados[] = [
                                 'numero' => $numeroActual++,
                                 'trabajo' => 'MATERIALES',
                                 'terminacion' => '',
-                                'puntos' => $pieza->seguimiento->coste_materiales_total,
+                                'puntos' => $puntos,
                                 'tipo' => 'materiales'
                             ];
                             $trabajosMostrados[] = 'MATERIALES';
@@ -301,11 +285,13 @@ th { background:#f2f2f2; }
                 @if($pieza->seguimiento && $pieza->seguimiento->peso_total_kg > 0)
                     @if(!in_array('PESO', $trabajosMostrados))
                         @php
+                            $puntos = $pieza->seguimiento->peso_total_kg * 10;
+                            $totalPuntosAsignados += $puntos;
                             $trabajosOrdenados[] = [
                                 'numero' => $numeroActual++,
                                 'trabajo' => 'PESO TOTAL (' . number_format($pieza->seguimiento->peso_total_kg, 2, ',', '.') . ' KG)',
                                 'terminacion' => '',
-                                'puntos' => $pieza->seguimiento->peso_total_kg * 10,
+                                'puntos' => $puntos,
                                 'tipo' => 'peso'
                             ];
                             $trabajosMostrados[] = 'PESO';
@@ -319,10 +305,35 @@ th { background:#f2f2f2; }
                         <td>{{ $t['trabajo'] }}</td>
                         <td>{{ $t['terminacion'] }}</td>
                         <td></td>
-                        <td class="t-right">{{ $fmt($t['puntos']) }}</td>
+                        <td class="t-right">{{ number_format($t['puntos'], 2, ',', '.') }}</td>
                     </tr>
                 @endforeach
                 </tbody>
+            </table>
+
+            <!-- RESUMEN PUNTOS -->
+            <table class="resumen">
+                <tr>
+                    <td class="ttl">Puntos asignados:</td>
+                    <td class="val">{{ number_format($totalPuntosAsignados, 2, ',', '.') }}</td>
+                    <td class="ttl">Puntos invertidos:</td>
+                    <td class="val">{{ $fmt(0) }}</td>
+                    <td class="ttl">Dif. Puntos:</td>
+                    <td class="val">{{ number_format($totalPuntosAsignados - 0, 2, ',', '.') }}</td>
+                </tr>
+            </table>
+
+            <!-- OBS CABECERA -->
+            <div class="section">OBSERVACIONES</div>
+            <table class="obs-top">
+                <tr>
+                    <th>COMERCIAL</th>
+                    <th>JEFE TALLER</th>
+                    <th class="t-center">PESO (KG)</th>
+                </tr>
+                <tr>
+                    <td></td><td></td><td class="t-center"></td>
+                </tr>
             </table>
 
             <!-- Observaciones artículo/pedido -->

@@ -232,13 +232,13 @@
         </div>
         <div class="order-details-row">
             <div class="order-details-cell order-details-label">Puntos Asignados:</div>
-            <div class="order-details-cell">{{ $colaTrabajo->tiempo_estimado_horas ?? '0' }}</div>
+            <div class="order-details-cell">{{ number_format($colaTrabajo->tiempo_estimado_horas ?? 0, 2, ',', '.') }}</div>
             <div class="order-details-cell order-details-label">Puntos Invertidos:</div>
             <div class="order-details-cell">0,00</div>
         </div>
         <div class="order-details-row">
             <div class="order-details-cell order-details-label">Dif. Puntos:</div>
-            <div class="order-details-cell">{{ ($colaTrabajo->tiempo_estimado_horas ?? 0) - 0 }},00</div>
+            <div class="order-details-cell">{{ number_format(($colaTrabajo->tiempo_estimado_horas ?? 0) - 0, 2, ',', '.') }}</div>
             <div class="order-details-cell order-details-label">CANTIDAD:</div>
             <div class="order-details-cell">1</div>
         </div>
